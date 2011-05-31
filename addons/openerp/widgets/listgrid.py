@@ -41,7 +41,7 @@ class List(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/listgrid.mako"
     params = ['name', 'data', 'columns', 'headers', 'model', 'selectable', 'editable', 'noteditable', 
               'pageable', 'selector', 'source', 'offset', 'limit', 'show_links', 'editors', 'view_mode',
-              'hiddens', 'edit_inline', 'field_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex']
+              'hiddens', 'edit_inline', 'field_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button']
 
     member_widgets = ['pager', 'buttons', 'editors', 'concurrency_info']
 
@@ -64,6 +64,8 @@ class List(TinyWidget):
     source = None
     checkbox_name = True
     min_rows = 5
+    hide_new_button = False
+    hide_delete_button = False
 
     def __init__(self, name, model, view, ids=[], domain=[], context={}, **kw):
 
@@ -95,6 +97,7 @@ class List(TinyWidget):
         self.o2m = kw.get('o2m', 0)
         self.concurrency_info = None
         self.selector = None
+        
 
         terp_params = getattr(cherrypy.request, 'terp_params', {})
         if terp_params:
@@ -117,6 +120,11 @@ class List(TinyWidget):
         root = dom.childNodes[0]
 
         attrs = node_attributes(root)
+        
+        # Get the hide status of some buttons - by default buttons are shown
+        self.hide_new_button = attrs.get('hide_new_button', False)
+        self.hide_delete_button = attrs.get('hide_delete_button', False)
+        
         self.string = attrs.get('string','')
 
         search_param = copy.deepcopy(domain) or []
