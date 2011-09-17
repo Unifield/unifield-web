@@ -11,7 +11,7 @@
     <%self:m2o_container>
         <span class="m2o">
             <input type="hidden" id="${name}" name="${name}" class="${css_class}" value="${value}"
-                ${py.attrs(attrs, kind=kind, domain=domain, context=ctx, relation=relation, required=required and 1 or 0, fld_readonly=readonly and 1 or 0)}/>
+                ${py.attrs(attrs, kind=kind, domain=domain, context=ctx, relation=relation, required=required and 1 or 0, fld_readonly=readonly and 1 or 0, only_form=only_form and 1 or 0)}/>
             <input type="text" id="${name}_text" class="${css_class}" size="1"
                 ${py.attrs(attrs, kind=kind, relation=relation, value=text)}/>
 
@@ -23,7 +23,9 @@
                 src="/openerp/static/images/fields-a-lookup-a.gif" class="m2o_select"/>
         </span>
         ${self.display_open_resource(name)}
-        <div id="autoCompleteResults_${name}" class="autoTextResults"></div>
+        % if not only_form:
+            <div id="autoCompleteResults_${name}" class="autoTextResults"></div>
+        % endif
         <script type="text/javascript">
             new ManyToOne('${name}');
         </script>

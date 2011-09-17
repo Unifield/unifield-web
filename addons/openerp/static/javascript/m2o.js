@@ -42,6 +42,7 @@ ManyToOne.prototype.__init__ = function(name) {
     //for autocomplete
     this.auto_hidden_id = openobject.dom.get('_hidden_' + name);
 
+    this.only_form = jQuery(this.field).attr('only_form') == "1";
     this.selectedResultRow = 0;
     this.numResultRows = 0;
     this.specialKeyPressed = false;
@@ -66,13 +67,18 @@ ManyToOne.prototype.__init__ = function(name) {
 
     if(this.editable) {
         jQuery(this.field).change(jQuery.proxy(this, 'on_change'));
-        jQuery(this.text).bind({
-            keydown: jQuery.proxy(this, 'on_keydown'),
-            keypress: jQuery.proxy(this, 'on_keypress'),
-            keyup: jQuery.proxy(this, 'on_keyup'),
-            focus: jQuery.proxy(this, 'gotFocus'),
-            blur: jQuery.proxy(this, 'lostFocus')
-        }).removeAttr('callback');
+        var bind = { focus: jQuery.proxy(this, 'gotFocus'), keydown: jQuery.proxy(this, 'on_keydown_form'), };
+        if (!this.only_form) {
+            $.extend(bind, {
+                keydown: jQuery.proxy(this, 'on_keydown'),
+                keypress: jQuery.proxy(this, 'on_keypress'),
+                keyup: jQuery.proxy(this, 'on_keyup')
+            })
+        } else {
+            $.extend(bind, { blur: jQuery.proxy(this, 'set_lostFocus')});
+        }
+
+        jQuery(this.text).bind(bind).removeAttr('callback');
 
         this.lastTextResult = this.text.value;
 
@@ -99,8 +105,10 @@ ManyToOne.prototype.gotFocus = function(evt) {
     this.hasFocus = true;
 };
 
-ManyToOne.prototype.lostFocus = function() {
+ManyToOne.prototype.set_lostFocus = function() {
     this.hasFocus = false;
+}
+ManyToOne.prototype.lostFocus = function() {
     if(this.selectedResult || this.lastKey == 9) {
         this.lastKey = null;
         this.clearResults();
@@ -269,6 +277,18 @@ ManyToOne.prototype.setCompletionText = function ($selectedRow) {
     this.lastTextResult = autoCompleteText;
 };
 
+ManyToOne.prototype.on_keydown_form = function(evt) {
+    if((evt.which == 8 || evt.which == 46) && this.field.value) {
+        this.text.value = '';
+        this.field.value = '';
+        this.on_change(evt);
+    }
+    if (evt.which == 13 ) {
+        this.get_matched();
+    }
+    return false;
+}
+
 ManyToOne.prototype.on_keydown = function(evt) {
     this.lastKey = evt.which;
     // Used to stop processing of further key functions
@@ -390,7 +410,10 @@ ManyToOne.prototype.get_matched = function() {
     if(!this.relation) {
         return;
     }
-
+    if (this.only_form) {
+        var arg = this.field.value || jQuery(this.field).attr('value');
+        return this.open(arg);
+    }
     var m2o = this;
 
     var domain = jQuery(this.field).attr('domain');

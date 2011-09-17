@@ -31,11 +31,12 @@ class M2OLabel(InputWidgetLabel):
 
 class M2O(TinyInputWidget):
     template = "/openerp/widgets/form/templates/many2one.mako"
-    params=['relation', 'text', 'domain', 'context', 'link', 'readonly', 'default_focus']
+    params=['relation', 'text', 'domain', 'context', 'link', 'readonly', 'default_focus', 'only_form']
 
     domain = []
     context = {}
     link = 1
+    only_form = False
 
     label_type = M2OLabel
 
@@ -48,7 +49,7 @@ class M2O(TinyInputWidget):
         self.context = attrs.get('context', {})
         self.link = attrs.get('link')
         self.onchange = None # override onchange in js code
-        
+        self.only_form = attrs.get('mode') == 'form'      
         self.default_focus = attrs.get('default_focus', 0)
         self.validator = validators.many2one()
 
