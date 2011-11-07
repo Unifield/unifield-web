@@ -59,7 +59,7 @@
     % endif
     % if selector and not hide_delete_button:
         <td class="grid-cell selector">
-            % if not m2m:
+            % if _2m or not m2m:
             <%
                 selector_click = "new ListView('%s').onBooleanClicked(!this.checked, '%s');" % (name, data['id'])
                 if selector == "radio":
@@ -190,7 +190,7 @@
                                     <td class="pager-cell-button" style="display: none;">
                                         % if not hide_delete_button:
 	                                        % if m2m:
-	                                            <button id="${name}_delete_record" title="${_('Delete record(s).')}">
+	                                            <button id="${name}_delete_record" title="${_('Delete record(s).')}" onclick="new Many2Many('${name}').remove(null); return false;">
 	                                                ${_('Delete')}
 	                                            </button>
 	                                        % else:
@@ -217,12 +217,15 @@
                             <tr class="grid-header">
                                 % if selector and not hide_delete_button:
                                     <th width="1" class="grid-cell selector">
-                                        % if selector == 'checkbox' and not m2m:
+                                        % if selector == 'checkbox' and not m2m and not _2m:
                                             <input type="checkbox" class="checkbox grid-record-selector" onclick="new ListView('${name}').checkAll(!this.checked)"/>
                                         % endif
                                         % if selector != 'checkbox' and not m2m:
                                             <span>&nbsp;</span>
                                         % endif
+                                        % if selector == 'checkbox' and _2m:
+                                            <input type="checkbox" class="checkbox grid-record-selector" onclick="new ListView('${name}').checkAll(!this.checked, true)"/>
+                                        %endif
                                     </th>
                                 % endif
                                 % if editable:

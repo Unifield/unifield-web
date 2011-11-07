@@ -41,7 +41,7 @@ class List(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/listgrid.mako"
     params = ['name', 'data', 'columns', 'headers', 'model', 'selectable', 'editable', 'noteditable', 
               'pageable', 'selector', 'source', 'offset', 'limit', 'show_links', 'editors', 'view_mode',
-              'hiddens', 'edit_inline', 'field_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button']
+              'hiddens', 'edit_inline', 'field_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button', '_2m']
 
     member_widgets = ['pager', 'buttons', 'editors', 'concurrency_info']
 
@@ -94,6 +94,7 @@ class List(TinyWidget):
         self.count = kw.get('count', 0)
         self.link = kw.get('nolinks')
         self.m2m = kw.get('m2m', 0)
+        self._2m = self.m2m
         self.o2m = kw.get('o2m', 0)
         self.concurrency_info = None
         self.selector = None
@@ -114,6 +115,11 @@ class List(TinyWidget):
 
         if self.selectable == 2:
             self.selector = 'checkbox'
+
+        if self.selectable == 3:
+            self.selector = 'checkbox'
+            self._2m = True
+
 
         fields = view['fields']
         dom = xml.dom.minidom.parseString(view['arch'].encode('utf-8'))

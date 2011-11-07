@@ -61,12 +61,12 @@ ListView.prototype = {
         this.sort_key = null;
     },
 
-    checkAll: function(clear) {
+    checkAll: function(clear, notoggle) {
         jQuery('[id="' + this.name + '"]:first :checkbox').each(function() {
             jQuery(this).attr('checked', !clear)
         });
 
-        this.onBooleanClicked();
+        this.onBooleanClicked(notoggle);
     },
 
     selectedRow_sum: function() {
@@ -141,15 +141,16 @@ ListView.prototype = {
         return this.$getSelectedItems().get();
     },
 
-    onBooleanClicked: function() {
-        var $sidebar = jQuery('.toggle-sidebar');
-        if ($sidebar.is('.closed')) {
-            $sidebar.click()
+    onBooleanClicked: function(notoggle) {
+        if (! notoggle) {
+            var $sidebar = jQuery('.toggle-sidebar');
+            if ($sidebar.is('.closed')) {
+                $sidebar.click()
+            }
+            if(!this.getSelectedRecords().length) {
+                $sidebar.click();
+            }
         }
-        if(!this.getSelectedRecords().length) {
-            $sidebar.click();
-        }
-
            this.selectedRow_sum();
     },
 
