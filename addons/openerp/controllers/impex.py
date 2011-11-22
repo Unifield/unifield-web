@@ -40,7 +40,7 @@ def datas_read(ids, model, flds, context=None):
 def export_csv(fields, result):
     try:
         fp = StringIO.StringIO()
-        writer = csv.writer(fp, quoting=csv.QUOTE_ALL)
+        writer = csv.writer(fp, quoting=csv.QUOTE_ALL, delimiter=';')
 
         writer.writerow(fields)
 
