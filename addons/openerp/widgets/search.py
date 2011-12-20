@@ -158,7 +158,8 @@ class Filter(TinyInputWidget):
             if not self.filter_context.get('group_by'):
                 self.filter_context = self.filter_context
             else:
-                self.filter_context = {}
+                self.filter_context = self.filter_context
+                del(self.filter_context['group_by'])
         self.text_val = self.string or self.help
         if self.icon:
             self.icon = icons.get_icon(self.icon)
