@@ -159,6 +159,7 @@ function doLoadingSuccess(app, url) {
         if (val == 'False' || val == '') {
             initial_onchange_triggers();
         }
+        form_hookAttrChange();
     };
 }
 
