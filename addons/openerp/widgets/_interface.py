@@ -131,6 +131,7 @@ class TinyInputWidget(TinyWidget, InputWidget):
         'change_default',
         'onchange',
         'kind',
+        'nochain',
         'filters' # filter buttons within an input widget, part of the same implicit "group"
     ]
 
@@ -144,6 +145,7 @@ class TinyInputWidget(TinyWidget, InputWidget):
 
     states = None
     callback = None
+    nochain = None
     change_default = None
     kind=None
 
@@ -161,6 +163,8 @@ class TinyInputWidget(TinyWidget, InputWidget):
         self.readonly = _boolean_attr(attrs, 'readonly')
 
         self.translatable = attrs.get('translate', False)
+
+        self.nochain = attrs.get('nochain')
 
         self.set_state(attrs.get('state', 'draft'))
 
@@ -216,7 +220,8 @@ class TinyInputWidget(TinyWidget, InputWidget):
             attrs={
                 'change_default': self.change_default or None,
                 'callback': self.callback or None,
-                'onchange': self.onchange
+                'onchange': self.onchange,
+                'nochain': self.nochain
             })
 
         if self.readonly:

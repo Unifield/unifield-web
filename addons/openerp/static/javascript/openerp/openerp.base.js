@@ -92,13 +92,20 @@ var ELEMENTS_WITH_CALLBACK = '[callback]:enabled:not([type="hidden"]):not([value
  * order to correctly set up initial values
  */
 function initial_onchange_triggers() {
+    var chaining = [];
     jQuery(ELEMENTS_WITH_CALLBACK).each(function() {
+        chain = jQuery(this).attr('nochain');
         if (jQuery(this).attr('kind') == 'boolean') {
             onBooleanClicked(jQuery(this).attr('id'));
         } else {
             // We pass an arbitrary parameter to the event so we can
             // differentiate a user event from a trigger
-            jQuery(this).trigger('change', [true]);
+            if (!chain || jQuery.inArray( chain, chaining) == -1) {
+                jQuery(this).trigger('change', [true]);
+                if (chain) {
+                    chaining.push(chain);
+                }
+            }
         }
     });
 }
