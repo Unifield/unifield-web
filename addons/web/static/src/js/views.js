@@ -129,7 +129,7 @@ session.web.ActionManager = session.web.OldWidget.extend({
     },
     ir_actions_act_window: function (action, on_close) {
         var self = this;
-        if (_(['base.module.upgrade', 'base.setup.installer'])
+        if (_(['base.module.upgrade', 'base.setup.installer', 'base.setup.config'])
                 .contains(action.res_model)) {
             var old_close = on_close;
             on_close = function () {
