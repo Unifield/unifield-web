@@ -409,7 +409,20 @@ openerp.web_dashboard.ApplicationTiles = openerp.web.OldWidget.extend({
     },
     start: function() {
         var self = this;
+        var action_manager = new openerp.web.ActionManager(this);
         openerp.webclient.menu.do_hide_secondary();
+        if (self.session.api == '6.0') {
+            self.rpc('/web/menu/get_user_home_action', {}).then(function (home_action_id) {
+                if (!home_action_id) {
+                    self.on_installed_database();
+                } else {
+                    self.rpc('/web/action/load', {action_id: home_action_id}, function(result){
+                        action_manager.do_action(result['result']);
+                    });
+                };
+            });
+            return;
+        };
         var domain = [['application','=',true], ['state','=','installed'], ['name', '!=', 'base']];
         var ds = new openerp.web.DataSetSearch(this, 'ir.module.module',{},domain);
         ds.read_slice(['id']).then(function(result) {

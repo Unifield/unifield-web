@@ -813,6 +813,27 @@ class Menu(openerpweb.Controller):
                 menu_domain = ast.literal_eval(menu_action['domain'])
         return Menus.search(menu_domain, 0, False, False, context)
 
+    @openerpweb.jsonrequest
+    def get_user_home_action(self, req):
+        return self.do_get_user_home_action(req)
+
+    def do_get_user_home_action(self, req):
+        """ Return user home action that need to be launch on login.
+
+        :param req: A request object, with an OpenERP session attribute
+        :type req: <session -> OpenERPSession >
+        :return: the home action id or None if none defined
+        :rtype: int
+        """
+        s = req.session
+        context = s.eval_context(req.context)
+
+        user_action_id = s.model('res.users').read([s._uid], ['action_id'], context)[0]['action_id']
+        if user_action_id:
+            return user_action_id[0]
+        else:
+            return None
+
     def do_load(self, req):
         """ Loads all menu items (all applications and their sub-menus).
 
