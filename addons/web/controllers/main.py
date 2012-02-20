@@ -807,10 +807,10 @@ class Menu(openerpweb.Controller):
 
         menu_domain = [('parent_id', '=', False)]
         if user_menu_id:
-            domain_string = s.model('ir.actions.act_window').read([user_menu_id[0]], ['domain'], context)[0]['domain']
-            if domain_string:
-                menu_domain = ast.literal_eval(domain_string)
-
+            menu_action = s.model('ir.actions.act_window').read([user_menu_id[0]], ['res_model', 'domain'], context)[0]
+            domain_string = menu_action['domain']
+            if domain_string and menu_action['res_model'] == 'ir.ui.menu':
+                menu_domain = ast.literal_eval(menu_action['domain'])
         return Menus.search(menu_domain, 0, False, False, context)
 
     def do_load(self, req):
