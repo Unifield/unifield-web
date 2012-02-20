@@ -169,9 +169,16 @@ session.web.ActionManager = session.web.OldWidget.extend({
     },
     ir_actions_server: function (action, on_closed) {
         var self = this;
+        var context = action.context;
+        if (!context && self.session.api == '6.0') {
+            context = {
+                active_id: action.id || False,
+                active_ids: (!action.id) ? [] : [action.id],
+            };
+        };
         this.rpc('/web/action/run', {
             action_id: action.id,
-            context: action.context || {}
+            context: context
         }).then(function (action) {
             self.do_action(action, on_closed)
         });
