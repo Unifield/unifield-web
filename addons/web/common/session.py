@@ -32,6 +32,7 @@ class OpenERPSession(object):
     def __init__(self):
         self._creation_time = time.time()
         self.config = None
+        self._api = None
         self._db = False
         self._uid = False
         self._login = False
@@ -47,6 +48,19 @@ class OpenERPSession(object):
         if "config" in state:
             del state['config']
         return state
+
+    def api(self):
+        if self._api is None:
+            try:
+                server_version = self.proxy('db').server_version()
+                server_release = server_version.split('-')[0] # strip out dev revision
+                self._api = '.'.join(server_release.split('.')[:2])
+            except Exception, e:
+                print("Oopps server_version failed: %s" % (str(e),))
+                # server doesn't understand the request fallback to 4.2 api
+                # the 'server_version' was introduce during 4.3.0 development on 20/08/2008 by chs
+                self._api = '4.2'
+        return self._api
 
     def openerp_entreprise(self):
         if not self._uid:

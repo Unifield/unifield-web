@@ -476,6 +476,7 @@ class Session(openerpweb.Controller):
             "db": req.session._db,
             "login": req.session._login,
             "openerp_entreprise": req.session.openerp_entreprise(),
+            "api": req.session.api(),
         }
 
     @openerpweb.jsonrequest

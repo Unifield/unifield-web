@@ -643,7 +643,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 username: result.login,
                 uid: result.uid,
                 user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                openerp_entreprise: result.openerp_entreprise,
+                api: result.api,
             });
         });
     },
@@ -664,7 +665,8 @@ openerp.web.Connection = openerp.web.CallbackEnabled.extend( /** @lends openerp.
                 username: result.login,
                 uid: result.uid,
                 user_context: result.context,
-                openerp_entreprise: result.openerp_entreprise
+                openerp_entreprise: result.openerp_entreprise,
+                api: result.api,
             });
             if (!_volatile) {
                 self.set_cookie('session_id', self.session_id);
