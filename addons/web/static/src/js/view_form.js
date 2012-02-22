@@ -365,14 +365,24 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     var condition = fieldname + '=' + value;
 
                     if (value) {
+                        if (self.session.api == '6.0') {
+                            var onchange_method_and_args = {
+                                model: 'ir.values',
+                                method: 'get',
+                                args: ['default', condition, [[self.model, false]], false]
+                            };
+                        } else {
+                            var onchange_method_and_args = {
+                                model: 'ir.values',
+                                method: 'get_defaults',
+                                args: [self.model, condition]
+                            };
+                        }
                         can_process_onchange = self.rpc({
                             url: '/web/dataset/call',
                             async: false
-                        }, {
-                            model: 'ir.values',
-                            method: 'get_defaults',
-                            args: [self.model, condition]
-                        }).then(function (results) {
+                        },
+                        onchange_method_and_args).then(function (results) {
                             if (!results.length) { return; }
                             if (!response.value) {
                                 response.value = {};
@@ -705,15 +715,31 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                     }
                     var condition = d.$element.find('#formview_default_conditions').val(),
                         all_users = d.$element.find('#formview_default_all').is(':checked');
-                    new openerp.web.DataSet(self, 'ir.values').call(
-                        'set_default', [
-                            self.dataset.model,
-                            field_to_set,
-                            self.fields[field_to_set].get_value(),
-                            all_users,
-                            false,
-                            condition || false
-                    ]).then(function () { d.close(); });
+                    if (d.session.api == '6.0') {
+                        new openerp.web.DataSet(self, 'ir.values').call(
+                            'set', [
+                                'default',
+                                condition || false,
+                                field_to_set,
+                                [[self.dataset.model, false]],
+                                self.fields[field_to_set].get_value(),
+                                true,
+                                false,
+                                false,
+                                all_users,
+                                true,
+                            ]).then(function () { d.close(); });
+                    } else {
+                        new openerp.web.DataSet(self, 'ir.values').call(
+                            'set_default', [
+                                self.dataset.model,
+                                field_to_set,
+                                self.fields[field_to_set].get_value(),
+                                all_users,
+                                false,
+                                condition || false
+                        ]).then(function () { d.close(); });
+                    }
                 }}
             ]
         });
