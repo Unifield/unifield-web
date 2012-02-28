@@ -881,6 +881,7 @@ openerp.web.CompoundContext = openerp.web.Class.extend({
         this.__ref = "compound_context";
         this.__contexts = [];
         this.__eval_context = null;
+        this.__eval_one2many_context = {};
         var self = this;
         _.each(arguments, function(x) {
             self.add(x);
@@ -896,6 +897,12 @@ openerp.web.CompoundContext = openerp.web.Class.extend({
     },
     get_eval_context: function () {
         return this.__eval_context;
+    },
+    set_one2many_eval_context: function (fieldname, value, parent_model) {
+        this.__eval_one2many_context[fieldname] = [value, parent_model];
+    },
+    get_one2many_eval_context: function () {
+        return this.__eval_one2many_context;
     }
 });
 

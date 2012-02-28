@@ -2475,10 +2475,15 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         return self.reload_current_view();
     },
     get_value: function() {
-        var self = this;
         if (!this.dataset)
             return [];
         this.save_any_view();
+        return this._get_value_commands()
+    },
+    _get_value_commands: function() {
+        var self = this;
+        if (!this.dataset)
+            return [];
         var val = this.dataset.delete_all ? [commands.delete_all()] : [];
         val = val.concat(_.map(this.dataset.ids, function(id) {
             var alter_order = _.detect(self.dataset.to_create, function(x) {return x.id === id;});
@@ -2560,7 +2565,28 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
                 });
             }
         }
-    }
+    },
+    /**
+     * Builds a new context usable for operations related to fields by merging
+     * the fields'context with the action's context.
+     */
+    build_context: function(blacklist) {
+        // only use the model's context if there is not context on the node
+        var v_context = this.node.attrs.context;
+        if (! v_context) {
+            v_context = (this.field || {}).context || {};
+        }
+        
+        if (v_context.__ref || true) { //TODO: remove true
+            var fields_values = this._build_eval_context(blacklist);
+            v_context = new openerp.web.CompoundContext(v_context).set_eval_context(fields_values);
+            if (this.session.api == '6.0' && this.widget_parent) {
+                var values = this._get_value_commands();
+                v_context.set_one2many_eval_context(this.name, values, this.widget_parent.model);
+            }
+        }
+        return v_context;
+    },
 });
 
 openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({

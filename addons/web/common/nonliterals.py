@@ -43,9 +43,11 @@ class NonLiteralEncoder(simplejson.encoder.JSONEncoder):
                 '__eval_context': object.get_eval_context()
             }
         raise TypeError('Could not encode unknown non-literal %s' % object)
-    
+
+# NOTE: __eval_one2many_context is here only for v6.0 backward compatibility
 _ALLOWED_KEYS = frozenset(['__ref', "__id", '__domains', '__debug',
-                           '__contexts', '__eval_context', 'own_values'])
+                           '__contexts', '__eval_context', 'own_values',
+                           '__eval_one2many_context'])
 
 def non_literal_decoder(dct):
     """ Decodes JSON dicts into :class:`Domain` and :class:`Context` based on
@@ -79,6 +81,7 @@ def non_literal_decoder(dct):
             for el in dct["__contexts"]:
                 ccontext.contexts.append(el)
             ccontext.set_eval_context(dct.get("__eval_context"))
+            ccontext.set_eval_one2many_context(dct.get("__eval_one2many_context"))
             return ccontext
     return dct
 
@@ -241,6 +244,7 @@ class CompoundContext(BaseContext):
     def __init__(self, *contexts):
         self.contexts = []
         self.eval_context = None
+        self.eval_one2many_context = {}
         self.session = None
         for context in contexts:
             self.add(context)
@@ -251,6 +255,21 @@ class CompoundContext(BaseContext):
         if eval_context:
             eval_context = self.session.eval_context(eval_context)
             ctx.update(eval_context)
+
+        eval_one2many_context = self.get_eval_one2many_context()
+        if eval_one2many_context and self.session.api() == '6.0':
+            for fieldname, (commands, model) in self.eval_one2many_context.iteritems():
+                model_obj = self.session.model(model)
+                one2many_data = model_obj.resolve_o2m_commands_to_record_dicts(
+                        fieldname, commands, context=self.session.context)
+                def fix_record_dict(record):
+                    record_id = record.get('id')
+                    if record_id:
+                        return (1, record_id, record)
+                    else:
+                        return (0, 0, record)
+                ctx[fieldname] = [ fix_record_dict(r) for r in one2many_data ]
+
         final_context = {}
         for context_to_eval in self.contexts:
             if not isinstance(context_to_eval, (dict, BaseContext)):
@@ -277,3 +296,10 @@ class CompoundContext(BaseContext):
         
     def get_eval_context(self):
         return self.eval_context
+
+    def set_eval_one2many_context(self, context):
+        self.eval_one2many_context = context
+
+    def get_eval_one2many_context(self):
+        return self.eval_one2many_context
+
