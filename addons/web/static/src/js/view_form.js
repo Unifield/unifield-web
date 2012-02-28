@@ -2587,12 +2587,34 @@ openerp.web.form.FieldOne2Many = openerp.web.form.Field.extend({
         }
         return v_context;
     },
+    build_default_context: function(blacklist) {
+        // if no 'default_get' defined on the node fallback to node context,
+        // then model's context 
+        var v_default_context = this.node.attrs.default_get;
+        if (! v_default_context) {
+            return this.build_context(blacklist);
+        }
+
+        if (v_default_context.__ref || true) { //TODO: remove true
+            var fields_values = this._build_eval_context(blacklist);
+            v_default_context = new openerp.web.CompoundContext(v_default_context).set_eval_context(fields_values);
+            if (this.session.api == '6.0' && this.widget_parent) {
+                var values = this._get_value_commands();
+                v_default_context.set_one2many_eval_context(this.name, values, this.widget_parent.model);
+            }
+        }
+        return v_default_context;
+    },
 });
 
 openerp.web.form.One2ManyDataSet = openerp.web.BufferedDataSet.extend({
     get_context: function() {
         this.context = this.o2m.build_context([this.o2m.name]);
         return this.context;
+    },
+    get_default_context: function() {
+        this.default_context = this.o2m.build_default_context([this.o2m.name]);
+        return this.default_context;
     }
 });
 

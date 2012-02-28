@@ -347,10 +347,16 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      */
     default_get: function(fields, options) {
         var options = options || {};
+        if (this.session.api == '6.0') {
+            // call get_default_context to handle 'default_get' on o2m
+            var context = this.get_default_context(options.context);
+        } else {
+            var context = this.get_context(options.context);
+        }
         return this.rpc('/web/dataset/default_get', {
             model: this.model,
             fields: fields,
-            context: this.get_context(options.context)
+            context: context
         });
     },
     /**
@@ -497,6 +503,11 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
             return new openerp.web.CompoundContext(this.context, request_context);
         }
         return this.context;
+    },
+    get_default_context: function(request_context) {
+        // API v6.0 compat
+        // Inherit this to override default_get() context
+        return this.get_context(request_context);
     },
     /**
      * Reads or changes sort criteria on the dataset.
