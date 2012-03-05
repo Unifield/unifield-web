@@ -277,7 +277,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             }
         };
         var parent_fields = null, context_index = null;
-        var args = _.map(call[2].split(','), function (a, i) {
+        var parse_onchange_param = function (a, i) {
             var field = _.str.trim(a);
 
             // literal constant or context
@@ -311,9 +311,39 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
                 return field.slice(1, -1);
             }
 
+            // v6.0 API: raw python dict value
+            // (simple {'key': value})
+            // TODO: improve this to handler some more complex cases.
+            if (first_char === '{' && last_char === '}' and this.session.api == '6.0') {
+                debugger;
+                var value = {};
+                var items = field.slice(1, -1).split(',');
+                for (var j = 0; j < items.length; j++) {
+                    var itemsplitted = items[j].split(':');
+                    var key = _.str.trim(itemsplitted[0]);
+                    var val = _.str.trim(itemsplitted[1]);
+
+                    // key: check if litteral or parse_onchange_param
+                    var key_first_char = key[0], key_last_char = key[key.length-1];
+                    if ((key_first_char === '"' && key_last_char === '"')
+                        || (key_first_char === "'" && key_last_char === "'")) {
+                        key = key.slice(1, -1);
+                    } else {
+                        // currently 'key' must be a litteral, if that not the case
+                        // considerer that parsing failed
+                        throw new Error("Could not get field with name '" + field +
+                                        "' for onchnage '" + onchange + "'");
+                    }
+                    val = parse_onchange_param(val, i);
+                    value[key] = val;
+                }
+                return value;
+            }
+
             throw new Error("Could not get field with name '" + field +
                             "' for onchange '" + onchange + "'");
-        });
+        };
+        var args = _.map(call[2].split(','), parse_onchange_param);
 
         return {
             method: method,
