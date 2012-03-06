@@ -237,10 +237,11 @@ MochiKit.Base.update(ListView.prototype, {
             elem = jQuery('#'+this.name+'_grid')
         } else {
             elem = jQuery('tr[parent="' + pid + '"]');
+            return;
         }
         this.expand_all = 1;
         elem.find('td.group-expand').each(function() {
-            this.click();
+            jQuery(this).click();
         });
         this.expand_all = 0;
         $('#expand_all').hide();
