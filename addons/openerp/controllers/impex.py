@@ -118,6 +118,7 @@ class ImpEx(SecuredController):
                 views[view] = params.view_ids[i]
 
         export_format = data.get('export_format', 'excel')
+        all_records = data.get('all_records', '0')
         exports = rpc.RPCProxy('ir.exports')
 
         headers = [{'string' : 'Name', 'name' : 'name', 'type' : 'char'}]
@@ -148,7 +149,7 @@ class ImpEx(SecuredController):
         default = simplejson.dumps(default)
         return dict(existing_exports=existing_exports, model=params.model, ids=params.ids, ctx=ctx,
                     search_domain=params.search_domain, source=params.source,
-                    tree=tree, import_compat=import_compat, default=default, export_format=export_format)
+                    tree=tree, import_compat=import_compat, default=default, export_format=export_format, all_records=all_records)
 
     @expose()
     def save_exp(self, **kw):
@@ -370,7 +371,7 @@ class ImpEx(SecuredController):
 
 
     @expose(content_type="application/octet-stream")
-    def export_data(self, fname, fields, import_compat=False, export_format='csv', **kw):
+    def export_data(self, fname, fields, import_compat=False, export_format='csv', all_records=False, **kw):
 
         params, data_index = TinyDict.split(kw)
         proxy = rpc.RPCProxy(params.model)
@@ -389,9 +390,12 @@ class ImpEx(SecuredController):
         ctx['import_comp'] = bool(int(import_compat))
 
         view_name = ctx.get('_terp_view_name', '')
-        domain = params.seach_domain or []
 
-        ids = params.ids or proxy.search(domain, 0, 0, 0, ctx)
+        if all_records:
+            domain = params.search_domain or []
+            ids = proxy.search(domain, 0, 2000, 0, ctx)
+        else:
+            ids = params.ids or []
         result = datas_read(ids, params.model, flds, context=ctx)
 
         if result.get('warning'):
