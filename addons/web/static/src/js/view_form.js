@@ -314,7 +314,7 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // v6.0 API: raw python dict value
             // (simple {'key': value})
             // TODO: improve this to handler some more complex cases.
-            if (first_char === '{' && last_char === '}' and this.session.api == '6.0') {
+            if (first_char === '{' && last_char === '}' && this.session.api == '6.0') {
                 debugger;
                 var value = {};
                 var items = field.slice(1, -1).split(',');
