@@ -119,6 +119,9 @@ class ImpEx(SecuredController):
 
         export_format = data.get('export_format', 'excel')
         all_records = data.get('all_records', '0')
+
+        if not params.ids:
+            all_records = '1'
         exports = rpc.RPCProxy('ir.exports')
 
         headers = [{'string' : 'Name', 'name' : 'name', 'type' : 'char'}]
@@ -391,7 +394,7 @@ class ImpEx(SecuredController):
 
         view_name = ctx.get('_terp_view_name', '')
 
-        if all_records:
+        if not params.ids or all_records:
             domain = params.search_domain or []
             ids = proxy.search(domain, 0, 2000, 0, ctx)
         else:

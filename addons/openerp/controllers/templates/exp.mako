@@ -205,7 +205,10 @@
                             <label for="all_records">Export all query results (limited to 2000 records):</label>
                         </td>
                         <td>
-                            <input type="checkbox" id="all_records" name="all_records" value="1" ${'checked=checked' if all_records=='1' else ''}/>
+                            <input type="checkbox" id="all_records" name="all_records" value="1" 
+                                ${'checked=checked' if all_records=='1' else ''}
+                                ${'disabled=disabled' if not ids else ''}
+                            />
                         </td>
                     </tr>
                 </table>
