@@ -305,8 +305,7 @@ function getFormData(extended, include_readonly, parentNode) {
 
     var frm = {};
 
-    var is_editable = jQuery('#_terp_editable').val() == 'True' || jQuery(parentNode).attr('id') == 'search_form';
-    
+    var is_editable = jQuery('#_terp_editable').val() == 'True' || jQuery(parentNode).find('#filter_list');
     var $fields = jQuery(parentNode).find('img[kind=picture]');
     if (is_editable) {
         if (include_readonly) {
