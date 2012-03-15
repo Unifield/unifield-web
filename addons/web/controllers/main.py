@@ -1075,6 +1075,8 @@ class DataSet(openerpweb.Controller):
                 has_context = context_id is not None and context_id < len(args)
                 context = args[context_id] if has_context else {}
                 if action.get('context'):
+                    if isinstance(action['context'], str):
+                        action['context'] = eval(action['context'])
                     context.update(action['context'])
                 action['context'] = context
             return {'result': clean_action(req, action)}
