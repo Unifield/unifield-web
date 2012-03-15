@@ -907,7 +907,15 @@ openerp.web.Menu =  openerp.web.OldWidget.extend(/** @lends openerp.web.Menu# */
         if (this.do_menu_click($clicked_menu, manual) && id) {
             this.current_menu = id;
             this.session.active_id = id;
-            this.rpc('/web/menu/action', {'menu_id': id}, this.on_menu_action_loaded);
+            var menu_action_params = {'menu_id': id};
+            if (this.session.api == '6.0') {
+                menu_action_params['context'] = {
+                        active_model: 'ir.ui.menu',
+                        active_id: id,
+                        active_ids: [id]
+                };
+            }
+            this.rpc('/web/menu/action', menu_action_params, this.on_menu_action_loaded);
         }
         if (ev) {
             ev.stopPropagation();

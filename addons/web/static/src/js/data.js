@@ -452,11 +452,16 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
      * @returns {$.Deferred}
      */
     call_button: function (method, args, callback, error_callback) {
+        var context = null;
+        if (this.session.api == '6.0') {
+            context = this.get_context();
+        }
         return this.rpc('/web/dataset/call_button', {
             model: this.model,
             method: method,
             domain_id: null,
             context_id: args.length - 1,
+            context: context,
             args: args || []
         }, callback, error_callback);
     },
