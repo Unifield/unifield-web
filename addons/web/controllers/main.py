@@ -676,7 +676,7 @@ def load_actions_from_ir_values(req, key, key2, models, meta):
     return [(id, name, clean_action(req, action))
             for id, name, action in actions]
 
-def clean_action(req, action, do_not_eval=False):
+def clean_action(req, action, do_not_eval=False, keep_source_context=False):
     action.setdefault('flags', {})
 
     context = req.session.eval_context(req.context)
@@ -694,6 +694,9 @@ def clean_action(req, action, do_not_eval=False):
             action['context'] = parse_context(action['context'], req.session)
         if 'domain' in action:
             action['domain'] = parse_domain(action['domain'], req.session)
+
+    if keep_source_context:
+        action['context'] = dict(context, **(action.get('context') or {}))
 
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
@@ -1068,18 +1071,13 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
+            result_action = clean_action(req, action)
             if req.session.api() == '6.0':
                 # force context of action to be 'current context' + action context
                 # otherwise we look 'active_model', 'active_id', 'active_ids' needed
                 # for some v6.0 API specific things
-                has_context = context_id is not None and context_id < len(args)
-                context = args[context_id] if has_context else {}
-                if action.get('context'):
-                    if isinstance(action['context'], str):
-                        action['context'] = eval(action['context'])
-                    context.update(action['context'])
-                action['context'] = context
-            return {'result': clean_action(req, action)}
+                result_action = clean_action(req, action, keep_source_context=True)
+            return {'result': result_action}
         return {'result': False}
 
     @openerpweb.jsonrequest
