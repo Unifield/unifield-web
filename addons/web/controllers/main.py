@@ -1071,12 +1071,14 @@ class DataSet(openerpweb.Controller):
     def call_button(self, req, model, method, args, domain_id=None, context_id=None):
         action = self.call_common(req, model, method, args, domain_id, context_id)
         if isinstance(action, dict) and action.get('type') != '':
-            result_action = clean_action(req, action)
             if req.session.api() == '6.0':
                 # force context of action to be 'current context' + action context
-                # otherwise we look 'active_model', 'active_id', 'active_ids' needed
-                # for some v6.0 API specific things
+                # otherwise we loose 'active_model', 'active_id', 'active_ids'
+                # needed for some v6.0 behaviour (ex: view header depending on
+                # source (products by stock location))
                 result_action = clean_action(req, action, keep_source_context=True)
+            else:
+                result_action = clean_action(req, action)
             return {'result': result_action}
         return {'result': False}
 
