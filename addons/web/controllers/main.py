@@ -1119,6 +1119,27 @@ class View(openerpweb.Controller):
         fvg = Model.fields_view_get(view_id, view_type, context, toolbar, submenu)
         # todo fme?: check that we should pass the evaluated context here
         self.process_view(req.session, fvg, context, transform, (view_type == 'kanban'))
+
+        if toolbar and req.session.api() == '6.0':
+            # add missing actions related to the requested view
+            # gtk behaviour: tree: client_action_multi, others*: keep fvg as-is
+            # web behaviour: form: tree_but_action, others*: client_action_multi
+            # web v6.1 behaviour: form: tree_but_action, others*: client_action_multi (like web v6.0)
+            ValuesModel = req.session.model('ir.values')
+            extra_action_type = 'client_action_multi'
+            if view_type == 'form':
+                extra_action_type = 'tree_but_action'
+
+            fvg.setdefault('toolbar', {})
+            current_actions = fvg['toolbar'].get('action', [])
+            current_action_ids = set([ a['id'] for a in current_actions ])
+            extra_actions = [ a[-1] for a in ValuesModel.get('action', extra_action_type, [(model, False)], False, context) ]
+
+            for action in extra_actions:
+                if action['id'] not in current_action_ids:
+                    current_actions.append(action)
+            fvg['toolbar']['action'] = current_actions
+
         if toolbar and transform:
             self.process_toolbar(req, fvg['toolbar'])
         return fvg
