@@ -349,15 +349,25 @@ openerp.web.DataSet =  openerp.web.OldWidget.extend( /** @lends openerp.web.Data
         var options = options || {};
         if (this.session.api == '6.0') {
             // call get_default_context to handle 'default_get' on o2m
-            var context = this.get_default_context(options.context);
+            // also add current domain to handle v6.0 'default based on domain'
+            var domain = [];
+            if (this.widget_parent && this.widget_parent.action) {
+                domain = this.widget_parent.action.domain;
+            }
+            return this.rpc('/web/dataset/default_get_v60', {
+                model: this.model,
+                fields: fields,
+                domain: this.domain,
+                context: this.get_default_context(options.context)
+            });
+
         } else {
-            var context = this.get_context(options.context);
+            return this.rpc('/web/dataset/default_get', {
+                model: this.model,
+                fields: fields,
+                context: this.get_context(options.context)
+            });
         }
-        return this.rpc('/web/dataset/default_get', {
-            model: this.model,
-            fields: fields,
-            context: context
-        });
     },
     /**
      * Creates a new record in db

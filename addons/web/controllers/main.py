@@ -1093,6 +1093,27 @@ class DataSet(openerpweb.Controller):
         return Model.default_get(fields, req.session.eval_context(req.context))
 
     @openerpweb.jsonrequest
+    def default_get_v60(self, req, model, fields, domain=None):
+        Model = req.session.model(model)
+        context = req.session.eval_context(req.context)
+        default_values = Model.default_get(fields, context)
+        if domain is not None:
+            fields = Model.fields_get(False, context)
+            for d in domain:
+               if d[0] in fields and not fields.get(d[0], {}).get('readonly',False):
+                    if d[1] == '=':
+                        if d[2]:
+                            value = d[2]
+                            # domain containing fields like M2M/O2M should return values as list
+                            if fields[d[0]].get('type', '') in ('many2many','one2many'):
+                                if not isinstance(d[2], (bool,list)):
+                                    value = [d[2]]
+                            default_values[d[0]] = value
+                    if d[1] == 'in' and len(d[2]) == 1:
+                        default_values[d[0]] = d[2][0]
+        return default_values
+
+    @openerpweb.jsonrequest
     def name_search(self, req, model, search_str, domain=[], context={}):
         m = req.session.model(model)
         r = m.name_search(search_str+'%', domain, '=ilike', context)
