@@ -136,8 +136,10 @@ class Domain(BaseDomain):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
+        evalctx = SuperDict(ctx)
+        evalctx.session = self.session
         try:
-            return eval(self.get_domain_string(), SuperDict(ctx))
+            return eval(self.get_domain_string(), evalctx)
         except NameError as e:
             raise ValueError('Error during evaluation of this domain: "%s", message: "%s"' % (self.get_domain_string(), e.message))
 
@@ -184,22 +186,49 @@ class Context(BaseContext):
         ctx = self.session.evaluation_context(context)
         if self.own:
             ctx.update(self.own)
+        evalctx = SuperDict(ctx)
+        evalctx.session = self.session
         try:
-            return eval(self.get_context_string(), SuperDict(ctx))
+            return eval(self.get_context_string(), evalctx)
         except NameError as e:
             raise ValueError('Error during evaluation of this context: "%s", message: "%s"' % (self.get_context_string(), e.message))
 
 class SuperDict(dict):
+
     def __getattr__(self, name):
         try:
             return self[name]
         except KeyError:
             raise AttributeError(name)
+
+    def get_one2many_context(self, key):
+        fieldname = key
+        commands, model = self['__one2many__'+fieldname]
+        model_obj = self.session.model(model)
+        one2many_data = model_obj.resolve_o2m_commands_to_record_dicts(
+                        fieldname, commands, context=self.session.context)
+        def fix_record_dict(record):
+            record_id = record.get('id')
+            if record_id:
+                return (1, record_id, record)
+            else:
+                return (0, 0, record)
+        return [ fix_record_dict(r) for r in one2many_data ]
+
     def __getitem__(self, key):
-        tmp = super(SuperDict, self).__getitem__(key)
-        if isinstance(tmp, dict):
-            return SuperDict(tmp)
-        return tmp
+        try:
+            tmp = super(SuperDict, self).__getitem__(key)
+            if isinstance(tmp, dict):
+                supertmp = SuperDict(tmp)
+                supertmp.session = getattr(self, 'session', None)
+                return SuperDict(tmp)
+            return tmp
+        except KeyError:
+            if getattr(self, 'session', None) and self.session.api() == '6.0' and '__one2many__'+key in self:
+                onetomany_value = self.get_one2many_context(key)
+                self[key] = onetomany_value
+                return onetomany_value
+            raise
 
 class CompoundDomain(BaseDomain):
     def __init__(self, *domains):
@@ -259,16 +288,7 @@ class CompoundContext(BaseContext):
         eval_one2many_context = self.get_eval_one2many_context()
         if eval_one2many_context and self.session.api() == '6.0':
             for fieldname, (commands, model) in self.eval_one2many_context.iteritems():
-                model_obj = self.session.model(model)
-                one2many_data = model_obj.resolve_o2m_commands_to_record_dicts(
-                        fieldname, commands, context=self.session.context)
-                def fix_record_dict(record):
-                    record_id = record.get('id')
-                    if record_id:
-                        return (1, record_id, record)
-                    else:
-                        return (0, 0, record)
-                ctx[fieldname] = [ fix_record_dict(r) for r in one2many_data ]
+                ctx['__one2many__'+fieldname] = (commands, model)
 
         final_context = {}
         for context_to_eval in self.contexts:
