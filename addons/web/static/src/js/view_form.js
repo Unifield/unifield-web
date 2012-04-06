@@ -315,7 +315,6 @@ openerp.web.FormView = openerp.web.View.extend( /** @lends openerp.web.FormView#
             // (simple {'key': value})
             // TODO: improve this to handler some more complex cases.
             if (first_char === '{' && last_char === '}' && self.session.api == '6.0') {
-                debugger;
                 var value = {};
                 var items = field.slice(1, -1).split(',');
                 for (var j = 0; j < items.length; j++) {
