@@ -30,9 +30,8 @@ function launch_wizard_v60(self, view) {
 function has_share(yes, no) {
     if (!session.connection.share_flag) {
         session.connection.share_flag = $.Deferred(function() {
-            var func = new session.web.Model("share.wizard").get_func("has_share");
-            func(session.connection.uid).pipe(function(res) {
-                if(res) {
+            session.connection.rpc('/web/share_v60/has_share', {}).pipe(function (res) {
+                if (res) {
                     session.connection.share_flag.resolve();
                 } else {
                     session.connection.share_flag.reject();
