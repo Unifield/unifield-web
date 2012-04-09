@@ -136,6 +136,10 @@ session.web.ActionManager = session.web.OldWidget.extend({
                 session.webclient.do_reload().then(old_close);
             };
         }
+        if (self.session.api == '6.0' && action.res_model == 'ir.ui.menu' && action.name && action.name == 'Menu') {
+            this.dialog_stop();
+            return session.webclient.do_reload();
+        }
         if (action.target === 'new') {
             if (this.dialog == null) {
                 this.dialog = new session.web.Dialog(this, { width: '80%' });
