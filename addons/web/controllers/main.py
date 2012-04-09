@@ -367,6 +367,21 @@ class Database(openerpweb.Controller):
             params['db_lang'],
             params['create_admin_pwd']
         )
+        if req.session.api() == '6.0':
+            # on server v6.0, as database are created in their own
+            # creation-thread, we need to actively test for completness
+            # of DB creation.
+            db_proxy = req.session.proxy("db")
+            action_id = db_proxy.create(*create_attrs)
+            timeout = 0
+            while True:
+                timeout_attrs = (params['super_admin_pwd'], action_id)
+                progress, user = db_proxy.get_progress(*timeout_attrs)
+                if progress == 1.0 or timeout > 300:
+                    return True
+                timeout += 1
+                time.sleep(1)
+            return False
 
         return req.session.proxy("db").create_database(*create_attrs)
 
