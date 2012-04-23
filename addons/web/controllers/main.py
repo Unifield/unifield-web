@@ -747,6 +747,8 @@ def generate_views(action):
 
     if len(view_modes) > 1:
         if view_id:
+            action['views'] = [(view_id, view_modes[0])] + [(False, mode) for mode in view_modes[1:]]
+            return
             raise ValueError('Non-db action dictionaries should provide '
                              'either multiple view modes or a single view '
                              'mode and an optional view id.\n\n Got view '
