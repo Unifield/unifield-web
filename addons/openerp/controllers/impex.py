@@ -32,8 +32,12 @@ from openobject.tools import expose, redirect, ast
 import simplejson
 import time
 from openobject.i18n import format
-
-
+import re
+from datetime import datetime
+from openpyxl.workbook import Workbook
+from openpyxl.writer.excel import ExcelWriter
+from openpyxl.cell import get_column_letter
+import openpyxl
 def datas_read(ids, model, flds, context=None):
     ctx = dict((context or {}), **rpc.session.context)
     return rpc.RPCProxy(model).export_data(ids, flds, ctx)
@@ -368,12 +372,51 @@ class ImpEx(SecuredController):
     
     @expose(template="/openerp/controllers/templates/expxml.mako")
     def export_html(self, fields, result, view_name):
+        """wb = Workbook()
+        ws = wb.worksheets[0]
+        default_style = openpyxl.style.Style()
+        default_style.alignment.wrap_text = True
+        default_style.font.bold = True
+        openpyxl.style.DEFAULTS = default_style
+        datetimeformat = re.compile('^[0-9]{4}-[0-9]{2}-[0-9]{2} [0-9]{2}:[0-9]{2}:[0-9]{2}$')
+        dateformat = re.compile('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        for idx, h in enumerate(fields):
+            cell = ws.cell(column=idx, row=0)
+            cell.style.font.bold = True 
+            cell.value = h
+        row = 1
+        for r in result:
+            for idx,d in enumerate(r):
+                cell_format = False
+                if d:
+                    if datetimeformat.match(d):
+                        d = datetime.strptime(d, '%Y-%m-%d %H:%M:%S')
+                        cell_format = 'dd/mm/YYYY HH:MM'
+                    elif dateformat.match(d):
+                        d = datetime.strptime(d,'%Y-%m-%d')
+                        cell_format = 'dd/mm/YYYY'
+                cell = ws.cell(column=idx, row=row)
+                cell.value = d
+                if cell_format:
+                     cell.style.number_format.format_code = cell_format
+            row += 1
+        ws.column_dimensions['L'].width = '100%'
+        ws = wb.create_sheet()
+        ws.title = view_name
+        fp = StringIO.StringIO()
+        wb.save(fp)
+        fp.seek(0)
+        data = fp.read()
+        fp.close()
+        cherrypy.response.headers['Content-Type'] = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="%s_%s.xlsx"'%(view_name, time.strftime('%Y%m%d'))
+        return data"""
         cherrypy.response.headers['Content-Type'] = 'application/vnd.ms-excel'
         cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="%s_%s.xls"'%(view_name, time.strftime('%Y%m%d'))
-        return {'fields': fields, 'result': result, 'title': 'Export %s %s'%(view_name, time.strftime(format.get_datetime_format()))}
+        return {'fields': fields, 'result': result, 'title': 'Export %s %s'%(view_name, time.strftime(format.get_datetime_format())), 're': re}
 
 
-    @expose(content_type="application/octet-stream")
+    @expose()
     def export_data(self, fname, fields, import_compat=False, export_format='csv', all_records=False, **kw):
 
         params, data_index = TinyDict.split(kw)
@@ -410,6 +453,7 @@ class ImpEx(SecuredController):
             params.fields2 = flds
         if export_format == "excel":
             return self.export_html(params.fields2, result, view_name)
+        cherrypy.response.headers['Content-Type'] = 'application/octet-stream'
         return export_csv(params.fields2, result)
 
     @expose(template="/openerp/controllers/templates/imp.mako")
