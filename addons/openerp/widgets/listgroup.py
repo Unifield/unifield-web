@@ -20,7 +20,7 @@
 ###############################################################################
 import random
 from operator import itemgetter
-
+import copy
 import cherrypy
 
 from openerp.utils import rpc
@@ -102,7 +102,9 @@ def parse_groups(group_by, grp_records, headers, ids, model,  offset, limit, con
                     rec[key] = format.format_decimal(val or 0.0, digit)
 
             for grp_by in group_by:
-                if not rec.get(grp_by):
+                if fields.get(grp_by).get('type') == 'boolean' and grp_by in rec and rec.get(grp_by) == False:
+                    rec[grp_by] = 'False'
+                elif not rec.get(grp_by):
                     rec[grp_by] = ''
 
             ch_ids = []
@@ -128,7 +130,7 @@ class ListGroup(List):
     def __init__(self, name, model, view, ids=[], domain=[], context={}, **kw):
 
         self.context = context or {}
-        self.domain = domain or []
+        self.domain = copy.deepcopy(domain) or []
         self.group_by_no_leaf = self.context.get('group_by_no_leaf', 0)
         self.selectable = kw.get('selectable', 0)
         self.editable = kw.get('editable', False)

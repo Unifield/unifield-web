@@ -60,7 +60,7 @@ class ViewForm(Form):
         search_param = params.search_domain or []
         params_domain = params.domain or []
         for element in params_domain:
-            if element not in search_param or len(element) == 1:
+            if element not in search_param:
                 if not isinstance(element,tuple):
                     search_param.append(element)
                 else:
@@ -95,7 +95,7 @@ class ViewForm(Form):
         if self.screen.widget and hasattr(self.screen.widget, 'sidebar'):
             self.sidebar = self.screen.widget.sidebar
         else:
-            if params.target != 'new' and not self.screen.is_dashboard and not self.screen.is_wizard and len(params.view_mode) > 1:
+            if params.target != 'new' and not self.screen.is_dashboard and not self.screen.is_wizard and (len(params.view_mode) > 1 or 'tree' in params.view_mode):
                 self.sidebar = Sidebar(self.screen.model, self.screen.submenu, self.screen.toolbar, self.screen.id,
                                self.screen.view_type, context=self.screen.context)
 

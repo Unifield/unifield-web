@@ -28,6 +28,7 @@ import common
 
 from tiny_socket import TinySocket
 from tiny_socket import TinySocketError
+from openobject.i18n import format
 
 class NotLoggedIn(openobject.errors.TinyError, openobject.errors.AuthenticationError): pass
 

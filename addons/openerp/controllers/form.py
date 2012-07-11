@@ -415,11 +415,10 @@ class Form(SecuredController):
                 params.ids = (params.ids or []) + [params.id]
                 params.count += 1
             else:
-                ctx = utils.context_with_concurrency_info(params.context, params.concurrency_info)
+                ctx = dict((params.context or {}), **rpc.session.context)
                 if params.button and params.button.name:
                     ctx.update({'button': params.button.name})
-                
-                #original_data = Model.read(params.id, data.keys())
+                #original_data = Model.read(params.id, data.keys(), ctx)
                 #modified = {}
                 
                 #if original_data and isinstance(original_data, dict):
@@ -427,8 +426,12 @@ class Form(SecuredController):
                 #        if isinstance(original_value, tuple):
                 #            original_data[field] = original_value[0]
                 #        if field in data and data[field] != original_data[field]:
-                #            modified[field] = data[field]
-
+                #            #When field is many2many at that time following code will be applied
+                #            if isinstance(data[field], list) and isinstance(data[field][0][2], list):
+                #                if sorted(data[field][0][2]) != sorted(original_data[field]):
+                #                    modified[field] = data[field]
+                #            else:
+                #                modified[field] = data[field]
                 #    Model.write([params.id], modified, ctx)
                 #else:
                 #    Model.write([params.id], data, ctx)
@@ -672,7 +675,7 @@ class Form(SecuredController):
     @expose(content_type='application/octet-stream')
     def save_binary_data(self, _fname='file.dat', **kw):
         params, data = TinyDict.split(kw)
-
+        
         cherrypy.response.headers['Content-Disposition'] = 'attachment; filename="%s"' % _fname
 
         if params.datas:
@@ -720,13 +723,14 @@ class Form(SecuredController):
         model = kw.get('model')
         field = kw.get('field')
         id = kw.get('id')
+        default_value = kw.get('default_value')
         proxy = rpc.RPCProxy(model)
         if id == 'None':
             # FIXME: doesnt honor the context
-            res = proxy.default_get([field]).get(field,'')
+            res = default_value or proxy.default_get([field]).get(field,'')
         else:
             res = proxy.read([int(id)], [field])[0].get(field)
-        if res:
+        if res and res != 'None':
             return base64.decodestring(res)
         else:
             return open(openobject.paths.addons('openerp','static','images','placeholder.png'),'rb').read()
@@ -984,7 +988,7 @@ class Form(SecuredController):
     @expose()
     def action(self, **kw):
         params, data = TinyDict.split(kw)
-        context_menu = kw.get('context_menu')
+        context_menu = kw.get('context_menu') or False
 
         id = params.id or False
         ids = params.selection or []
@@ -1009,7 +1013,11 @@ class Form(SecuredController):
 
         if type is None:
             action_type = rpc.RPCProxy('ir.actions.actions').read(act_id, ['type'], context)['type']
-            action = rpc.session.execute('object', 'execute', action_type, 'read', act_id, False, context)
+            tmp_ctx = dict(context)
+            if action_type == 'ir.actions.report.xml':
+                # avoid reading large binary values that we won't even care about
+                tmp_ctx['bin_size'] = True
+            action = rpc.session.execute('object', 'execute', action_type, 'read', act_id, False, tmp_ctx)
 
         if domain:
             if isinstance(domain, basestring):
@@ -1017,6 +1025,8 @@ class Form(SecuredController):
             domain.extend(expr_eval(action.get('domain', '[]'), context))
             action['domain'] = ustr(domain)
 
+        if context.get('search_view'):
+            context.pop('search_view')
         action['form_context'] = context or {}
         import actions
         return actions.execute(action, model=params.model, id=id, ids=ids, report_type='pdf', context_menu=context_menu)
@@ -1037,6 +1047,10 @@ class Form(SecuredController):
         caller = data.pop('_terp_caller')
         model = data.pop('_terp_model')
         context = data.pop('_terp_context')
+
+        change_default = False
+        if '_terp_change_default' in data:
+            change_default = data.pop('_terp_change_default')
 
         try:
             context = eval(context) # convert to python dict
@@ -1148,6 +1162,14 @@ class Form(SecuredController):
         if 'domain' in result:
             for k in result['domain']:
                 result['domain'][k] = ustr(result['domain'][k])
+
+        if change_default:
+            value = data.get('_terp_value')
+            proxy = rpc.RPCProxy('ir.values')
+            values = proxy.get('default', '%s=%s' % (caller, value), [(model, False)], False, context)
+            for index, fname, value in values:
+                if fname not in result['value']:
+                    result['value'][fname] = value
         return result
 
     @expose('json')
@@ -1221,7 +1243,7 @@ class Form(SecuredController):
         for index, fname, value in values:
             data[fname] = value
 
-        return dict(values=data)
+        return dict(value=data)
 
     # Possible to create shortcut for particular object or not.
     def can_shortcut_create(self):

@@ -8,14 +8,14 @@ msgstr ""
 "Project-Id-Version: openobject-client-web\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2011-03-18 11:53+0100\n"
-"PO-Revision-Date: 2011-03-27 16:44+0000\n"
+"PO-Revision-Date: 2012-03-01 16:57+0000\n"
 "Last-Translator: Dimitar Markov <dimitar.markov@gmail.com>\n"
 "Language-Team: Bulgarian <bg@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Launchpad-Export-Date: 2011-08-04 05:13+0000\n"
-"X-Generator: Launchpad (build 13573)\n"
+"X-Launchpad-Export-Date: 2012-06-20 05:03+0000\n"
+"X-Generator: Launchpad (build 15435)\n"
 
 #: validators.py:75
 msgid "Invalid literal for float"
@@ -64,7 +64,7 @@ msgstr "Това не е валиден URL"
 #: validators.py:256
 #, python-format
 msgid "You must provide a full domain name (like %(domain)s.com)"
-msgstr ""
+msgstr "Трябва да предоставите пълни име на домейн (напр. %(domain)s.com)"
 
 #: validators.py:260
 msgid "Please enter an integer value"
@@ -190,6 +190,8 @@ msgid ""
 "This is the password of the 'admin' user that will be created in your new "
 "database. It has to be the same than the above field."
 msgstr ""
+"Това е паролата на \"ADMIN\" потрбителят, който ще бъде създаден в новата "
+"база данни. Трябва да бъде еднакъв с горното поле."
 
 #: controllers/database.py:79
 msgid "Drop database"
@@ -1567,12 +1569,3 @@ msgstr "Добавяне на записи..."
 #: widgets/templates/listgrid/listgrid.mako:194
 msgid "Delete record(s)."
 msgstr "Изтриване на запис(и)."
-
-#~ msgid "Image"
-#~ msgstr "Изображение"
-
-#~ msgid "Add Resource:"
-#~ msgstr "Добави ресурс"
-
-#~ msgid "Click here to add new image."
-#~ msgstr "Натиснете за да добавите ново изображение."

@@ -186,12 +186,16 @@ class List(SecuredController):
         domain = grp_domain
         group_level = ast.literal_eval(group_level)
         groups = ast.literal_eval(groups)
-
-        context = {'group_by_no_leaf': int(no_leaf), 'group_by': group_by, '__domain': domain}
-        args = {'editable': True,
+        # build a new TinyDict to correctly handle _terp_* params
+        params = TinyDict(**kw)
+        editable = params.editable
+        selectable = params.selectable or 2
+        context = params.context or {}
+        context.update({'group_by_no_leaf': int(no_leaf), 'group_by': group_by, '__domain': domain})
+        args = {'editable': editable,
                 'view_mode': ['tree', 'form', 'calendar', 'graph'],
                 'nolinks': 1, 'group_by_ctx': group_by,
-                'selectable': 2,
+                'selectable': selectable,
                 'multiple_group_by': True,
                 'sort_key': kw.get('sort_key'),
                 'sort_order': kw.get('sort_order')}
@@ -230,6 +234,15 @@ class List(SecuredController):
     @expose('jsonp', methods=('POST',))
     def get(self, **kw):
         params, data = TinyDict.split(kw)
+
+        if not params.model and params.o2m and params.view_params.model:
+            # Ok, no base model, copy infos from _terp_view_params.
+            # This is required to be able to correctly build the form view
+            # and to get the 'widget' related to the requested listgrid
+            view_params_base, x = TinyDict.split(params.view_params)
+            view_params_update = dict([(k[6:], v) for k, v in view_params_base.iteritems()
+                                                if k.startswith('_terp_') ])
+            params.update(view_params_update)
 
         groupby = params.get('_terp_group_by_ctx')
         if groupby and isinstance(groupby, basestring):

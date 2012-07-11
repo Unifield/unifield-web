@@ -59,7 +59,7 @@ class Attachment(SecuredController):
         attachment = rpc.RPCProxy('ir.attachment').read(record, [], rpc.session.context)
 
         if attachment['type'] == 'binary':
-            cherrypy.response.headers["Content-Disposition"] = 'attachment; filename="%s"' % attachment['name']
+            cherrypy.response.headers["Content-Disposition"] = 'attachment; filename="%s"' % attachment['name'].encode('utf-8')
             return base64.decodestring(attachment['datas'])
         elif attachment['type'] == 'url':
             raise redirect(attachment['url'])
@@ -75,6 +75,7 @@ class Attachment(SecuredController):
         attachment_id = rpc.RPCProxy('ir.attachment').create({
             'name': datas.filename,
             'datas': base64.encodestring(datas.file.read()),
+            'datas_fname': datas.filename,
         }, ctx)
         return {'id': attachment_id, 'name': datas.filename}
 

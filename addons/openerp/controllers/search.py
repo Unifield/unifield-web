@@ -94,7 +94,6 @@ class Search(Form):
         # parent's search_view has no business being in m2o or m2m
         if '_terp_context' in params and 'search_view' in params['_terp_context']:
             params.get('_terp_context').pop('search_view', None)
-
         if text:
             params.search_text = True
             ids = proxy.name_search(text, params.domain or [], 'ilike', ctx, False)
@@ -185,6 +184,10 @@ class Search(Form):
             for key, val in context.items():
                 if val is None:
                     context[key] = False
+
+        for key, val in context.items():
+            if key in ctx:
+                context[key] = ctx[key]
 
         if isinstance(context, dict):
             context = expr_eval(context, ctx)
@@ -376,6 +379,34 @@ class Search(Form):
             if selection_domain:
                 domain.extend(selection_domain)
 
+        for i,flt in enumerate(ncustom_domain):
+            if len(flt) > 1:
+
+                left_field = flt[0]
+                operator = flt[1]
+                right_val = flt[2]
+
+                if res[left_field]['type'] == 'selection' and right_val:
+
+                    if operator in ['ilike','=','in']:
+                        operator = 'in'
+                    else:
+                        operator = 'not in'
+
+                    keys = []
+                    if isinstance(right_val, list):
+                        for sel_val in res[left_field]['selection']:
+                            for rgt_val in right_val:
+                                if sel_val[1].lower().find(rgt_val.lower()) != -1 and sel_val[0] not in keys:
+                                    keys.append(sel_val[0])
+                    else:
+                        for sel_val in res[left_field]['selection']:
+                            if sel_val[1].lower().find(right_val.lower()) != -1:
+                                keys.append(sel_val[0])
+
+                    if keys:
+                        ncustom_domain[i] = (left_field, operator, keys)
+
         if not domain:
             domain = None
         if not isinstance(group_by_ctx, list):
@@ -427,7 +458,9 @@ class Search(Form):
         name = kw.get('name')
         model = kw.get('model')
         domain = kw.get('domain')
-        group_by = kw.get('group_by', '[]')
+        group_by = kw.get('group_by', [])
+        if isinstance(group_by, str):
+            group_by = expr_eval(group_by)
         if group_by:
             context = {'group_by': group_by}
         else:

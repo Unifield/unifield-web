@@ -31,6 +31,7 @@ var ManyToOne = function(name) {
     }
 
     this.__init__(name);
+    self = this;
 };
 
 ManyToOne.prototype.__init__ = function(name) {
@@ -298,6 +299,7 @@ ManyToOne.prototype.on_keydown = function(evt) {
                 if(this.callback) {
                     onChange(this.name);
                 }
+                $(this.field).change();
                 this.change_icon();
                 this.clearResults();
                 break;
@@ -336,7 +338,9 @@ ManyToOne.prototype.on_keydown = function(evt) {
     if((evt.which == 8 || evt.which == 46) && this.field.value) {
         this.text.value = '';
         this.field.value = '';
+        $(this.field).change();
         this.on_change(evt);
+        form_hookAttrChange();
     }
 
     //Tab
@@ -635,6 +639,7 @@ ManyToOne.prototype.getOnclick = function(evt) {
 	    } else if ($m2o_field[0]._m2o) {
 		$m2o_field[0]._m2o.on_change();
             } else {
+                self.on_change();
                 $m2o_field.change();
             }
         }

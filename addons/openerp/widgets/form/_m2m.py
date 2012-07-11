@@ -30,7 +30,7 @@ from openerp.widgets import TinyInputWidget
 from openerp.widgets import register_widget
 
 from openerp import validators
-
+from openobject.tools import ast
 
 __all__ = ["M2M"]
 
@@ -104,10 +104,10 @@ class M2M(TinyInputWidget):
 
         if ids and current.limit != -1 and not params.sort_key:
             ids = ids[current.offset: current.offset+current.limit]
-
+        
         if self.name == params.source and params.sort_key and ids:
             domain = current.domain or []
-            domain.append(('id', 'in', ids))
+            domain.append(('id','in',ids))
             limit = current.limit
             if current.limit == -1:
                 limit = 0

@@ -35,6 +35,90 @@ from openobject.tools import ast
 from openobject.i18n import format
 from pager import Pager
 
+class ListViewDataSetIterator(object):
+    def __init__(self, dataset):
+        self.dataset = dataset
+        self.iter = self.dataset.data.__iter__()
+
+    def next(self):
+        row = self.iter.next()
+        return self.dataset.build_row(row)
+
+class ListViewDataSet(object):
+    def __init__(self, data, fields, colors):
+        self.data = data
+        self.fields = fields
+        self.colors = colors
+        self.defaults = {
+            'char': False,
+            'many2one': False,
+            'datetime': False,
+            'date': False,
+            'one2many': [],
+            'many2many': [],
+            'selection': False,
+            'float': False,
+            'float_time': False,
+            'integer': False,
+            'boolean' : False,
+            'progressbar': False,
+        }
+
+        # pre-compute field's cell
+        self.fields_obj = self.build_new_fields(self.fields)
+
+    def build_new_fields(self, fields):
+        fields_obj = []
+        for (name, kind, invisible, attrs) in fields:
+            if invisible:
+                cell = Hidden(**attrs)
+            else:
+                default_value = self.defaults[kind]
+                cell = CELLTYPES[kind](value=default_value, **attrs)
+            fields_obj.append((name, invisible, cell))
+        return fields_obj
+
+    def build_row(self, row):
+        row = row.copy()
+        # compute color once for whole row
+        rowcolor = None
+        for color, expr in self.colors.items():
+            try:
+                if expr_eval(expr,
+                    dict(row, active_id=rpc.session.active_id or False)):
+                    rowcolor = color
+                    break
+            except Exception:
+                pass
+
+        for (name, invisible, cell) in self.build_new_fields(self.fields):
+            if invisible:
+                cell.set_value(row.get(name, False))
+            else:
+                cell.value = row.get(name, False)
+                cell.text = cell.get_text()
+                cell.link = cell.get_link()
+            cell.color = rowcolor
+            row[name] = cell
+        return row
+
+    def __iter__(self):
+        return ListViewDataSetIterator(self)
+
+    def __len__(self):
+        return len(self.data)
+
+    def __getitem__(self, i):
+        if isinstance(i, slice):
+            sliced_data = self.data[i]
+            return ListViewDataSet(sliced_data, self.fields, self.colors)
+
+        row = self.data[i]
+        return self.build_row(row)
+
+    def __getslice__(self, i, j):
+        sliced_data = self.data[i:j]
+        return ListViewDataSet(sliced_data, self.fields, self.colors)
 
 class List(TinyWidget):
 
@@ -152,7 +236,6 @@ class List(TinyWidget):
                 self.colors[colour] = test
 
         proxy = rpc.RPCProxy(model)
-        
         default_data = kw.get('default_data', [])
         search_text = terp_params.get('_terp_search_text', False)
         if not self.source:
@@ -168,7 +251,10 @@ class List(TinyWidget):
                     else:
                         ids = proxy.search(search_param, self.offset, self.limit, False, context)
             else:
-                ids = proxy.search(search_param, 0, 0, 0, context)
+                if self.sort_key:
+                    ids = proxy.search(search_param, 0, 0, self.sort_key + ' ' +self.sort_order, context)
+                else:
+                    ids = proxy.search(search_param, 0, 0, 0, context)
             if len(ids) < self.limit:
                 if self.offset > 0:
                     self.count = len(ids) + self.offset
@@ -180,7 +266,7 @@ class List(TinyWidget):
         self.data_dict = {}
         data = []
 
-        if ids and not isinstance(ids, list):
+        if ids and not isinstance(ids, (list, tuple)):
             ids = [ids]
 
         if ids and len(ids) > 0:
@@ -394,6 +480,7 @@ class List(TinyWidget):
         values  = [row.copy() for row in data]
 
         myfields = [] # check for duplicate fields
+        list_fields = []
 
         for node in root.childNodes:
 
@@ -439,8 +526,6 @@ class List(TinyWidget):
                     if kind not in CELLTYPES:
                         kind = 'char'
 
-                    fields[name].update(attrs)
-
                     try:
                         visval = fields[name].get('invisible', 'False')
                         invisible = eval(visval, {'context': self.context})
@@ -457,30 +542,16 @@ class List(TinyWidget):
                     if 'real_sum' in attrs:
                         field_real_total[name] = [attrs['real_sum'], 0.0]
 
-                    for i, row in enumerate(data):
-                        row_value = values[i]
-                        if invisible:
-                            cell = Hidden(**fields[name])
-                            cell.set_value(row_value.get(name, False))
-                        else:
-                            cell = CELLTYPES[kind](value=row_value.get(name, False), **fields[name])
+                    list_fields.append((name, kind, invisible, fields[name],))
 
-                        for color, expr in self.colors.items():
-                            try:
-                                if expr_eval(expr,
-                                     dict(row_value, active_id=rpc.session.active_id or False)):
-                                    cell.color = color
-                                    break
-                            except:
-                                pass
-
-                        row[name] = cell
                     if invisible:
                         continue
 
                     headers += [(name, fields[name])]
 
-        return headers, hiddens, data, field_total, field_real_total, buttons
+        dataset = ListViewDataSet(data, list_fields, self.colors)
+
+        return headers, hiddens, dataset, field_total, field_real_total, buttons
 
 class Char(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/char.mako"
@@ -600,8 +671,8 @@ class FloatTime(Char):
 
     def get_text(self):
         val = self.value or 0.0
-        t = '%02d:%02d' % (math.floor(abs(val)),round(abs(val)%1+0.01,2) * 60)
-        
+        t = '%02d:%02d' % (math.floor(abs(val)),round(round(abs(val)%1,2) * 60))
+
         hour, min = t.split(':')
         if int(min) == 60:
             t = str(int(hour) + 1) + ":00"
@@ -703,7 +774,10 @@ class Button(TinyInputWidget):
         if self.states:
             state = data.get('state')
             try:
-                state = ((state or False) and state.value) or 'draft'
+                if isinstance(state, Hidden):
+                    state = state.widget.get_value()
+                else:
+                    state = ((state or False) and state.value) or 'draft'
             except:
                 state = ustr(state)
             visible = state in self.states

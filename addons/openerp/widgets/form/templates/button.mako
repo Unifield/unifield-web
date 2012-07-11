@@ -2,10 +2,11 @@
         id="${name}"
         name="${name}"
         type="button"
+        title="${help}"
         href="javascript: void(0)"
-        onclick="buttonClicked('${name}', '${btype}', '${model}', '${id}', '${confirm}', '${target}', getNodeAttribute(this, 'context'));"
+        onclick="buttonClicked('${name}', '${btype}', '${model}', '${id}', getNodeAttribute(this, 'confirm'), '${target}', getNodeAttribute(this, 'context'));"
         style="height: 20px;"
-        ${py.attrs(attrs, context=ctx)}>
+        ${py.attrs(attrs, confirm=confirm, context=ctx)}>
     % if string:
         % if icon:
             <img src="${icon}" width="16" height="16" alt="">&nbsp;<span>${string}</span>

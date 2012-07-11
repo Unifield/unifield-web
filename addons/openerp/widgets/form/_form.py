@@ -623,7 +623,7 @@ class Hidden(TinyInputWidget):
 class Button(TinyInputWidget):
 
     template = "/openerp/widgets/form/templates/button.mako"
-    params = ["btype", "id", "confirm", "icon", "target", "context", "default_focus"]
+    params = ["btype", "id", "confirm", "icon", "target", "context", "default_focus", "help"]
 
     visible = True
     def __init__(self, **attrs):
@@ -632,8 +632,12 @@ class Button(TinyInputWidget):
         # remove mnemonic
         self.string = re.sub('_(?!_)', '', self.string or '')
 
+        if (getattr(cherrypy.request, 'terp_params', {}) and 
+            cherrypy.request.terp_params.o2m and not cherrypy.request.terp_params.o2m_id):
+            self.readonly = True
         self.btype = attrs.get('special', attrs.get('type', 'workflow'))
         self.context = attrs.get("context", {})
+        self.help = attrs.get('help', '')
         self.nolabel = True
         self.target = ''
         if self.icon:
@@ -772,9 +776,6 @@ class Form(TinyInputWidget):
                     values = lval[0]
                     self.id = ids[0]
                     
-                    for f in fields:
-                        if fields[f]['type'] == 'many2one' and isinstance(values[f], tuple):
-                            values[f] = values[f][0]
                             
                     ConcurrencyInfo.update(self.model, [values])
 

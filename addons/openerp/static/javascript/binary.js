@@ -22,14 +22,14 @@
 function save_binary_data(src, filename) {
 
     var name = openobject.dom.get(src) ? openobject.dom.get(src).name : src;
-
+	
     var prefix = name.split('/');
     name = prefix.pop();
     prefix = prefix.join('/');
     prefix = prefix ? prefix + '/' : '';
-
+    
     var fname = openobject.dom.get(prefix + filename) || openobject.dom.get(prefix + 'name');
-
+	
     fname = fname ? fname.value || fname.innerHTML : null;
 
     var act = get_form_action('save_binary_data', undefined);

@@ -467,6 +467,18 @@ function onChange(caller){
 
     var $caller = jQuery(openobject.dom.get(caller));
     var $form = $caller.closest('form');
+
+    // Inline editable row pass the fields when not save row
+    // so remove whole editable row when onchange called outside the o2m
+    if (($('tr.editors').length) && (!$caller.closest('tr.editors').length)) {
+        var edit_line_id = $('tr.editors').attr('record');
+        if(edit_line_id != "-1"){
+            o2m_id = $('tr.editors').closest('.gridview').attr('id');
+            new One2Many(o2m_id).save(edit_line_id);
+        }
+        $('tr.editors').remove();
+    }
+
     var callback = $caller.attr('callback');
     var change_default = $caller.attr('change_default');
 
@@ -502,6 +514,7 @@ function onChange(caller){
 
     openobject.http.postJSON(post_url, jQuery.extend({}, form_data, {
         _terp_callback: callback,
+        _terp_change_default: change_default,
         _terp_caller: $caller.attr('id').slice(id_slice_offset),
         _terp_value: $caller.val(),
         _terp_model: select('_terp_model').val(),
@@ -617,8 +630,8 @@ function onChange(caller){
                         }
                         var fld_name = jQuery(fld).attr('name');
                         var old_m2m = jQuery(idSelector(fld_name)).closest('.list-a');
-                        $(idSelector(fld_name+'/_terp_id')).val('');
-                        $(idSelector(fld_name+'/_terp_ids')).val('[]');
+                        $(idSelector(fld_name+'/_terp_id')).val(value[0] || '');
+                        $(idSelector(fld_name+'/_terp_ids')).val(fld_val || '[]');
                         jQuery.ajax({
                             url: '/openerp/listgrid/get_m2m',
                             context: old_m2m,
@@ -917,7 +930,7 @@ function makeContextMenu(id, kind, relation, val){
         var menu_width = $menu.width();
         var body_width = jQuery(document.body).width();
         if (parseInt($menu.css("left")) + menu_width > body_width) {
-            $menu.offset({ left: body_width - menu_width - 10 });
+            $menu.css({left: body_width - menu_width - 10 + 'px'});
         }
         showContextMenu();
     });
@@ -997,12 +1010,8 @@ function do_action(src, context_menu) {
             new ListView('_terp_list').getSelectedRecords().join(',') +
             ']';
         if (eval(params['_terp_selection']).length == 0) {
-            var ids = eval(jQuery('#_terp_ids').val());
-            if (ids && ids.length > 0){
-                params['_terp_selection'] = '[' + ids[0] + ']';
-            } else {
-                error_display(_('You must select one or several records !'));
-            }
+            error_display(_('You must select one or several records !'));
+            return;
         }
         var id = eval(params['_terp_selection'])[0]
     } else {
