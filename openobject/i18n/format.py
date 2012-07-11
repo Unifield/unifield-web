@@ -368,7 +368,6 @@ def group(value, monetary=False, grouping=False, thousands_sep=''):
         seps += 1
     return result + spaces, seps         
         
->>>>>>> MERGE-SOURCE
 
 def parse_decimal(value):
     
