@@ -62,6 +62,7 @@ class ListViewDataSet(object):
             'integer': False,
             'boolean' : False,
             'progressbar': False,
+            'reference': False,
         }
 
         # pre-compute field's cell
