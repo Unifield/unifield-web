@@ -41,7 +41,7 @@ class List(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/listgrid.mako"
     params = ['name', 'data', 'columns', 'headers', 'model', 'selectable', 'editable', 'noteditable', 
               'pageable', 'selector', 'source', 'offset', 'limit', 'show_links', 'editors', 'view_mode',
-              'hiddens', 'edit_inline', 'field_total', 'field_real_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button', 'notselectable']
+              'hiddens', 'edit_inline', 'field_total', 'field_real_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button', 'notselectable', 'sort_by']
 
     member_widgets = ['pager', 'buttons', 'editors', 'concurrency_info']
 
@@ -67,6 +67,7 @@ class List(TinyWidget):
     checkbox_name = True
     min_rows = 5
     hide_new_button = False
+    sort_by = ''
     hide_delete_button = False
 
     def __init__(self, name, model, view, ids=[], domain=[], context={}, **kw):
@@ -127,6 +128,13 @@ class List(TinyWidget):
         # Get the hide status of some buttons - by default buttons are shown
         self.hide_new_button = attrs.get('hide_new_button', False)
         self.hide_delete_button = attrs.get('hide_delete_button', False)
+        self.sort_by = attrs.get('sort_by', '')
+        if self.sort_by:
+            if len(self.sort_by.split(' ')) == 2:
+                self.sort_key, self.sort_order = self.sort_by.split(' ')
+            elif len(self.sort_by.split(' ')) == 1:
+                self.sort_key = self.sort_by
+                self.sort_order = 'desc'
         
         self.string = attrs.get('string','')
 
