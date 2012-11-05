@@ -99,8 +99,7 @@ class FormRestore(DBForm):
     action = '/openerp/database/do_restore'
     submit_text = _('Restore')
     fields = [openobject.widgets.FileField(name="filename", label=_('File:')),
-              openobject.widgets.PasswordField(name='password', label=_('Password:'), validator=formencode.validators.NotEmpty()),
-              openobject.widgets.TextField(name='dbname', label=_('New database name:'), validator=formencode.validators.NotEmpty())]
+              openobject.widgets.PasswordField(name='password', label=_('Password:'), validator=formencode.validators.NotEmpty())]
 
 class FormPassword(DBForm):
     name = "password"
@@ -264,8 +263,17 @@ class Database(BaseController):
     @expose()
     @validate(form=_FORMS['restore'])
     @error_handler(restore)
-    def do_restore(self, filename, password, dbname, **kw):
+    def do_restore(self, filename, password, dbname=None, **kw):
         self.msg = {}
+        if dbname is None and getattr(filename, 'filename', ''):
+            submitted_filename = filename.filename
+            matches = re.search('^(.*)-[0-9]{8}-[0-9]{6}.dump$', submitted_filename)
+            if matches:
+                dbname = matches.group(1)
+        if dbname is None:
+            self.msg = {'message': _('The submitted file in not a valid database file'),
+                        'title': _('Error')}
+            return self.restore()
         try:
             data = base64.encodestring(filename.file.read())
             rpc.session.execute_db('restore', password, dbname, data)
