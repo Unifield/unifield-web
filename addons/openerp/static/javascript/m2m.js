@@ -143,6 +143,7 @@ Many2Many.prototype = {
         $field.add(this.text)
                 .attr('readOnly', readonly)
                 .toggleClass('readonlyfield', readonly);
+        jQuery(idSelector(this.name+'_add_records')).attr('disabled', readonly);
     },
 
     addRecords: function () {
