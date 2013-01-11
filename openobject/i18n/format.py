@@ -44,6 +44,15 @@ DT_SERVER_FORMATS = {
 
 __pat = re.compile("%\(([dMy]+)\)s")
 __sub = {'d': '%d', 'M': '%m', 'y': '%Y'}
+
+__mdname_format_regexp = re.compile('(%a|%b|%A|%B)')
+__mdname_format_ldml_map = {
+    '%a': 'ddd',
+    '%A': 'dddd',
+    '%b': 'MMM',
+    '%B': 'MMMM',
+}
+
 def _to_posix_format(format):
     """Convert LDML format string to posix format string.
     """
@@ -157,7 +166,15 @@ def format_datetime(value, kind="datetime", as_timetuple=False):
     if as_timetuple:
         return value
 
-    return time.strftime(local_format, value)
+    value_dt = DT.datetime(*value[:6])
+
+    mdname_formats = set(__mdname_format_regexp.findall(local_format))
+    for format in mdname_formats:
+        format_local_value = dates.format_datetime(value_dt,
+                                    __mdname_format_ldml_map[format])
+        local_format = local_format.replace(format, format_local_value)
+
+    return value_dt.strftime(local_format)
 
 def parse_datetime(value, kind="datetime", as_timetuple=False):
     """Convert date value to the server datetime considering timezone info.

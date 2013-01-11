@@ -8,25 +8,25 @@
 
 // full day names
 Calendar._DN = new Array
-("Dimanche",
- "Lundi",
- "Mardi",
- "Mercredi",
- "Jeudi",
- "Vendredi",
- "Samedi",
- "Dimanche");
+("dimanche",
+ "lundi",
+ "mardi",
+ "mercredi",
+ "jeudi",
+ "vendredi",
+ "samedi",
+ "dimanche");
 
 // short day names
 Calendar._SDN = new Array
-("Dim.",
- "Lun.",
- "Mar.",
- "Mer.",
- "Jeu.",
- "Ven.",
- "Sam.",
- "Dim.");
+("dim.",
+ "lun.",
+ "mar.",
+ "mer.",
+ "jeu.",
+ "ven.",
+ "sam.",
+ "dim.");
 
 // First day of the week. "0" means display Sunday first, "1" means display
 // Monday first, etc.
@@ -34,33 +34,33 @@ Calendar._FD = 1;
 
 // full month names
 Calendar._MN = new Array
-("Janvier",
- "Février",
- "Mars",
- "Avril",
- "Mai",
- "Juin",
- "Juillet",
- "Août",
- "Septembre",
- "Octobre",
- "Novembre",
- "Décembre");
+("janvier",
+ "février",
+ "mars",
+ "avril",
+ "mai",
+ "juin",
+ "juillet",
+ "août",
+ "septembre",
+ "octobre",
+ "novembre",
+ "décembre");
 
 // short month names
 Calendar._SMN = new Array
-("Janv.",
- "Févr.",
- "Mars",
- "Avril",
- "Mai",
- "Juin",
- "Juil.",
- "Août",
- "Sept.",
- "Oct.",
- "Nov.",
- "Déc.");
+("janv.",
+ "févr.",
+ "mars",
+ "avril",
+ "mai",
+ "juin",
+ "juil.",
+ "août",
+ "sept.",
+ "oct.",
+ "nov.",
+ "déc.");
 
 // tooltips
 Calendar._TT = {};
