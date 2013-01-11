@@ -61,6 +61,14 @@ def _to_posix_format(format):
 def format_date_custom(dt, fmt="y-M-d"):
     return dates.format_date(dt, format=fmt, locale=get_locale())
 
+def format_date_localized(dt, local_format):
+    mdname_formats = set(__mdname_format_regexp.findall(local_format))
+    for format in mdname_formats:
+        format_local_value = dates.format_datetime(dt,
+                                    __mdname_format_ldml_map[format])
+        local_format = local_format.replace(format, format_local_value)
+    return unicode(dt.strftime(local_format.encode('utf-8')), 'utf-8')
+
 def get_datetime_format(kind="datetime"):
     """Get local datetime format.
 
@@ -138,7 +146,7 @@ def format_datetime(value, kind="datetime", as_timetuple=False):
         value = ustr(value)
         try:
             value = DT.datetime.strptime(value[:10], server_format)
-            return value.strftime(local_format)
+            return format_date_localized(value, local_format)
         except:
             return ''
 
@@ -167,14 +175,7 @@ def format_datetime(value, kind="datetime", as_timetuple=False):
         return value
 
     value_dt = DT.datetime(*value[:6])
-
-    mdname_formats = set(__mdname_format_regexp.findall(local_format))
-    for format in mdname_formats:
-        format_local_value = dates.format_datetime(value_dt,
-                                    __mdname_format_ldml_map[format])
-        local_format = local_format.replace(format, format_local_value)
-
-    return value_dt.strftime(local_format)
+    return format_date_localized(value_dt, local_format)
 
 def parse_datetime(value, kind="datetime", as_timetuple=False):
     """Convert date value to the server datetime considering timezone info.
