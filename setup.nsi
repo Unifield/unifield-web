@@ -65,7 +65,8 @@ ShowInstDetails show
 
 XPStyle on
 
-InstallDir "$PROGRAMFILES\OpenERP ${MAJOR_VERSION}.${MINOR_VERSION}\Web"
+#InstallDir "$PROGRAMFILES\OpenERP ${MAJOR_VERSION}.${MINOR_VERSION}\Web"
+InstallDir "$PROGRAMFILES\msf\Unifield\Web"
 InstallDirRegKey HKCU "${REGISTRY_KEY}" ""
 
 BrandingText '${PRODUCT_NAME} ${VERSION}'
