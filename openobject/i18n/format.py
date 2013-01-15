@@ -65,7 +65,7 @@ def format_date_localized(dt, local_format):
     mdname_formats = set(__mdname_format_regexp.findall(local_format))
     for format in mdname_formats:
         format_local_value = dates.format_datetime(dt,
-                                    __mdname_format_ldml_map[format])
+                                    __mdname_format_ldml_map[format], locale=get_locale())
         local_format = local_format.replace(format, format_local_value)
     return unicode(dt.strftime(local_format.encode('utf-8')), 'utf-8')
 
