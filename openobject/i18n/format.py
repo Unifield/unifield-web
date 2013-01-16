@@ -89,7 +89,7 @@ def get_datetime_format(kind="datetime"):
     # TODO: correctly convert from LDML to POSIX datetime formatting
     # current converter is trivial and lame and probably very easy to break
     date_format = _to_posix_format(dates.get_date_format(
-            format='short', locale=get_locale())).format
+            format='short', locale=get_locale()).format)
     if kind == 'time':
         # Should use dates.get_time_format(locale=get_locale())
         return '%H:%M:%S'
