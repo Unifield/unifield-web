@@ -293,6 +293,10 @@ One2Many.prototype = {
                 if(!attr) { return; }
                 attrs[attribute] = attr;
             });
+            // copy special 'format' attribute for date/datetime fields
+            if ($this.attr('kind') == 'date' || $this.attr('kind') == 'datetime') {
+                attrs[format] = $this.attr('format');
+            }
             $form.append($('<input>', $.extend(attrs, {
                 type: 'hidden',
                 disabled: 'disabled',

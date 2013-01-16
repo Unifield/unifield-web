@@ -602,7 +602,7 @@ register_widget(URL, ["url"])
 class Hidden(TinyInputWidget):
     template = "/openerp/widgets/form/templates/hidden.mako"
 
-    params = ['relation', 'field_id']
+    params = ['relation', 'field_id', 'date_format']
     member_widgets = ['widget']
 
     def __init__(self, **attrs):
@@ -612,6 +612,10 @@ class Hidden(TinyInputWidget):
         self.validator = self.widget.validator
         self.relation = attrs.get('relation') or None
         self.editable = self.readonly
+        self.date_format = None
+        if kind in ('date', 'datetime'):
+            self.date_format = format.get_datetime_format(kind)
+
         if 'field_id' not in attrs:
             self.field_id = self.name
 
