@@ -53,6 +53,7 @@ function openRecord(id, src, target, readonly){
         'offset': openobject.dom.get(prefix + '_terp_offset').value,
         'limit': openobject.dom.get(prefix + '_terp_limit').value,
         'count': openobject.dom.get(prefix + '_terp_count').value,
+        'editable': openobject.dom.get(prefix + '_terp_editable').value,
         'search_domain': jQuery('#_terp_search_domain').val() || null,
         'search_data': jQuery('#_terp_search_data').val() || null,
         'filter_domain': jQuery('#_terp_filter_domain').val() || [],

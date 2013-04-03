@@ -322,10 +322,11 @@ class Form(SecuredController):
              search_data=None, filter_domain=None, o2m_edit=False, **kw):
 
         notebook_tab = kw.get('notebook_tab') or 0
+        editable = kw.get('editable', True);
         params = self._read_form(context, count, domain, filter_domain, id,
                                  ids, kw, limit, model, offset, search_data,
                                  search_domain, source, view_ids, view_mode,
-                                 view_type, notebook_tab, o2m_edit=o2m_edit, editable=True)
+                                 view_type, notebook_tab, o2m_edit=o2m_edit, editable=editable)
 
         if not params.ids:
             params.count = 0

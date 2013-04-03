@@ -144,6 +144,10 @@ Many2Many.prototype = {
                 .attr('readOnly', readonly)
                 .toggleClass('readonlyfield', readonly);
         jQuery(idSelector(this.name+'_add_records')).attr('disabled', readonly);
+        var bool = readonly ? 'False' : 'True';
+        jQuery(idSelector(this.name+'/_terp_editable')).val(bool);
+        ListView(this.name).reload();
+
     },
 
     addRecords: function () {
