@@ -579,6 +579,8 @@ ManyToOne.prototype.getOnclick = function(evt) {
     evt.preventDefault();
 };
 
+var frame_counter_3 = 0;
+
 (function ($) {
     /**
      * Opens an m2o dialog linked to the provided <code>$this</code> window,
@@ -599,6 +601,46 @@ ManyToOne.prototype.getOnclick = function(evt) {
         } else {
             url = '/openerp/search/new';
         }
+        var frame_identifier = 'm2o-frame' + frame_counter_3++;
+        var $frame = $.frame_dialog({
+            src: 'about:blank',
+            // never sure whether the iframe is targetted by name or by id,
+            // so let's just set both
+            id: frame_identifier,
+            name: frame_identifier
+        }, {
+            'source-window': $this[0],
+            source_id: options.source || null
+        }, {
+            width: '90%',
+            max_width: 1200,
+            height: '95%'
+        });
+        var $form = jQuery('<form>', {
+            method: 'POST',
+            action: url,
+            target: frame_identifier
+        }).appendTo(document.documentElement);
+        jQuery.each(options, function (key, value) {
+            $form.append(jQuery('<input>', {
+                type: 'hidden',
+                name: key,
+                value: value
+            }));
+        });
+        setTimeout(function () {
+            $form.submit();
+        });
+        return $frame;
+    }
+    function open1($this, options) {
+        var url;
+        if(options.record) {
+            url = '/openerp/openm2o/edit'
+        } else {
+            url = '/openerp/search/new';
+        }
+
         return $.frame_dialog({
                 src: openobject.http.getURL(url, options)
             }, {
