@@ -195,7 +195,12 @@ class O2M(TinyInputWidget):
             #    ctx['parent'] = EvalEnvironment(self.parent)
 
             try:
-                context = ctx.copy()
+                if current.context:
+                    context = current.context.copy()
+                    context.update(ctx)
+                else:
+                    context = ctx.copy()
+                
                 ctx = expr_eval("dict(%s)" % self.default_get_ctx, context)
                 ctx.update(expr_eval("dict(%s)" % attrs.get('context', '{}'), context))
                 current.context.update(ctx)
