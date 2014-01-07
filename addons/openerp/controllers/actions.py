@@ -172,7 +172,7 @@ def execute_report(name, **data):
             if not state:
                 time.sleep(1)
                 attempt += 1
-            if attempt>200:
+            if attempt>1000:
                 raise common.message(_('Printing aborted, too long delay'))
 
         # report name
