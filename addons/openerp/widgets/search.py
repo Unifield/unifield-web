@@ -274,7 +274,11 @@ class Search(TinyInputWidget):
         sorted_filters = []
         for act in my_acts:
             action = [act['domain'], act['name']]
-            act_ctx = eval(act['context'])
+            # UFTP-76 ignoring invalid saved custom filter
+            try:
+                act_ctx = eval(act['context'])
+            except:
+                act_ctx = False
             if act_ctx and act_ctx.get('group_by'):
                 action.append(ustr(act_ctx['group_by']))
             else:
