@@ -69,6 +69,8 @@ class ViewForm(Form):
             if element not in search_param or len(element) == 1:
                 if not isinstance(element,tuple):
                     search_param.append(element)
+                elif len(element) == 1:
+                    search_param.append(element[0])
                 else:
                     key, op, value = element
                     search_param.append((key, op, value))

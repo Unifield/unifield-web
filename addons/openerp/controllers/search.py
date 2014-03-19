@@ -368,12 +368,14 @@ class Search(Form):
         
         # conversion of the pseudo domain from the javascript to a valid domain
         ncustom_domain = []
-        for i in xrange(max(len(custom_domains) - 1, 0)):
-            ncustom_domain.append("|")
-        for and_list in custom_domains:
-            for i in xrange(max(len(and_list) - 1, 0)):
-                ncustom_domain.append("&")
-            ncustom_domain += [tuple(x) for x in and_list]
+        for x in custom_domains:
+            ncustom_domain += x
+        #for i in xrange(max(len(custom_domains) - 1, 0)):
+        #    ncustom_domain.append("|")
+        #for and_list in custom_domains:
+            #for i in xrange(max(len(and_list) - 1, 0)):
+            #    ncustom_domain.append("&")
+            #ncustom_domain += [tuple(x) for x in and_list]
 
         if selection_domain and selection_domain not in ['blk', 'sf', 'mf']:
             selection_domain = expr_eval(selection_domain)

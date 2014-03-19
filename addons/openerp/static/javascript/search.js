@@ -326,15 +326,18 @@ function display_Customfilters(all_domains, group_by_ctx) {
 
         var form_result = obj.frm;
         var tbody_keys = jQuery.keys(form_result);
-
         if(form_result) {
             // By property, we get incorrect ordering
             for(var ind=0; ind<tbody_keys.length ;ind++){
                 var All_domain = [];
                 var group = [];
                 var tbody_frm_ind = form_result[tbody_keys[ind]]; //tbody dictionary
+                if (ind < tbody_keys.length) {
+                    var join = jQuery('#filter_option_table > tbody').eq(tbody_keys[ind+1]).find('tr');
+                    if (join && join[0] && $(join[0]).attr('id') == 'or') {
+                        All_domain.push('|')
+                }
                 var trs_keys = jQuery.unique(jQuery.keys(tbody_frm_ind)); //sort trs
-
                 for(var index = 0; index<trs_keys.length ; index++) {
                     var return_record = tbody_frm_ind[trs_keys[index]];
                     var $curr_body = jQuery('#filter_option_table > tbody').eq(tbody_keys[ind]);
@@ -356,10 +359,13 @@ function display_Customfilters(all_domains, group_by_ctx) {
                             group.push('&');
                         }
                     }
-                    if(grouping) {
-                        temp_domain.push(grouping == 'AND' ? '&' : '|');
+                    if($row.find('label.and_or').length) {
+                        All_domain.push(grouping == 'AND' ? '&' : '|');
                     }
-
+/*                    if (!grouping && $row.find('label.and_or').length) {
+                        temp_domain.push('|')
+                    }
+*/
                     var field = return_record['rec'];
                     var comparison = $row.find('select.expr').val();
                     var value = return_record['rec_val'];
@@ -440,18 +446,10 @@ function display_Customfilters(all_domains, group_by_ctx) {
                             }
                             break;
                     }
+                    group.push(field, comparison, value);
+                    All_domain.push(group);
 
-                    if ($row.find('label.and_or').length || grouping){
-                        temp_domain.push(field, comparison, value);
-                        group.push(temp_domain);
-                    } else {
-                        group.push(field, comparison, value);
-                    }
-
-                    if (!grouping) {
-                        All_domain.push(group);
-                        group = [];
-                    }
+                    group = [];
                 }
 
                 if (All_domain.length) {
