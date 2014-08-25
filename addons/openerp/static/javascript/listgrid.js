@@ -415,6 +415,9 @@ MochiKit.Base.update(ListView.prototype, {
     },
 
     dragRow: function(id, to_index) {
+        if (!confirm('Do you really want to reorder the lines ?')) {
+            return
+        }
         jQuery.ajax({
             url: '/openerp/listgrid/dragRow',
             type: 'POST',
