@@ -1060,6 +1060,7 @@ class Form(SecuredController):
             context = eval(context) # convert to python dict
         except:
             context = {}
+        rpc.session._context = context
 
         match = re.match('^(.*?)\((.*)\)$', callback)
 
