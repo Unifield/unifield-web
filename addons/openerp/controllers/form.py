@@ -1060,7 +1060,9 @@ class Form(SecuredController):
             context = eval(context) # convert to python dict
         except:
             context = {}
-        rpc.session._context = context
+
+        if context.get('active_model') == 'sale.order.line' and context.get('from_multiple_sourcing_line'):
+            rpc.session._context = context
 
         match = re.match('^(.*?)\((.*)\)$', callback)
 
