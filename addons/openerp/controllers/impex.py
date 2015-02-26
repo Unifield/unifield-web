@@ -450,8 +450,11 @@ class ImpEx(SecuredController):
                 if '/' not in f:
                     fields_to_read.append(f)
 
+            fields_to_read = rpc_obj.export_sort_fld_to_read(fields_to_read)
+
             flds = fields_to_read[:]
             params.fields2 = fields_to_read[:]
+
 
             data = rpc_obj.read_group(domain, flds, group_by, 0, 2000, ctx)
 
@@ -475,7 +478,11 @@ class ImpEx(SecuredController):
             # Prepare recursively the data to export (inserted in 'result_tmp')
             for data_line in data:
                 process_data(data_line)
+
+            result_tmp, flds, params.fields2 = rpc_obj.export_filter_results(result_tmp, flds, params.fields2)
             result = self.get_grp_data(result_tmp, flds)
+
+            params.fields2 = rpc_obj.export_get_fld_realname(params.fields2)
 
             if export_format == "excel":
                 return self.export_html(params.fields2, result, view_name)
