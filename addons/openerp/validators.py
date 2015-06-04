@@ -108,14 +108,14 @@ class DateTime(BaseValidator):
         self.kind = kind
 
     def _to_python(self, value, state):
-        # do validation
         try:
-            res = time.strptime(value, self.format)
-        except ValueError:
-            raise formencode.api.Invalid(_('Invalid datetime format'), value, state)
-        # return str instead of real datetime object
-        try:
-            return format.parse_datetime(value, kind=self.kind)
+            if value:
+                value = value.strip()
+            # do validation and convert value
+            res = format.parse_datetime(value, kind=self.kind)
+            if value and not res:
+                raise ValueError() # validation failed
+            return res
         except ValueError:
             raise formencode.api.Invalid(_('Invalid datetime format'), value, state)
 

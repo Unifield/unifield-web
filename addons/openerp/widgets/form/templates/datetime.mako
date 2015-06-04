@@ -1,6 +1,6 @@
 % if editable:
     <input type="text" id="${name}" name="${name}" autocomplete="OFF" size="3"
-    class="${css_class}" ${py.attrs(attrs, kind=kind, value=value)}/>
+    class="${css_class}" ${py.attrs(attrs, kind=kind, value=value, format=format)}/>
     % if error:
         <span class="fielderror">${error}</span>
     % endif

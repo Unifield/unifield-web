@@ -44,6 +44,15 @@ DT_SERVER_FORMATS = {
 
 __pat = re.compile("%\(([dMy]+)\)s")
 __sub = {'d': '%d', 'M': '%m', 'y': '%Y'}
+
+__mdname_format_regexp = re.compile('(%a|%b|%A|%B)')
+__mdname_format_ldml_map = {
+    '%a': 'ddd',
+    '%A': 'dddd',
+    '%b': 'MMM',
+    '%B': 'MMMM',
+}
+
 def _to_posix_format(format):
     """Convert LDML format string to posix format string.
     """
@@ -51,6 +60,14 @@ def _to_posix_format(format):
 
 def format_date_custom(dt, fmt="y-M-d"):
     return dates.format_date(dt, format=fmt, locale=get_locale())
+
+def format_date_localized(dt, local_format):
+    mdname_formats = set(__mdname_format_regexp.findall(local_format))
+    for format in mdname_formats:
+        format_local_value = dates.format_datetime(dt,
+                                    __mdname_format_ldml_map[format], locale=get_locale())
+        local_format = local_format.replace(format, format_local_value)
+    return unicode(dt.strftime(local_format.encode('utf-8')), 'utf-8')
 
 def get_datetime_format(kind="datetime"):
     """Get local datetime format.
@@ -72,7 +89,7 @@ def get_datetime_format(kind="datetime"):
     # TODO: correctly convert from LDML to POSIX datetime formatting
     # current converter is trivial and lame and probably very easy to break
     date_format = _to_posix_format(dates.get_date_format(
-            format='short', locale=get_locale())).format
+            format='short', locale=get_locale()).format)
     if kind == 'time':
         # Should use dates.get_time_format(locale=get_locale())
         return '%H:%M:%S'
@@ -129,7 +146,7 @@ def format_datetime(value, kind="datetime", as_timetuple=False):
         value = ustr(value)
         try:
             value = DT.datetime.strptime(value[:10], server_format)
-            return value.strftime(local_format)
+            return format_date_localized(value, local_format)
         except:
             return ''
 
@@ -157,7 +174,8 @@ def format_datetime(value, kind="datetime", as_timetuple=False):
     if as_timetuple:
         return value
 
-    return time.strftime(local_format, value)
+    value_dt = DT.datetime(*value[:6])
+    return format_date_localized(value_dt, local_format)
 
 def parse_datetime(value, kind="datetime", as_timetuple=False):
     """Convert date value to the server datetime considering timezone info.

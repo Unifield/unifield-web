@@ -26,6 +26,26 @@ function get_form_action(action, params){
     return openobject.http.getURL(act, params);
 }
 
+function datetime_get_server_value(elem, format) {
+    var $elem = jQuery(elem);
+    var field_date_format = $elem.attr('format') || '';
+    if (!field_date_format.match(/(%a|%b|%A|%B)/)) {
+        return elem.value;
+    }
+    // convert it back to str and compare to original value to determine
+    // if this a value set by jscal Calendar - or server/user input. In
+    // last case - keep the original value intact - in all other case
+    // we change the input value to match the server-format because depending
+    // on the language we might not be able to parse month or day of week names
+    var field_date = Date.parseDate(elem.value, field_date_format);
+    var field_date_str = field_date.print(field_date_format);
+    if (field_date_str == elem.value) {
+        var server_date_format = $elem.attr('kind') == 'date' ? '%Y-%m-%d' : '%Y-%m-%d %H:%M:%S';
+        return field_date.print(server_date_format);
+    }
+    return elem.value;
+}
+
 function openRecord(id, src, target, readonly){
 
     var kind = getNodeAttribute(src + '_set', 'kind');
@@ -241,6 +261,16 @@ function submit_form(action, src, target){
         return;
     }
 
+    $form.find('input[kind^="date"]').each(function(i, f) {
+        if (!this.value ||
+                !(this.getAttribute('kind') == 'date'
+                  || this.getAttribute('kind') == 'datetime')) {
+             return; // skip input having no    
+        }
+        // make sure date/datetime value is parseable by server
+        this.value = datetime_get_server_value(this);
+    });
+
     // Cant use $form.attr due to http://dev.jquery.com/ticket/3113 as there is a form with a field called
     // action when creating an activity
     $form[0].setAttribute('action', action);
@@ -388,10 +418,16 @@ function getFormData(extended, include_readonly, parentNode) {
             return;
         }
 
+        // sure value is server-parseable in case of translated date/datetime fields
+        var this_value = this.value;
+        if ($this.attr('kind') == 'date' || $this.attr('kind') == 'datetime') {
+            this_value = datetime_get_server_value(this);
+        }
+
         if (extended && name.indexOf('/__id') == -1) {
             var attrs = {};
 
-            value = (is_editable ? this.value : $this.attr('value')) || "";
+            value = (is_editable ? this_value : $this.attr('value')) || "";
             var kind = $this.attr('kind') || "char";
 
             //take care of _terp_id
@@ -443,7 +479,7 @@ function getFormData(extended, include_readonly, parentNode) {
 	    
         }
         else {
-            frm[name] = this.value;
+            frm[name] = this_value;
         }
     });
     return frm;
@@ -522,10 +558,15 @@ function onChange(caller){
     	return;
     }
 
+    var caller_value = $caller.val();
+    if ($caller.attr('kind') == 'date' || $caller.attr('datetime')) {
+        // make sure date/dateime value is parseable by server
+        caller_value = datetime_get_server_value($caller[0]);
+    }
     openobject.http.postJSON(post_url, jQuery.extend({}, form_data, {
         _terp_callback: callback,
         _terp_caller: $caller.attr('id').slice(id_slice_offset),
-        _terp_value: $caller.val(),
+        _terp_value: caller_value,
         _terp_model: select('_terp_model').val(),
         _terp_context: select('_terp_context').val(),
         id: select('_terp_id').val()
