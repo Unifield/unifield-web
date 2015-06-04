@@ -300,7 +300,7 @@ One2Many.prototype = {
             });
             // copy special 'format' attribute for date/datetime fields
             if ($this.attr('kind') == 'date' || $this.attr('kind') == 'datetime') {
-                attrs[format] = $this.attr('format');
+                attrs['format'] = $this.attr('format');
             }
             $form.append($('<input>', $.extend(attrs, {
                 type: 'hidden',
