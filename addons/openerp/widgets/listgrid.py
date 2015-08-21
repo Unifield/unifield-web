@@ -41,7 +41,8 @@ class List(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/listgrid.mako"
     params = ['name', 'data', 'columns', 'headers', 'model', 'selectable', 'editable', 'noteditable', 'resequencable',
               'pageable', 'selector', 'source', 'offset', 'limit', 'show_links', 'editors', 'view_mode',
-              'hiddens', 'edit_inline', 'field_total', 'field_real_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex', 'hide_new_button', 'hide_delete_button', 'hide_edit_button', 'notselectable']
+              'hiddens', 'edit_inline', 'field_total', 'field_real_total', 'link', 'checkbox_name', 'm2m', 'min_rows', 'string', 'o2m', 'dashboard', 'impex',
+              'hide_new_button', 'hide_delete_button', 'hide_edit_button', 'hive_save_button', 'notselectable']
 
     member_widgets = ['pager', 'buttons', 'editors', 'concurrency_info']
 
@@ -69,6 +70,7 @@ class List(TinyWidget):
     hide_new_button = False
     hide_delete_button = False
     hide_edit_button = False
+    hide_save_button = False
 
     def __init__(self, name, model, view, ids=[], domain=[], context={}, **kw):
 
@@ -129,10 +131,12 @@ class List(TinyWidget):
         self.hide_new_button = False
         self.hide_delete_button = False
         self.hide_edit_button = False
+        self.hide_save_button = False
         try:
             self.hide_new_button = expr_eval(attrs.get('hide_new_button', False), {'context': context})
             self.hide_delete_button = expr_eval(attrs.get('hide_delete_button', False), {'context': context})
             self.hide_edit_button = expr_eval(attrs.get('hide_edit_button', False), {'context': context})
+            self.hide_save_button = expr_eval(attrs.get('hide_save_button', False), {'context': context})
         except:
             pass
         

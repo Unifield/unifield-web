@@ -123,7 +123,7 @@
                             <a href="javascript: void(0);" onclick="editRecord(${form.screen.id or 'null'})" class="button-a">${_("Edit")}</a>
                         </li>
                         % endif
-                        % if buttons.save:
+                        % if buttons.save and not form.screen.widget.hide_button_edit:
                         <li title="${_('Save this resource')}">
                             <a href="javascript: void(0);" onclick="submit_form('save')" class="button-a">${_("Save")}</a>
                         </li>
