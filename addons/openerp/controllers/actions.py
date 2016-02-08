@@ -555,6 +555,9 @@ def close_popup(reload=True, o2m_refresh=False):
 
 @tools.expose(template="/openerp/controllers/templates/report.mako")
 def report_link(report_name, **kw):
+    # avoid problems with special characters such as "&"
+    if "context" in kw and "_terp_view_name" in kw["context"]:
+        kw["context"]["_terp_view_name"] = urllib.quote(kw["context"]["_terp_view_name"].encode('utf-8'))
     cherrypy.response.headers['X-Target'] = 'download'
     cherrypy.response.headers['Location'] = tools.url(
             '/openerp/report', report_name=report_name, **kw)
