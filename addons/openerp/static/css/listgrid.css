@@ -203,6 +203,10 @@ strong#total_sum_label {
     color: #7D7979;
     font-size: 0.9em;
 }
+
+.dialog-box-btn {
+    font-size: 1.5em !important;
+}
 /**
  * vim: sts=4 st=4 et
  *

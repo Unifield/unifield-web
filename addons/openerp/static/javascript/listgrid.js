@@ -33,6 +33,35 @@ var ListView = function(name) {
     this.__init__(name);
 };
 
+// (UFTP-366) override JavaScript confirm
+var customConfirm = function(message, callback) {
+    $(document.createElement('div')).attr({
+        'style': 'font-size:2em'
+    }).html(message).dialog({
+        position: ['center', 100],
+        buttons: [
+             {
+                text: _('OK'),
+                'className': 'dialog-box-btn',
+                click: function() {
+                    $(this).dialog('close');
+                    callback(); // NB; don't forget to add ".bind(this)" to the callback function
+                }
+            },
+            {
+                text: _('Cancel'),
+                'className': 'dialog-box-btn',
+                click: function() {
+                    $(this).dialog('close');
+                }
+            }
+        ],
+        draggable: true,
+        modal: true,
+        resizable: false,
+        width: '30%'
+    });
+};
 
 ListView.prototype = {
 
@@ -581,66 +610,76 @@ MochiKit.Base.update(ListView.prototype, {
     },
 
     onButtonClick: function(name, btype, id, sure, context) {
-        if (sure && !confirm(sure)) {
-            return;
-        }
 
-        var self = this;
-        var _list = this.name;
-        var prefix = this.name == '_terp_list' ? '' : this.name + '/';
+        var onButtonClickAction = function() {
+            var self = this;
+            var _list = this.name;
+            var prefix = this.name == '_terp_list' ? '' : this.name + '/';
 
-        if (btype == "open") {
-            return window.open(get_form_action('/openerp/form/edit', {
-                id: id,
-                ids: openobject.dom.get(prefix + '_terp_ids').value,
-                model: openobject.dom.get(prefix + '_terp_model').value,
-                view_ids: openobject.dom.get(prefix + '_terp_view_ids').value,
-                domain: openobject.dom.get(prefix + '_terp_domain').value,
-                context: openobject.dom.get(prefix + '_terp_context').value,
-                limit: openobject.dom.get(prefix + '_terp_limit').value,
-                offset: openobject.dom.get(prefix + '_terp_offset').value,
-                count: openobject.dom.get(prefix + '_terp_count').value}));
-        }
-
-        name = name.split('.').pop();
-
-        var params = {
-            _terp_model : this.model,
-            _terp_id : id,
-            _terp_button_name : name,
-            _terp_button_type : btype,
-			_terp_context: context
-        };
-
-        eval_domain_context_request({
-            source: this.name,
-            context : context || '{}',
-            active_id: id,
-            active_ids: openobject.dom.get(prefix + '_terp_ids').value
-        }).addCallback(function(res) {
-            if (res && res.context) {
-                params['_terp_context'] = res.context;
-            } else {
-                params['_terp_context'] = jQuery('#_terp_context').val()
+            if (btype == "open") {
+                return window.open(get_form_action('/openerp/form/edit', {
+                    id: id,
+                    ids: openobject.dom.get(prefix + '_terp_ids').value,
+                    model: openobject.dom.get(prefix + '_terp_model').value,
+                    view_ids: openobject.dom.get(prefix + '_terp_view_ids').value,
+                    domain: openobject.dom.get(prefix + '_terp_domain').value,
+                    context: openobject.dom.get(prefix + '_terp_context').value,
+                    limit: openobject.dom.get(prefix + '_terp_limit').value,
+                    offset: openobject.dom.get(prefix + '_terp_offset').value,
+                    count: openobject.dom.get(prefix + '_terp_count').value}));
             }
-            params['_terp_list_grid'] = _list;
-            var $action_button = jQuery('#listgrid_button_action');
-            if($action_button.length) {
-                $action_button.remove();
-            }
-            var $form = jQuery('<form>', {
-                'id': 'listgrid_button_action',
-                'name': 'listgrid_button_action',
-                'action':'/openerp/listgrid/button_action',
-                'method': 'post',
-                'enctype': 'multipart/form-data'
-            }).appendTo(document.documentElement);
-            $form.ajaxSubmit({
-                data: params,
-                success: doLoadingSuccess(jQuery('#appContent')),
-                error: loadingError()
+
+            name = name.split('.').pop();
+
+            var params = {
+                _terp_model : this.model,
+                _terp_id : id,
+                _terp_button_name : name,
+                _terp_button_type : btype,
+                _terp_context: context
+            };
+
+            eval_domain_context_request({
+                source: this.name,
+                context : context || '{}',
+                active_id: id,
+                active_ids: openobject.dom.get(prefix + '_terp_ids').value
+            }).addCallback(function(res) {
+                if (res && res.context) {
+                    params['_terp_context'] = res.context;
+                } else {
+                    params['_terp_context'] = jQuery('#_terp_context').val()
+                }
+                params['_terp_list_grid'] = _list;
+                var $action_button = jQuery('#listgrid_button_action');
+                if($action_button.length) {
+                    $action_button.remove();
+                }
+                var $form = jQuery('<form>', {
+                    'id': 'listgrid_button_action',
+                    'name': 'listgrid_button_action',
+                    'action':'/openerp/listgrid/button_action',
+                    'method': 'post',
+                    'enctype': 'multipart/form-data'
+                }).appendTo(document.documentElement);
+                $form.ajaxSubmit({
+                    data: params,
+                    success: doLoadingSuccess(jQuery('#appContent')),
+                    error: loadingError()
+                });
             });
-        });
+
+        }.bind(this); // to use the right context
+
+        if (sure)
+        {
+            // ask for confirmation if needed
+            customConfirm(sure, onButtonClickAction);
+        }
+        else
+        {
+            onButtonClickAction();
+        }
     }
 });
 
@@ -774,46 +813,50 @@ MochiKit.Base.update(ListView.prototype, {
             todel = [ids]
         }
 
-        if(ids.length == 0 || !confirm(_('Do you really want to delete selected record(s) ?'))) {
-            return false;
-        }
+        var recordRemove = function() {
+            if(ids.length == 0) {
+                return false;
+            }
 
-        $.each(todel, function() {
-            self.remove_previously_selected(this);
-        });
+            $.each(todel, function() {
+                self.remove_previously_selected(this);
+            });
 
-        var $terp_ids;
-        var $terp_count;
+            var $terp_ids;
+            var $terp_count;
 
-        if(this.name == '_terp_list') {
-            $terp_ids = jQuery('#_terp_ids')
-            $terp_count = jQuery('#_terp_count')
-        }
-        else {
-            $terp_ids = jQuery('[id="'+this.name+'/_terp_ids'+'"]')
-            $terp_count =  jQuery('[id="'+this.name+'/_terp_count'+'"]')
-        }
-
-        args['_terp_ids'] = $terp_ids.val()
-        args['_terp_model'] = this.model;
-        args['_terp_id'] = ids;
-        var req = openobject.http.postJSON('/openerp/listgrid/remove', args);
-
-        req.addCallback(function(obj) {
-            if (obj.error) {
-                error_display(obj.error);
+            if(this.name == '_terp_list') {
+                $terp_ids = jQuery('#_terp_ids')
+                $terp_count = jQuery('#_terp_count')
             }
             else {
-                if(obj.ids) {
-                    $terp_ids.val(obj.ids)
-                    $terp_count.val(obj.count)
-                }
-                self.reload();
-                if(obj.res_ids) {
-                    jQuery('div#corner ul.tools li a.messages small').text(obj.ids.length)
-                }
+                $terp_ids = jQuery('[id="'+this.name+'/_terp_ids'+'"]')
+                $terp_count =  jQuery('[id="'+this.name+'/_terp_count'+'"]')
             }
-        });
+
+            args['_terp_ids'] = $terp_ids.val()
+            args['_terp_model'] = this.model;
+            args['_terp_id'] = ids;
+            var req = openobject.http.postJSON('/openerp/listgrid/remove', args);
+
+            req.addCallback(function(obj) {
+                if (obj.error) {
+                    error_display(obj.error);
+                }
+                else {
+                    if(obj.ids) {
+                        $terp_ids.val(obj.ids)
+                        $terp_count.val(obj.count)
+                    }
+                    self.reload();
+                    if(obj.res_ids) {
+                        jQuery('div#corner ul.tools li a.messages small').text(obj.ids.length)
+                    }
+                }
+            });
+        }.bind(this); // to use the right context
+
+        customConfirm(_('Do you really want to delete selected record(s) ?'), recordRemove);
     },
 
     go: function(action) {
