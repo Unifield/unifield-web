@@ -674,7 +674,7 @@ MochiKit.Base.update(ListView.prototype, {
         if (sure)
         {
             // ask for confirmation if needed
-            customConfirm(_(sure), onButtonClickAction);
+            customConfirm(sure, onButtonClickAction);
         }
         else
         {
