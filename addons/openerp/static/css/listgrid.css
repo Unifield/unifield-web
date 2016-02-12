@@ -204,6 +204,11 @@ strong#total_sum_label {
     font-size: 0.9em;
 }
 
+.dialog-box {
+    font-size:2em;
+    font-weight:bold;
+}
+
 .dialog-box-btn {
     font-size: 1.5em !important;
 }

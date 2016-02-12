@@ -33,12 +33,12 @@ var ListView = function(name) {
     this.__init__(name);
 };
 
-// (UFTP-366) override JavaScript confirm
+// (UFTP-366) overwrite JavaScript confirm
 var customConfirm = function(message, callback) {
     $(document.createElement('div')).attr({
-        'style': 'font-size:2em'
+        'className': 'dialog-box',
     }).html(message).dialog({
-        position: ['center', 100],
+        //position: ['center', 100],
         buttons: [
              {
                 text: _('OK'),
@@ -60,7 +60,7 @@ var customConfirm = function(message, callback) {
         modal: true,
         resizable: false,
         width: '30%'
-    });
+    }).position({my: "center", at: "center", of: window});
 };
 
 ListView.prototype = {
@@ -674,7 +674,7 @@ MochiKit.Base.update(ListView.prototype, {
         if (sure)
         {
             // ask for confirmation if needed
-            customConfirm(sure, onButtonClickAction);
+            customConfirm(_(sure), onButtonClickAction);
         }
         else
         {
