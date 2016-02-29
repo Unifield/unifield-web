@@ -37,7 +37,7 @@ from tempfile import NamedTemporaryFile
 import shutil
 
 def get_lang_list():
-    langs = [('en_US', 'English (US)')]
+    langs = [('en_MF', 'English (MSF)')]
     try:
         return langs + (rpc.session.execute_db('list_lang') or [])
     except Exception, e:
