@@ -317,11 +317,12 @@ class List(TinyWidget):
         
         # custom fields - decimal_precision computation
         computation = attrs.get('computation', False)
+        truncate = attrs.get('truncate', False)
         if isinstance(computation, basestring):
             computation = eval(computation)
 
         integer, digit = digits
-        return format.format_decimal(sum or 0.0, digit, computation=computation)
+        return format.format_decimal(sum or 0.0, digit, computation=computation, truncate=truncate)
 
     def do_real_sum(self, data, field):
         sum = 0.0
@@ -342,11 +343,12 @@ class List(TinyWidget):
         
         # custom fields - decimal_precision computation
         computation = attrs.get('computation', False)
+        truncate = attrs.get('truncate', False)
         if isinstance(computation, basestring):
             computation = eval(computation)
 
         integer, digit = digits
-        return format.format_decimal(sum or 0.0, digit, computation=computation)
+        return format.format_decimal(sum or 0.0, digit, computation=computation, truncate=truncate)
 
 
     def display(self, value=None, **params):
