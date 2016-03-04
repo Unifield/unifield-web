@@ -85,8 +85,8 @@ def search(model, offset=0, limit=50, domain=[], context={}, data={}):
     data = data or {}
 
     proxy = rpc.RPCProxy(model)
-    fields = proxy.fields_get([], rpc.session.context)
-
+    if data:
+        fields = proxy.fields_get(data.keys(), rpc.session.context)
     search_domain = domain[:]
     search_data = {}
 
@@ -1125,6 +1125,7 @@ class Form(SecuredController):
         # apply validators (transform values from python)
         values = result['value']
         values2 = {}
+        float_to_check = []
         for k, v in values.items():
             key = ((prefix or '') and prefix + '/') + k
 
@@ -1137,14 +1138,17 @@ class Form(SecuredController):
                 values2[k] = {'value': v}
 
             if kind == 'float':
-                field = proxy.fields_get([k], ctx2)
-                digit = field[k].get('digits')
-                if digit: digit = digit[1]
+                float_to_check.append(k)
+        if float_to_check:
+            fields = proxy.fields_get(float_to_check, ctx2)
+            for k in float_to_check:
+                digit = fields[k].get('digits')
+                if digit:
+                    digit = digit[1]
                 values2[k]['digit'] = digit or 2
-                
                 # custom fields - decimal_precision computation
-                computation = field[k].get('computation')
-                values2[k]['computation'] = computation
+                values2[k]['computation'] = fields[k].get('computation')
+                values2[k]['truncate'] = fields[k].get('truncate', False)
 
         values = TinyForm(**values2).from_python().make_plain()
 
