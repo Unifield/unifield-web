@@ -18,7 +18,7 @@
     % endif
 % else:
     <input
-        type="text"
+        type="checkbox"
         kind="${kind}"
         class="checkbox" 
         id="${name}" 
