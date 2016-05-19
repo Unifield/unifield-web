@@ -423,6 +423,26 @@ class Boolean(TinyInputWidget):
 
 register_widget(Boolean, ["boolean"])
 
+class NullBoolean(Char):
+    template = "/openerp/widgets/form/templates/null_boolean.mako"
+
+    label_type = BooleanLabel
+
+    def __init__(self, **attrs):
+        super(NullBoolean, self).__init__(**attrs)
+        self.editable = False
+
+    def set_value(self, value):
+        self.default = value or ''
+        if value == '?':
+            self.default = '?'
+            self.null_bool = True
+        elif value == 'X':
+            self.default = 1
+        else:
+            self.default = 0
+
+register_widget(NullBoolean, ["null_boolean"])
 
 class Float(TinyInputWidget):
     template = "/openerp/widgets/form/templates/float.mako"
@@ -828,8 +848,13 @@ class Form(TinyInputWidget):
             try:
                 if expr_eval(attrs.get('noteditable'), values):
                     self.noteditable = True
+                    self.hide_button_save = True
             except:
                 pass
+
+        if self.hide_button_new and not self.id:
+            self.noteditable = True
+            self.hide_button_save = True
 
         # store current record values in request object (see, self.parse & O2M default_get_ctx)
         if not hasattr(cherrypy.request, 'terp_record'):
