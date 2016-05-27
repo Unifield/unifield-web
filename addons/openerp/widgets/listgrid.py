@@ -135,6 +135,22 @@ class List(TinyWidget):
             self.hide_edit_button = expr_eval(attrs.get('hide_edit_button', False), {'context': context})
         except:
             pass
+
+        write_access = create_access = read_access = unlink_access = 1
+        if model:
+            write_access = rpc.RPCProxy('ir.model.access').check(model, 'write', False)
+            create_access = rpc.RPCProxy('ir.model.access').check(model, 'create', False) 
+            #read_access = rpc.RPCProxy('ir.model.access').check(model, 'read', False)
+            unlink_access = rpc.RPCProxy('ir.model.access').check(model, 'unlink', False)
+
+        if not write_access:
+            self.hide_edit_button = True
+
+        if not create_access:
+            self.hide_new_button = True
+
+        if not unlink_access:
+            self.hide_delete_button = True
         
         self.string = attrs.get('string','')
 

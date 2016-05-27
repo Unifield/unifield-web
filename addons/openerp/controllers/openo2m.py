@@ -72,12 +72,22 @@ class OpenO2M(Form):
         if ctx.get('default_name'):
             del ctx['default_name']
 
+        write_access = create_access = read_access = unlink_access = 1
+        if params.o2m_model:
+            write_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'write', False)
+            create_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'create', False)
+            #read_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'read', False)
+            #unlink_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'unlink', False)
+
         arch = params.views.get('form', {}).get('arch', False)
         if arch:
             dom = xml.dom.minidom.parseString(arch.encode('utf-8'))
             form_attribute = node_attributes(dom.childNodes[0])
             if form_attribute.get('hide_new_button'):
                 params.hide_new_button = expr_eval(form_attribute.get('hide_new_button', False), {'context': ctx})
+
+        if not create_access:
+            params.hide_new_button = True
 
         params.context = ctx or {}
         params.hidden_fields = [tw.form.Hidden(name='_terp_parent_model', default=params.parent_model),

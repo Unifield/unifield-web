@@ -213,6 +213,13 @@ class Form(SecuredController):
             except:
                 self.reset_notebooks()
 
+        write_access = create_access = read_access = unlink_access = 1
+        if params.get('_terp_model'):
+            write_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'write', False)
+            create_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'create', False)
+            #read_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'read', False)
+            unlink_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'unlink', False)
+
         editable = form.screen.editable
         mode = form.screen.view_type
         id = form.screen.id
@@ -228,6 +235,23 @@ class Form(SecuredController):
         buttons.i18n = not editable and mode == 'form'
         buttons.show_grid = mode == 'diagram'
         buttons.create_node = mode == 'diagram' and editable
+
+        if not write_access:
+            buttons.save = False
+            buttons.edit = False
+            if form.screen.id:
+                form.screen.editable = False
+
+        if not create_access:
+            if not form.screen.id:
+                buttons.edit = False
+                buttons.save = False
+                form.screen.editable = False
+            buttons.new = False
+            buttons.duplicate = False
+
+        if not unlink_access:
+            buttons.delete = False
 
         from openerp.widgets import get_registered_views
         buttons.views = []
