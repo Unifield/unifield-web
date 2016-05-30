@@ -214,7 +214,7 @@ class Form(SecuredController):
                 self.reset_notebooks()
 
         write_access = create_access = read_access = unlink_access = 1
-        if params.get('_terp_model'):
+        if params.get('_terp_model') == 'product.product':
             write_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'write', False)
             create_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'create', False)
             #read_access = rpc.RPCProxy('ir.model.access').check(params.get('_terp_model'), 'read', False)

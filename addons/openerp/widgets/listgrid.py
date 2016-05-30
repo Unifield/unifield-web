@@ -137,7 +137,7 @@ class List(TinyWidget):
             pass
 
         write_access = create_access = read_access = unlink_access = 1
-        if model:
+        if model and model == 'product.product':
             write_access = rpc.RPCProxy('ir.model.access').check(model, 'write', False)
             create_access = rpc.RPCProxy('ir.model.access').check(model, 'create', False) 
             #read_access = rpc.RPCProxy('ir.model.access').check(model, 'read', False)

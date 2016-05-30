@@ -73,7 +73,7 @@ class OpenO2M(Form):
             del ctx['default_name']
 
         write_access = create_access = read_access = unlink_access = 1
-        if params.o2m_model:
+        if params.o2m_model and params.o2m_model == 'product.product':
             write_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'write', False)
             create_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'create', False)
             #read_access = rpc.RPCProxy('ir.model.access').check(params.o2m_model, 'read', False)
