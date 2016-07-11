@@ -346,7 +346,7 @@ class Search(Form):
 
                 else:
                     if not 'm2o_' in value:
-                        operator = 'ilike'
+                        operator = '='
                         if '__' in value:
                             value, operator = value.split('__')
                             value = int(value)
