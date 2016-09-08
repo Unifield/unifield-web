@@ -99,12 +99,15 @@ class OpenO2M(Form):
     @expose(template="/openerp/controllers/templates/openo2m.mako")
     def create(self, params, tg_errors=None):
 
+        pager = {}
         if tg_errors:
             form = cherrypy.request.terp_form
         else:
             form = self.create_form(params, tg_errors)
+            pager = tw.pager.Pager(id=params.o2m_id, ids=params.o2m_ids, offset=0,
+                                   limit=-1, count=len(params.o2m_ids), view_type='form')
 
-        return dict(form=form, params=params)
+        return dict(form=form, params=params, pager=pager)
 
     @expose()
     @validate(form=get_validation_schema)
@@ -168,6 +171,11 @@ class OpenO2M(Form):
     @expose()
     def edit(self, **kw):
         params, data = TinyDict.split(kw)
+
+        if params.next_id:
+            params.o2m_id = params.next_id
+            params.next_id = None
+
         return self.create(params)
     
     @expose('json', methods=('POST',))

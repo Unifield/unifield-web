@@ -7,7 +7,13 @@
         var form_controller = '/openerp/openo2m';
         function do_select(id, src) {
             viewRecord(id, src);
-        };
+        }
+
+        var o2m_ids = [];
+
+        jQuery(document).ready(function() {
+            validateForm();
+        });
     </script>
 </%def>
 
@@ -46,6 +52,9 @@
                             	<button class="button-a" style="height: 20px;" onclick="jQuery.o2m('close'); return false;">${_("Cancel")}</button>
                             </td>
                             <td width="100%">
+                                % if pager:
+                                    ${pager.display()}
+                                % endif
                             </td>
                         </tr>
                     </table>
@@ -67,5 +76,6 @@
             }, 3000);
         })
         jQuery.o2m('init');
+        o2m_ids = document.getElementById('order_line/_terp_ids').value;
     </script>
 </%def>

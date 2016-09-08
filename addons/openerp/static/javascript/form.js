@@ -290,12 +290,35 @@ function submit_form(action, src, target){
         args['_terp_close'] = 1;
     }
 
-    if(action == 'save_and_next') {
-        action = 'save'
+    if (document.getElementById('_terp_o2m_id') && (action == 'save_and_next' || action == 'next' || action == 'last' || action == 'previous' || action == 'first')) {
         args['_terp_return_edit'] = 1;
         terp_id = document.getElementById('order_line/_terp_id').value;
         terp_ids = document.getElementById('_terp_o2m_ids').value.replace("[", "").replace("]", "").replace(/\s+/g, '').split(",");
-        args['_terp_next_id'] = terp_ids[terp_ids.indexOf(terp_id) + 1];
+
+        if (terp_ids.length != 0) {
+            switch(action) {
+                case 'save_and_next':
+                case 'next':
+                    args['_terp_next_id'] = terp_ids[terp_ids.indexOf(terp_id) + 1];
+                    break;
+                case 'last':
+                    args['_terp_next_id'] = terp_ids[terp_ids.length - 1];
+                    break;
+                case 'previous':
+                    args['_terp_next_id'] = terp_ids[terp_ids.indexOf(terp_id) - 1];
+                    break;
+                case 'first':
+                    args['_terp_next_id'] = terp_ids[0];
+                    break;
+            }
+        }
+
+        if (action == 'save_and_next') {
+            action = 'save';
+        } else {
+            action = 'edit';
+            validate_action();
+        }
     }
 
     get_sidebar_status(args);
@@ -310,6 +333,7 @@ function submit_form(action, src, target){
     // action when creating an activity
     $form[0].setAttribute('action', action);
     $form.attr("target", target);
+
     $form.submit();
 }
 
