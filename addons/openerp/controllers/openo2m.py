@@ -37,6 +37,7 @@ class OpenO2M(Form):
     def create_form(self, params, tg_errors=None):
 
         params.id = params.o2m_id
+        params.o2m_ids = params.o2m_ids
         params.model = params.o2m_model
         params.view_mode = ['form', 'tree']
         params.view_type = 'form'
@@ -85,6 +86,7 @@ class OpenO2M(Form):
                                 tw.form.Hidden(name='_terp_parent_context', default=ustr(params.parent_context)),
                                 tw.form.Hidden(name='_terp_o2m', default=params.o2m),
                                 tw.form.Hidden(name='_terp_o2m_id', default=params.id or None),
+                                tw.form.Hidden(name='_terp_o2m_ids', default=params.o2m_ids or []),
                                 tw.form.Hidden(name='_terp_o2m_model', default=params.o2m_model),
                                 tw.form.Hidden(name='_terp_o2m_context', default=ustr(params.o2m_context or {})),
                                 tw.form.Hidden(name=params.prefix + '/__id', default=params.id or None)] + hiddens
@@ -139,8 +141,10 @@ class OpenO2M(Form):
         if new_ids and params.source:
             current.id = new_ids[-1]
             params.o2m_id = current.id
-        elif not params.button:
+        elif not params.button and not params.next_id:
             params.o2m_id = False
+        elif params.next_id:
+            params.o2m_id = params.next_id
 
         # perform button action
         if params.button:

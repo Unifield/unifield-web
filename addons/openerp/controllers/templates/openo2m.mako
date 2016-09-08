@@ -7,7 +7,7 @@
         var form_controller = '/openerp/openo2m';
         function do_select(id, src) {
             viewRecord(id, src);
-        }
+        };
     </script>
 </%def>
 
@@ -32,6 +32,9 @@
                             % if form.screen.editable:
                                 <td class="save_close">
                                     <button onclick="submit_form('save_and_close'); return false;" style="height: 20px;" class="button-a">${_("Save & Close")}</button>
+                                </td>
+                                <td class="save_close">
+                                    <button onclick="submit_form('save_and_next'); return false;" styje="height: 20px;" class="button-a">${_("Save & Next")}</button>
                                 </td>
                                 % if not params.hide_new_button:
                                 <td class="save_close">

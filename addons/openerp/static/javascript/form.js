@@ -289,6 +289,15 @@ function submit_form(action, src, target){
         action = 'save';
         args['_terp_close'] = 1;
     }
+
+    if(action == 'save_and_next') {
+        action = 'save'
+        args['_terp_return_edit'] = 1;
+        terp_id = document.getElementById('order_line/_terp_id').value;
+        terp_ids = document.getElementById('_terp_o2m_ids').value.replace("[", "").replace("]", "").replace(/\s+/g, '').split(",");
+        args['_terp_next_id'] = terp_ids[terp_ids.indexOf(terp_id) + 1];
+    }
+
     get_sidebar_status(args);
     action = get_form_action(action, args);
 

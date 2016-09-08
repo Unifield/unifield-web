@@ -166,6 +166,7 @@ One2Many.prototype = {
 
         if(id != null) {
             params['_terp_o2m_id'] = id;
+            params['_terp_o2m_ids'] = openobject.dom.get(prefix + '/_terp_ids').value;
         }
         if (id && id != 'False' && !this.default_get_ctx) {
             jQuery.o2m(params);
