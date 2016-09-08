@@ -292,7 +292,15 @@ function submit_form(action, src, target){
 
     if (document.getElementById('_terp_o2m_id') && (action == 'save_and_next' || action == 'next' || action == 'last' || action == 'previous' || action == 'first')) {
         args['_terp_return_edit'] = 1;
-        terp_id = document.getElementById('order_line/_terp_id').value;
+
+        var prefix = '';
+        if (this.name.split('/').length > 0) {
+            prefix = this.name.split('/')[0] + '/';
+        } else if (this.name != '_terp_list') {
+            prefix = this.name + '/';
+        }
+
+        terp_id = document.getElementById(prefix + '_terp_id').value;
         terp_ids = document.getElementById('_terp_o2m_ids').value.replace("[", "").replace("]", "").replace(/\s+/g, '').split(",");
 
         if (terp_ids.length != 0) {
