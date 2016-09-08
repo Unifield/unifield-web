@@ -39,9 +39,11 @@
                                 <td class="save_close">
                                     <button onclick="submit_form('save_and_close'); return false;" style="height: 20px;" class="button-a">${_("Save & Close")}</button>
                                 </td>
+                                % if params.o2m_id in params.o2m_ids and params.o2m_id != params.o2m_ids[-1]:
                                 <td class="save_close">
-                                    <button onclick="submit_form('save_and_next'); return false;" styje="height: 20px;" class="button-a">${_("Save & Next")}</button>
+                                    <button onclick="submit_form('save_and_next'); return false;" style="height: 20px;" class="button-a">${_("Save & Next")}</button>
                                 </td>
+                                % endif
                                 % if not params.hide_new_button:
                                 <td class="save_close">
                                     <button onclick="submit_form('save'); return false;" style="height: 20px;" class="button-a">${_("Save & New")}</button>

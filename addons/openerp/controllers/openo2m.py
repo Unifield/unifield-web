@@ -98,12 +98,12 @@ class OpenO2M(Form):
 
     @expose(template="/openerp/controllers/templates/openo2m.mako")
     def create(self, params, tg_errors=None):
-
         pager = {}
         if tg_errors:
             form = cherrypy.request.terp_form
         else:
             form = self.create_form(params, tg_errors)
+            params.o2m_ids = params.view_params[params.o2m].ids
             pager = tw.pager.Pager(id=params.o2m_id, ids=params.o2m_ids, offset=0,
                                    limit=-1, count=len(params.o2m_ids), view_type='form')
 
@@ -144,6 +144,7 @@ class OpenO2M(Form):
         if new_ids and params.source:
             current.id = new_ids[-1]
             params.o2m_id = current.id
+            params.o2m_ids = all_ids
         elif not params.button and not params.next_id:
             params.o2m_id = False
         elif params.next_id:
