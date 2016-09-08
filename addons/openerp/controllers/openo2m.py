@@ -105,7 +105,8 @@ class OpenO2M(Form):
             form = self.create_form(params, tg_errors)
             params.o2m_ids = params.view_params[params.o2m].ids
             pager = tw.pager.Pager(id=params.o2m_id, ids=params.o2m_ids, offset=0,
-                                   limit=-1, count=len(params.o2m_ids), view_type='form')
+                                   limit=-1, count=len(params.o2m_ids), view_type='form',
+                                   pager_options=[])
 
         return dict(form=form, params=params, pager=pager)
 

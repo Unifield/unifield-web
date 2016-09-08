@@ -15,9 +15,15 @@
         % if prev:
         </a>
         % endif
+        % if pager_options:
         <span class="pager_info" onclick="jQuery('[id=_${name+str(pager_id)}_link_span]').hide(); jQuery('[id=_${name+str(pager_id)}_limit_span]').show();">
             ${page_info} ${_('of')} ${approximation and '~' or ''}${count}
         </span>
+        % else:
+        <span class="pager_info" style="cursor: not-allowed">
+            ${page_info} ${_('of')} ${approximation and '~' or ''}${count}
+        </span>
+        % endif
         % if next:
         <a href="#next" action="next" relation="${name}" onclick="validate_action(this, pager_action); return false;">
         % endif
