@@ -167,6 +167,18 @@ One2Many.prototype = {
         if(id != null) {
             params['_terp_o2m_id'] = id;
             params['_terp_o2m_ids'] = openobject.dom.get(prefix + '/_terp_ids').value;
+            var req = openobject.http.postJSON('/openerp/openo2m/get_ids', {
+                'parent_model': this.parent_model,
+                'parent_id': this.parent_id,
+                'fld_name': prefix,
+                'fld_model': openobject.dom.get(prefix + '/_terp_model').value,
+             });
+
+	        req.addCallback(function(obj) {
+                if (obj.o2m_ids) {
+                    params['_terp_o2m_ids'] = obj.o2m_ids;
+                }
+    	    });
         }
         if (id && id != 'False' && !this.default_get_ctx) {
             jQuery.o2m(params);

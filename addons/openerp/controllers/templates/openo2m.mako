@@ -9,8 +9,6 @@
             viewRecord(id, src);
         }
 
-        var o2m_ids = [];
-
         jQuery(document).ready(function() {
             validateForm();
         });
@@ -78,6 +76,5 @@
             }, 3000);
         })
         jQuery.o2m('init');
-        o2m_ids = document.getElementById('order_line/_terp_ids').value;
     </script>
 </%def>
