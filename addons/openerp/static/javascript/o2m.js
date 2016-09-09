@@ -29,6 +29,7 @@ var One2Many = function(name, inline) {
 
     this.model = openobject.dom.get(name + '/_terp_model').value;
     this.mode = openobject.dom.get(name + '/_terp_view_type').value;
+    this.sort_order = openobject.dom.get(name + '/_terp_sort_order').value;
 
     if (openobject.dom.get(name + '/_terp_default_get_ctx'))
         this.default_get_ctx = openobject.dom.get(name + '/_terp_default_get_ctx').value;
@@ -153,6 +154,21 @@ One2Many.prototype = {
             params['_terp_view_params/' + prefix + '/_terp_view_mode'] = openobject.dom.get(prefix + '/_terp_view_mode').value;
             params['_terp_view_params/' + prefix + '/_terp_context'] = openobject.dom.get(prefix + '/_terp_context').value || {};
             params['_terp_view_params/' + prefix + '/_terp_view_type'] = 'form';
+            params['_terp_view_params/' + prefix + '/_terp_sort_order'] = this.sort_order;
+
+            var req = openobject.http.postJSON('/openerp/openo2m/get_ids', {
+                'parent_model': this.parent_model,
+                'parent_id': this.parent_id,
+                'fld_name': prefix,
+                'fld_model': openobject.dom.get(prefix + '/_terp_model').value,
+                'order': this.sort_order,
+             });
+
+	        req.addCallback(function(obj) {
+                if (obj.o2m_ids) {
+                    params['_terp_view_params/' + prefix + '/_terp_ids'] = obj.o2m_ids;
+                }
+    	    });
         }
 
         jQuery.extend(params, {
@@ -172,6 +188,7 @@ One2Many.prototype = {
                 'parent_id': this.parent_id,
                 'fld_name': prefix,
                 'fld_model': openobject.dom.get(prefix + '/_terp_model').value,
+                'order': this.sort_order,
              });
 
 	        req.addCallback(function(obj) {

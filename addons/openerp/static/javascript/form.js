@@ -898,7 +898,7 @@ function eval_domain_context_request(options){
         '_terp_prefix': prefix.join('/'),
         '_terp_active_id': openobject.dom.get(prefix.concat('_terp_id').join('/')).value,
         '_terp_active_ids': openobject.dom.get(prefix.concat('_terp_ids').join('/')).value,
-        '_terp_search_domain': '[]'
+        '_terp_search_domain': '[]',
     });
     if (options.from_search_mode) {
         params['_terp_search_mode'] = 'true';

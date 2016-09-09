@@ -284,6 +284,8 @@ MochiKit.Base.update(ListView.prototype, {
 
     sort_by_order: function(column, field) {
         var $img = jQuery(field).find('img');
+        var terp_sort_order = openobject.dom.get(this.name + '/_terp_sort_order');
+
         if($img.length) {
             if ($img.attr('id') == 'asc') this.sort_order = 'desc';
             else this.sort_order = 'asc';
@@ -291,6 +293,8 @@ MochiKit.Base.update(ListView.prototype, {
         else this.sort_order = 'asc';
 
         this.sort_key = column;
+        terp_sort_order.value = this.sort_key + ' ' + this.sort_order;
+
         if(this.ids.length) {
             this.reload();
         }

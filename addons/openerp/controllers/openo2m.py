@@ -103,7 +103,7 @@ class OpenO2M(Form):
             form = cherrypy.request.terp_form
         else:
             form = self.create_form(params, tg_errors)
-            params.o2m_ids = self.get_o2m_ids(params.parent_model, params.parent_id, params.o2m, params.o2m_model)
+            params.o2m_ids = self.get_o2m_ids(params.parent_model, params.parent_id, params.o2m, params.o2m_model, order=params.view_params[params.o2m].    sort_order)
             pager = tw.pager.Pager(id=params.o2m_id, ids=params.o2m_ids, offset=0,
                                    limit=-1, count=len(params.o2m_ids), view_type='form',
                                    pager_options=[])
@@ -205,12 +205,14 @@ class OpenO2M(Form):
         rel_fld = rpc.RPCProxy('ir.model.fields').read(fld_ids, ['relation_field'])[0]['relation_field']
 
         domain.append((rel_fld, '=', int(parent_id)))
-
+        if order:
+            order = '%s,id' % order
+        
         return rpc.RPCProxy(fld_model).search(domain, order=order)
 
     @expose('json', methods=('POST',))
-    def get_ids(self, parent_model, parent_id, fld_name, fld_model):
-        return  dict(o2m_ids=self.get_o2m_ids(parent_model, parent_id, fld_name, fld_model))
+    def get_ids(self, parent_model, parent_id, fld_name, fld_model, domain=[], order=False):
+        return  dict(o2m_ids=self.get_o2m_ids(parent_model, parent_id, fld_name, fld_model, domain=domain, order=order))
 
 
 # vim: ts=4 sts=4 sw=4 si et

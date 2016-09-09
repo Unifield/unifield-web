@@ -17,6 +17,7 @@
 <input type="hidden" id="${name}_terp_count" name="${name}_terp_count" value="${count}"/>
 <input type="hidden" id="${name}_terp_group_by_ctx" name="${name}_terp_group_by_ctx" value="${group_by_ctx}"/>
 <input type="hidden" id="${name}_terp_filters_context" name="${name}_terp_filters_context" value=""/>
+<input type="hidden" id="${name}_terp_sort_order" name="${name}_terp_sort_order" value="" />
 % if action_id:
 <input type="hidden" id="${name}_terp_action_id" name="${name}_terp_action_id" value="${action_id}">
 % endif

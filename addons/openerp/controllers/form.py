@@ -5,7 +5,7 @@
 #  $Id$
 #
 #  Developed by OpenERP (http://openerp.com) and Axelor (http://axelor.com).
-#
+#ViewForm
 #  The OpenERP web client is distributed under the "OpenERP Public License".
 #  It's based on Mozilla Public License Version (MPL) 1.1 with following 
 #  restrictions:
