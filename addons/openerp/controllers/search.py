@@ -204,16 +204,11 @@ class Search(Form):
     def get(self, **kw):
 
         params, data = TinyDict.split(kw)
-
-        error = None
-        error_field = None
-
         model = params.model
 
         record = kw.get('record')
         record = eval(record)
         proxy = rpc.RPCProxy(model)
-        data = {}
         res = proxy.fields_get(False, rpc.session.context)
 
         all_values = {}

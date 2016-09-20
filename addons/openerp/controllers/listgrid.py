@@ -103,7 +103,6 @@ class List(SecuredController):
     @expose('json', methods=('POST',))
     def remove(self, **kw):
         params, data = TinyDict.split(kw)
-        sc_ids = [i['id'] for i in cherrypy.session['terp_shortcuts']]
         error = None
         proxy = rpc.RPCProxy(params.model)
         if params.id:
@@ -331,10 +330,6 @@ class List(SecuredController):
     @expose('json')
     def button_action(self, **kw):
         params, data = TinyDict.split(kw)
-        error = None
-        reload = (params.context or {}).get('reload', False)
-        result = {}
-
         name = params.button_name
         btype = params.button_type
         ctx = dict((params.context or {}), **rpc.session.context)

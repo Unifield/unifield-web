@@ -130,7 +130,6 @@ class Wizard(SecuredController):
 
                 datas['report_id'] = res.get('report_id', False)
                 if res.get('get_id_from_action', False):
-                    backup_ids = datas['ids']
                     datas['ids'] = datas['form']['ids']
 
                 return actions.execute_report(res['report'], **datas)

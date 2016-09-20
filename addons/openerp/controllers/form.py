@@ -18,17 +18,16 @@
 #  You can see the MPL licence at: http://www.mozilla.org/MPL/MPL-1.1.html
 #
 ###############################################################################
-import base64,os,re
+import base64, re
 
 import cherrypy
-from openerp import utils, widgets as tw, validators
+from openerp import utils, widgets as tw
 from openerp.controllers import SecuredController
 from openerp.utils import rpc, common, TinyDict, TinyForm, expr_eval
 from error_page import _ep
 from openobject.tools import expose, redirect, validate, error_handler, exception_handler
 import openobject
 import openobject.paths
-import simplejson
 
 FIELDS_INTERNAL_NAME = '__openerp__real_fiels'
 
@@ -123,7 +122,7 @@ def get_validation_schema(self):
     """Generate validation schema for the given Form instance. Should be used
     to validate form inputs with @validate decorator.
 
-    @param self: and instance of Form
+    @param self: an instance of Form
 
     @returns a new instance of Form with validation schema
     """
@@ -801,7 +800,6 @@ class Form(SecuredController):
 
     @expose("json")
     def binary_image_delete(self, **kw):
-        saved = kw.get('saved') or None
         model = kw.get('model')
         id = kw.get('id')
         if id:
@@ -839,7 +837,7 @@ class Form(SecuredController):
                 id = rpc.RPCProxy(params.model).create(data, ctx)
                 params.ids.append(id)
                 params.count += 1
-            
+
         l = params.limit or 50
         o = params.offset or 0
         c = params.count or 0
@@ -848,30 +846,28 @@ class Form(SecuredController):
         ids = params.ids or []
         filter_action = params.filter_action
 
-        if ids and filter_action == 'FIRST':
-            o = 0
-            id = ids[0]
-
-        if ids and filter_action == 'LAST':
-            o = c - c % l
-            id = ids[-1]
-
-        if ids and filter_action == 'PREV':
-            if id == ids[0]:
-                o -= l
-            elif id in ids:
-                id = ids[ids.index(id)-1]
-
-        if ids and filter_action == 'NEXT':
-            if id == ids[-1]:
-                o += l
-            elif id in ids:
-                id = ids[ids.index(id)+1]
-            elif id is False:
-                o = 0
-                id = ids[0]
-
         if filter_action:
+            if ids:
+                if filter_action == 'FIRST':
+                    o = 0
+                    id = ids[0]
+                elif filter_action == 'LAST':
+                    o = c - c % l
+                    id = ids[-1]
+                elif filter_action == 'PREV':
+                    if id == ids[0]:
+                        o -= l
+                    elif id in ids:
+                        id = ids[ids.index(id)-1]
+                elif filter_action == 'NEXT':
+                    if id == ids[-1]:
+                        o += l
+                    elif id in ids:
+                        id = ids[ids.index(id)+1]
+                    elif id is False:
+                        o = 0
+                        id = ids[0]
+
             # remember the current page (tab) of notebooks
             cherrypy.session['remember_notebooks'] = True
 
@@ -888,7 +884,8 @@ class Form(SecuredController):
 
             o = res['offset']
             l = res['limit']
-            if not c: c = res['count']
+            if not c:
+                c = res['count']
 
             params.search_domain = res['search_domain']
             params.search_data = res['search_data']
@@ -896,11 +893,11 @@ class Form(SecuredController):
             ids = res['ids']
             id = False
 
-            if ids and filter_action in ('FIRST', 'NEXT'):
-                id = ids[0]
-
-            if ids and filter_action in ('LAST', 'PREV'):
-                id = ids[-1]
+            if ids:
+                if filter_action in ('FIRST', 'NEXT'):
+                    id = ids[0]
+                elif filter_action in ('LAST', 'PREV'):
+                    id = ids[-1]
 
         params.id = id
         params.ids = ids
@@ -953,7 +950,6 @@ class Form(SecuredController):
     @exception_handler(default_exception_handler)
     def previous_o2m(self, **kw):
         params, data = TinyDict.split(kw)
-        
         if params.get('_terp_save_current_id'):
             ctx = dict((params.context or {}), **rpc.session.context)
             if params.id:
@@ -962,10 +958,10 @@ class Form(SecuredController):
                 id = rpc.RPCProxy(params.model).create(data, ctx)
                 params.ids.append(id)
                 params.count += 1
-        
+
         current = params.chain_get(params.source or '') or params
         idx = -1
-        
+
         if current.id:
             # save current record
             if params.editable:
@@ -985,7 +981,6 @@ class Form(SecuredController):
     @expose()
     def next_o2m(self, **kw):
         params, data = TinyDict.split(kw)
-        c = params.count or 0
         current = params.chain_get(params.source or '') or params
 
         idx = 0
