@@ -824,7 +824,6 @@ class Form(SecuredController):
             raise cherrypy.HTTPError(400)   # Bad request
 
     @expose()
-    @validate(form=get_validation_schema)
     @error_handler(default_error_handler)
     @exception_handler(default_exception_handler)
     def filter(self, **kw):
