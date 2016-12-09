@@ -659,6 +659,10 @@ table.fields td {
     vertical-align: middle;
 }
 
+.item textarea#arch {
+    min-height: 620px;
+}
+
 .item input.m2o,
 .item input.reference {
     padding-right: 14px;
