@@ -248,8 +248,6 @@ function validate_binary_size(form){
 
     for (var i = 0; i < elements.length; i++) {
         var elem = elements[i];
-        var elem2 = elem;
-        var value = elem.value;
         var kind = jQuery(elem).attr('kind');
 
         if (kind == 'binary') {
