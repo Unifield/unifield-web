@@ -291,6 +291,7 @@ def _convert_date_format_in_domain(domain, fields, context):
     return fixed_domain
 
 def format_decimal(value, digits=2, **kwargs):
+    truncate = kwargs.get('truncate', False)
     locale = get_locale()
     # fix issue where "%.2f"%a != '%s'%round(a, 2) exple a=51.345 depends on python version / win / linux
     value = round(value, digits)
@@ -315,8 +316,13 @@ def format_decimal(value, digits=2, **kwargs):
         if len(decimals) < min_digits:
             decimals = decimals + '0'*(min_digits - len(decimals))
 
+    if truncate:
+        decimals = decimals.rstrip('0')
+        if not decimals:
+            return val
+
     result = val + unicode(numbers.get_decimal_symbol(locale) + decimals)
-        
+
     return result
 
 def parse_decimal(value):

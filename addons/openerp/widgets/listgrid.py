@@ -323,11 +323,12 @@ class List(TinyWidget):
 
         # custom fields - decimal_precision computation
         computation = attrs.get('computation', False)
+        truncate = attrs.get('truncate', False)
         if isinstance(computation, basestring):
             computation = eval(computation)
 
         integer, digit = digits
-        return format.format_decimal(sum or 0.0, digit, computation=computation)
+        return format.format_decimal(sum or 0.0, digit, computation=computation, truncate=truncate)
 
     def do_real_sum(self, data, field):
         sum = 0.0
@@ -348,11 +349,12 @@ class List(TinyWidget):
 
         # custom fields - decimal_precision computation
         computation = attrs.get('computation', False)
+        truncate = attrs.get('truncate', False)
         if isinstance(computation, basestring):
             computation = eval(computation)
 
         integer, digit = digits
-        return format.format_decimal(sum or 0.0, digit, computation=computation)
+        return format.format_decimal(sum or 0.0, digit, computation=computation, truncate=truncate)
 
 
     def display(self, value=None, **params):
@@ -608,11 +610,12 @@ class Float(Char):
 
         # custom fields - decimal_precision computation
         computation = self.attrs.get('computation', False)
+        truncate = self.attrs.get('truncate', False)
         if isinstance(computation, basestring):
             computation = eval(computation)
 
         integer, digit = digits
-        return format.format_decimal(self.value or 0.0, digit, computation=computation)
+        return format.format_decimal(self.value or 0.0, digit, computation=computation, truncate=truncate)
 
     def get_sortable_text(self):
         return ustr(self.value or '0.0')

@@ -81,7 +81,8 @@ def parse_groups(group_by, grp_records, headers, ids, model,  offset, limit, con
     digits = (16,2)
     # custom fields - decimal_precision computation
     computation = False
-    
+    truncate = False
+
     if fields:
         for key, val in fields.items():
             if val.get('digits'):
@@ -89,6 +90,8 @@ def parse_groups(group_by, grp_records, headers, ids, model,  offset, limit, con
             # custom fields - decimal_precision computation
             if val.get('computation'):
                 computation = val['computation']
+            if val.get('truncate'):
+                truncate = val['truncate']
     if isinstance(digits, basestring):
             digits = eval(digits)
     integer, digit = digits
@@ -101,14 +104,14 @@ def parse_groups(group_by, grp_records, headers, ids, model,  offset, limit, con
             if grp_records[0].has_key(sum_key):
                 value = sum(map(lambda x: x[sum_key], grp_records))
                 if isinstance(value, float):
-                    total_fields[sum_key][1] = format.format_decimal(value or 0.0, digit, computation=computation)
+                    total_fields[sum_key][1] = format.format_decimal(value or 0.0, digit, computation=computation, truncate=truncate)
                 else:
                     total_fields[sum_key][1] = value
     if grp_records:
         for rec in grp_records:
             for key, val in rec.items():
                 if isinstance(val, float):
-                    rec[key] = format.format_decimal(val or 0.0, digit, computation=computation)
+                    rec[key] = format.format_decimal(val or 0.0, digit, computation=computation, truncate=truncate)
 
             for grp_by in group_by:
                 if not rec.get(grp_by):
