@@ -269,9 +269,9 @@ class Workflow(Form):
         proxy = rpc.RPCProxy("workflow")
         result = proxy.get_active_workitems(model, rec_id)
         wkf = result['wkf']
-
         if not wkf:
             raise common.message(_('No workflow associated!'))
+
 
         params = TinyDict()
         params.update(
@@ -280,14 +280,14 @@ class Workflow(Form):
             _terp_ids=[wkf['id']],
             _terp_editable=True,
             _terp_id=wkf['id'],
-            _terp_view_mode=['tree', 'form', 'diagram']
+            _terp_view_mode=['tree', 'form', 'diagram'],
+            _terp_wkf_item=result.get('workitems', {}).keys(),
         )
         return self.create(params)
 
 
     @expose('json')
     def get_info(self, id, model, node_obj, conn_obj, src_node, des_node, **kw):
-
         node_flds_visible = eval(kw.get('node_flds_v', '[]'))
         node_flds_hidden = eval(kw.get('node_flds_h', '[]'))
         node_flds_string = eval(kw.get('node_flds_string', []))

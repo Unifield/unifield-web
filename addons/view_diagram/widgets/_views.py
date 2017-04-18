@@ -14,6 +14,7 @@ class DiagramView(TinyView):
                          model=screen.model,
                          view=screen.view,
                          ids=((screen.id or []) and [screen.id]) or screen.ids[:1],
+                         wkf_item = screen.wkf_item,
                          domain=screen.domain,
                          context=screen.context)
         if not screen.id:

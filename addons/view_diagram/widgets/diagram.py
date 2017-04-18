@@ -32,7 +32,7 @@ class Diagram(TinyWidget):
 
     params = ['dia_id', 'node', 'connector', 'src_node', 'des_node',
               'node_flds', 'conn_flds', 'bgcolor', 'shapes',
-              'node_flds_string', 'conn_flds_string']
+              'node_flds_string', 'conn_flds_string', 'wkf_item']
 
     pager = None
     dia_id = None
@@ -61,7 +61,7 @@ class Diagram(TinyWidget):
                   JSLink("view_diagram", 'javascript/infobox.js')]
 
     def __init__(self, name, model, view,
-                 ids=None, domain=None, context=None, **kw):
+                 ids=None, wkf_item=None, domain=None, context=None, **kw):
         super(Diagram, self).__init__(name=name, model=model, ids=ids)
 
         if ids:
@@ -70,7 +70,7 @@ class Diagram(TinyWidget):
         dom = xml.dom.minidom.parseString(view['arch'].encode('utf-8'))
         root = dom.childNodes[0]
         attrs = node_attributes(root)
-
+        self.wkf_item = wkf_item
         self.string = attrs.get('string')
 
         self.parse(root, view['fields'])
@@ -90,7 +90,7 @@ class Diagram(TinyWidget):
                     if fld.nodeName == 'field':
                         attrs = node_attributes(fld)
                         name = attrs['name']
-                        if attrs.has_key('invisible') and attrs['invisible']=='1':
+                        if False and attrs.has_key('invisible') and attrs['invisible']=='1':
                             self.node_flds['invisible'].append(name)
                         else:
                             self.node_flds['visible'].append(name)

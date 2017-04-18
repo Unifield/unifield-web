@@ -95,7 +95,9 @@ openobject.workflow.Workflow.implement({
     draw_graph : function(wkf_id) {
 
         this.id = wkf_id;
+        this.wkf_item = eval(jQuery('#wkf_item').val());
         var self = this;
+
 
         openobject.http.postJSON('/view_diagram/workflow/get_info',{
             id:wkf_id, model:getElement('_terp_model').value,
@@ -112,10 +114,15 @@ openobject.workflow.Workflow.implement({
                 var node = obj.nodes[i];
 
                 var state;
-                if(node['shape']=='ellipse')
+                if(node['shape']=='ellipse') {
                     state = new openobject.workflow.StateOval(node);
-                else if(node['shape']=='rectangle')
+                    if (self.wkf_item.indexOf(node['id']) != -1) {
+                        state.lineColor = new draw2d.Color(255,0,0);
+                    }
+                }
+                else if(node['shape']=='rectangle') {
                     state = new openobject.workflow.StateRectangle(node);
+                }
 
                 self.addFigure(state, node['x'], node['y']);
                 state.initPort();
