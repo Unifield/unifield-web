@@ -109,6 +109,7 @@ function openRecord(id, src, target, readonly){
         'offset': openobject.dom.get(prefix + '_terp_offset').value,
         'limit': openobject.dom.get(prefix + '_terp_limit').value,
         'count': openobject.dom.get(prefix + '_terp_count').value,
+        'approximation': openobject.dom.get(prefix + '_terp_approximation').value,
         'search_domain': jQuery('#_terp_search_domain').val() || null,
         'search_data': jQuery('#_terp_search_data').val() || null,
         'filter_domain': jQuery('#_terp_filter_domain').val() || [],
@@ -229,6 +230,34 @@ function validate_required(form){
     return result;
 }
 
+function validate_binary_size(form){
+
+    if (typeof form == 'string') {
+        form = jQuery('#' + form).get(0);
+    }
+
+    if (!form) {
+        return true;
+    }
+
+    var elements = MochiKit.Base.filter(function(el){
+        return !el.disabled && el.id && el.name && el.id.indexOf('_terp_listfields/') == -1 && hasElementClass(el, 'binary');
+    }, form.elements);
+
+    var result = true;
+
+    for (var i = 0; i < elements.length; i++) {
+        var elem = elements[i];
+        var kind = jQuery(elem).attr('kind');
+
+        if (kind == 'binary') {
+            return check_attachment_size(elem);
+        }
+    }
+    return result;
+}
+
+
 function error_display(msg) {
     var error = jQuery("<table>",{'width': '100%', 'height': '100%'}
                 ).append(
@@ -337,12 +366,19 @@ function submit_form(action, src, target){
         return;
     }
 
+    // check there is no binary data exceding the maximum size
+    if (/\/save(\?|\/)?/.test(action) && !validate_binary_size($form[0])) {
+        return;
+    }
+
     // Cant use $form.attr due to http://dev.jquery.com/ticket/3113 as there is a form with a field called
     // action when creating an activity
     $form[0].setAttribute('action', action);
+    previous_target = $form.attr("target");
     $form.attr("target", target);
 
     $form.submit();
+    $form.attr("target", previous_target);
 }
 
 function pager_action(src){
@@ -912,6 +948,7 @@ function eval_domain_context_request(options){
     if (options.active_id) {
         params['_terp_active_id'] = options.active_id;
         params['_terp_active_ids'] = options.active_ids;
+        params['_terp_previous_active_id'] = openobject.dom.get(prefix.concat('_terp_id').join('/')).value;
     }
 
     var parent_context = openobject.dom.get(prefix.concat('_terp_context').join('/'));
@@ -979,7 +1016,7 @@ function open_search_window(relation, domain, context, source, kind, text){
     });
 }
 
-function makeContextMenu(id, kind, relation, val){
+function makeContextMenu(id, kind, relation, val, hide_default_menu){
     var act = get_form_action('get_context_menu');
 
     var prefix = id.indexOf('/') > -1 ? id.slice(0, id.lastIndexOf('/')) : '';
@@ -994,7 +1031,8 @@ function makeContextMenu(id, kind, relation, val){
         'field': id,
         'kind': kind,
         'relation': relation,
-        'value': val
+        'value': val,
+        'hide_default_menu': hide_default_menu
     }).addCallback(function(obj){
         var $tbody = jQuery('<tbody>');
         jQuery.each(obj.defaults, function (_, default_) {
@@ -1269,7 +1307,7 @@ function on_context_menu(evt, target){
     $menu.offset({top: 0, left: 0});
     $menu.offset({top: click_position.y - 5, left: click_position.x - 5});
     $menu.hide();
-    makeContextMenu(src, kind, $src.attr('relation'), $src.val());
+    makeContextMenu(src, kind, $src.attr('relation'), $src.val(), $src.attr('hide_default_menu'));
 
     stopEventDammit(evt);
 }
@@ -1332,6 +1370,26 @@ function removeAttachment() {
     return false;
 }
 
+function check_attachment_size(obj) {
+    var $datas = jQuery(obj);
+    var $max_size = $datas.attr('max-size');
+    if (typeof $max_size !== "undefined" && obj.files && obj.files[0]) {
+        var $file_size = obj.files[0].size;
+        if ($file_size > $max_size) {
+            var $mb_size = $file_size/1024/1024;
+            $mb_size = parseFloat($mb_size).toFixed( 2 );
+            var $mb_max_size = $max_size/1024/1024;
+            $mb_max_size = parseFloat($mb_max_size).toFixed( 2 );
+            var msg = _('You cannot upload files bigger than %(max_size)sMB, current size is %(size)sMB');
+            msg = msg.replace('%(size)s', $mb_size);
+            msg = msg.replace('%(max_size)s', $mb_max_size);
+            return error_display(msg);
+        };
+    };
+    return true;
+}
+
+
 /**
  * @event form submission
  *
@@ -1340,6 +1398,13 @@ function removeAttachment() {
  * Creates a new line in #attachments if the creation succeeds.
  */
 function createAttachment(){
+
+    // Check attachment size is not bigger than max attachment size
+    // refuse it if bigger.
+    if (check_attachment_size(this.children.datas) !== true) {
+        return false
+    }
+
     var $form = jQuery(this);
     if(!jQuery(idSelector('_terp_id')).val() || jQuery(idSelector('_terp_id')).val() == 'False') {
         return error_display(_('No record selected ! You can only attach to existing record.'));
@@ -1352,7 +1417,12 @@ function createAttachment(){
     $form.ajaxSubmit({
         dataType: 'json',
         data: {'requested_with': 'XMLHttpRequest'},
-        success: function(data){
+        type: 'POST',
+        success: function(data) {
+            if ('error' in data) {
+                // display error message from server
+                return error_display(data['error']);
+            }
             var $attachment_line = jQuery('<li>', {
                 'id': 'attachment_item_' + data['id'],
                 'data-id': data['id']

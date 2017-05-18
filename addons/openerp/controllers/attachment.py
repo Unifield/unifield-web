@@ -22,12 +22,11 @@ import base64
 
 import cherrypy
 from openerp.controllers import SecuredController
-from openerp.utils import rpc, common, TinyDict
+from openerp.utils import rpc, common, TinyDict, serve_file
 
 from openobject.tools import expose, redirect
 
 import actions
-
 
 class Attachment(SecuredController):
 
@@ -40,6 +39,7 @@ class Attachment(SecuredController):
 
         if id:
             ctx = dict(rpc.session.context)
+            ctx['from_web_interface'] = True
 
             action = dict(
                 rpc.RPCProxy('ir.attachment').action_get(ctx),
@@ -47,7 +47,7 @@ class Attachment(SecuredController):
                 context=dict(ctx,
                              default_res_model=model,
                              default_res_id=id
-            ))
+                             ))
 
             return actions.execute(action)
         else:
@@ -57,11 +57,15 @@ class Attachment(SecuredController):
     def get(self, record=False):
         record = int(record)
         attachment = rpc.RPCProxy('ir.attachment').read(record, ['type',
-        'datas', 'url', 'name'], rpc.session.context)
+                                                                 'url', 'name', 'path', 'datas_fname', 'datas'], rpc.session.context)
 
         if attachment['type'] == 'binary':
-            cherrypy.response.headers["Content-Disposition"] = 'attachment; filename="%s"' % attachment['name']
-            return base64.decodestring(attachment['datas'])
+            if attachment['datas']:
+                # US1690: old style attachement where stored in base
+                cherrypy.response.headers["Content-Disposition"] = 'attachment; filename="%s"' % attachment['datas_fname']
+                return base64.decodestring(attachment['datas'])
+            else:
+                return serve_file.serve_file(attachment['path'], "application/x-download", 'attachment', attachment['datas_fname'])
         elif attachment['type'] == 'url':
             raise redirect(attachment['url'])
         raise Exception('Unknown attachment type %(type)s for attachment name %(name)s' % attachment)
@@ -72,13 +76,17 @@ class Attachment(SecuredController):
         ctx = dict(rpc.session.context,
                    default_res_model=params.model, default_res_id=params.id,
                    active_id=False, active_ids=[])
+        ctx['from_web_interface'] = True
 
-        attachment_id = rpc.RPCProxy('ir.attachment').create({
-            'name': datas.filename,
-            'datas_fname': datas.filename,
-            'datas': base64.encodestring(datas.file.read()),
-        }, ctx)
-        return {'id': attachment_id, 'name': datas.filename}
+        try:
+            attachment_id = rpc.RPCProxy('ir.attachment').create({
+                'name': datas.filename,
+                'datas_fname': datas.filename,
+                'datas': base64.encodestring(datas.file.read()),
+            }, ctx)
+            return {'id': attachment_id, 'name': datas.filename}
+        except Exception, e:
+            return {'error': ustr(e)}
 
     @expose('json', methods=('POST',))
     def remove(self, id=False, **kw):

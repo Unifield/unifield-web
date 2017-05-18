@@ -23,7 +23,6 @@
 This module implementes widget parser for form view, and
 several widget components.
 """
-import os
 import random
 import re
 import xml.dom.minidom
@@ -455,7 +454,7 @@ class Float(TinyInputWidget):
             digits = eval(digits)
 
         integer, digit = digits
-        
+
         # custom fields - decimal_precision computation
         computation = attrs.get('computation', False)
         if isinstance(computation, basestring):
@@ -563,6 +562,18 @@ class Selection(TinyInputWidget):
         super(Selection, self).set_value(value)
 
 register_widget(Selection, ["selection"])
+
+class FullText(TinyInputWidget):
+    template = "/openerp/widgets/form/templates/full_text.mako"
+
+    def set_value(self, value):
+        if value:
+            super(FullText, self).set_value(value)
+
+    def _make_field_widget(self, attrs, value=False):
+        super(FullText, self)._make_field_widget(attrs, value)
+
+register_widget(FullText, ["full_text"])
 
 
 class DTLink(JSLink):
@@ -788,7 +799,7 @@ class Form(TinyInputWidget):
         proxy = rpc.RPCProxy(model)
 
         self.context = dict(rpc.session.context,
-                                **(context or {}))
+                            **(context or {}))
         self.context['bin_size'] = True
 
         values = {}
@@ -806,15 +817,15 @@ class Form(TinyInputWidget):
                 else:
                     fields_to_read = fields.keys()
                 lval = proxy.read(ids[:1], fields_to_read + ['__last_update'], self.context)
-                
+
                 if lval:
                     values = lval[0]
                     self.id = ids[0]
-                    
+
                     for f in fields:
                         if fields[f]['type'] == 'many2one' and f in values and isinstance(values[f], tuple):
                             values[f] = values[f][0]
-                            
+
                     ConcurrencyInfo.update(self.model, [values])
 
             elif 'datas' in view: # wizard data
@@ -851,6 +862,7 @@ class Form(TinyInputWidget):
                 if expr_eval(attrs.get('noteditable'), new_values):
                     self.noteditable = True
                     self.hide_button_save = True
+                    self.hide_button_edit = True
             except:
                 pass
 

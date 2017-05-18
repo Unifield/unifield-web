@@ -9,13 +9,23 @@
             value="${bin_data}"/>
     % endif
     <div id="${name}_binary_add" style="display: none;">
-        % if editable and not readonly:
+        % if editable and not readonly and model != 'ir.attachment':
         <input ${py.attrs(attrs)}
             accept="${accept}"
             type="file"
             class="${css_class}"
             kind="${kind}"
             disabled="disabled"
+            id="${name}"
+            name="${name}"/>
+        % elif editable and not readonly and model == 'ir.attachment':
+        <input ${py.attrs(attrs)}
+            accept="${accept}"
+            type="file"
+            class="${css_class}"
+            kind="${kind}"
+            disabled="disabled"
+            max-size="${max_attachment_size}"
             id="${name}"
             name="${name}"/>
         % endif
@@ -25,7 +35,7 @@
         %if value:
         	<input type="hidden" name="${name}" value="${value}"></input>
        	% endif
-        % if text and model == 'ir.attachment' and ctx != 'usb_synchronization' and editable:
+        % if (text or value_bin_size) and model == 'ir.attachment' and ctx != 'usb_synchronization' and editable:
         <a class="button-a" href="javascript: void(0)" onclick="save_binary_data('${name}', '${filename}')">${_("Open donation certificate")}</a>
         % elif text and editable:
         <a class="button-a" href="javascript: void(0)" onclick="save_binary_data('${name}', '${filename}')">${_("Save As")}</a>
