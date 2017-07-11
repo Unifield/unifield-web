@@ -203,7 +203,7 @@ import itertools
             </table>
             % if editable or selectable:
                 <script type="text/javascript">
-                    jQuery('table[id=${name}_grid] tr.grid-row').click(function(event) {
+                    jQuery('table#${name}_grid tr.grid-row').click(function(event) {
                         var $this = jQuery(this);
                         if(event.detail != 1
                          || jQuery(event.target).is('img, input')

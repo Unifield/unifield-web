@@ -432,7 +432,7 @@ function getFormData(extended, include_readonly, parentNode) {
             $fields = $fields.add('input:not([readonly="True"]):not(:disabled), textarea:not([readonly="True"]):not(:disabled), select:not([readonly="True"]):not(:disabled)', parentNode);
         }
     } else {
-        $fields = $fields.add('[kind=value], [name$=/__id]');
+        $fields = $fields.add('[kind="value"], [name$="/__id"]');
     }
 
     $fields.each(function(){
@@ -464,7 +464,7 @@ function getFormData(extended, include_readonly, parentNode) {
                 return;
             }
             // skip if editable list's editors are visible
-            if (openobject.dom.select("[name^=_terp_listfields/" + name + "]").length) {
+            if (openobject.dom.select("[name^=_terp_listfields\\/" + name + "]").length) {
                 return;
             }
 

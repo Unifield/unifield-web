@@ -512,7 +512,7 @@ function parse_filters(src, id) {
         }
         jQuery(id).toggleClass('active inactive');
     }
-    var $all_search_fields = jQuery('#search_filter_data').find("input:not([type=checkbox]):not([type=hidden])), select[name]");
+    var $all_search_fields = jQuery('#search_filter_data').find("input:not([type=checkbox]):not([type=hidden]), select[name]");
     jQuery('#_terp_filters_context').val(filter_context);
     $all_search_fields.each(function(fld_index, fld){
         var $fld = jQuery(fld);
