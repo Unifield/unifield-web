@@ -3,7 +3,7 @@
 <%def name="header()">
     <script type="text/javascript" src="/openobject/static/javascript/MochiKit.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/MochiKit/Resizable.js"></script>
-    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-1.4.2.js"></script>
+    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-1.12.4.js"></script>
     <script type="text/javascript">
         jQuery.noConflict();
     </script>

@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="/openobject/static/images/favicon.ico">
     
-    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery-ui/smoothness/jquery-ui-1.8.6.custom.css"/>
-    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery.fancybox-1.3.1.css"/>
+    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery-ui/smoothness/jquery-ui.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery.fancybox-1.3.4.css"/>
 
 % for css in widget_css:
     ${css.display()}
@@ -15,11 +15,12 @@
     <script type="text/javascript" src="/openobject/static/javascript/MochiKit.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/MochiKit/Resizable.js"></script>
 
-    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-1.4.2.js"></script>
-    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-ui-1.8.6.custom.min.js"></script>
+    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-1.12.4.js"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.4.1.js"></script>
+    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.form.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.ba-hashchange.js"></script>
-    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.fancybox-1.3.1.js"></script>
+    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.fancybox-1.3.4.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.dialogextend.js"></script>
     
     <script type="text/javascript">
