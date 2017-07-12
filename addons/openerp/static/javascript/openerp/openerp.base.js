@@ -331,7 +331,7 @@ jQuery(document).delegate(
     }
 });
 
-jQuery(document).bind('ready', function (){
+jQuery(document).ready(function () {
     var $caller = jQuery(ELEMENTS_WITH_CALLBACK);
     $caller.each(function(){
         if (!jQuery(this).val()) {

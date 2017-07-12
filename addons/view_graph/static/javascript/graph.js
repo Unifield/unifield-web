@@ -61,4 +61,5 @@ function onChartClick(path) {
 	openLink(path)
 }
 
-jQuery(document).bind('ready ajaxStop', setup_charts);
+jQuery(document).ready(setup_charts);
+jQuery(document).ajaxStop(setup_charts);
