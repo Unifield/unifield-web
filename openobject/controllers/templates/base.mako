@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <link rel="shortcut icon" href="/openobject/static/images/favicon.ico">
     
-    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery-ui/smoothness/jquery-ui.min.css"/>
+    <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery-ui/smoothness/jquery-ui.min_custom.css"/>
     <link type="text/css" rel="stylesheet" href="/openobject/static/css/jquery.fancybox-1.3.1.css"/>
 
 % for css in widget_css:
@@ -21,7 +21,7 @@
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.form.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.ba-hashchange.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.fancybox-1.3.1.js"></script>
-    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.dialogextend.js"></script>
+    <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.dialogextend_custom.js"></script>
     
     <script type="text/javascript">
         jQuery.noConflict();
