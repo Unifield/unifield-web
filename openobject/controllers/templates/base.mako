@@ -16,7 +16,6 @@
     <script type="text/javascript" src="/openobject/static/javascript/MochiKit/Resizable.js"></script>
 
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-1.12.4.js"></script>
-    <script type="text/javascript" src="http://code.jquery.com/jquery-migrate-1.4.1.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery-ui.min.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.form.js"></script>
     <script type="text/javascript" src="/openobject/static/javascript/jQuery/jquery.ba-hashchange.js"></script>

@@ -15,7 +15,7 @@
         % if prev:
         </a>
         % endif
-        <span class="pager_info" onclick="jQuery('[id=_${name+str(pager_id)}_link_span]').hide(); jQuery('[id=_${name+str(pager_id)}_limit_span]').show();">
+        <span class="pager_info" onclick="jQueryEscape('[id="_${name+str(pager_id)}_link_span"]').hide(); jQueryEscape('[id="_${name+str(pager_id)}_limit_span"]').show();">
             ${page_info} ${_('of')} ${approximation and '~' or ''}${count}
         </span>
         % if next:
@@ -38,12 +38,12 @@
 
     <div id="_${name+str(pager_id)}_limit_span" style="display: none" align="right">
         <label for="_${name+str(pager_id)}_limit"
-               onclick="jQuery('[id=_${name+str(pager_id)}_limit_span]').hide(); jQuery('[id=_${name+str(pager_id)}_link_span]').show();">${_("Change Limit:")}</label>&nbsp;
+               onclick="jQueryEscape('[id="_${name+str(pager_id)}_limit_span"]').hide(); jQueryEscape('[id="_${name+str(pager_id)}_link_span"]').show();">${_("Change Limit:")}</label>&nbsp;
         <select id='_${name+str(pager_id)}_limit'
                 action="filter"
                 relation="${name}"
-                onchange="jQuery('[id=${name_base}_terp_limit]').val(jQuery(this).val());
-                          jQuery('[id=${name_base}_terp_offset]').val(0);
+                onchange="jQueryEscape('[id="${name_base}_terp_limit"]').val(jQuery(this).val());
+                          jQueryEscape('[id="${name_base}_terp_offset"]').val(0);
                       pager_action(this)" style="min-width: 25px;">
             <option value=""></option>
             % for k in pager_options:

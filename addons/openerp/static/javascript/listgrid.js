@@ -40,22 +40,23 @@ ListView.prototype = {
         var prefix = name == '_terp_list' ? '' : name + '/';
 
         this.name = name;
-        this.model = jQuery('#'+prefix + '_terp_model').get() ? jQuery('#'+prefix + '_terp_model').val() : null;
+        this.model = jQueryEscape('[id*="'+prefix + '_terp_model'+'"]').get() ? jQueryEscape('[id*="'+prefix + '_terp_model'+'"]').val() : null;
         this.current_record = null;
 
-        this.ids = jQuery('#'+prefix + '_terp_ids').val();
+        this.ids = jQueryEscape('[id*="'+prefix + '_terp_ids'+'"]').val();
 
-        this.view_ids = jQuery('#'+prefix + '_terp_view_ids').get() ? jQuery('#'+prefix + '_terp_view_ids').val() : null;
-        this.view_id = jQuery('#'+prefix + '_terp_view_id').get() ? jQuery('#'+prefix + '_terp_view_id').val() : null;
-        this.view_mode = jQuery('#'+prefix + '_terp_view_mode').get() ? jQuery('#'+prefix + '_terp_view_mode').val() : null;
-        this.view_type = jQuery('#'+prefix + '_terp_view_type').get() ? jQuery('#'+prefix + '_terp_view_type').val() : null;
+
+        this.view_ids = jQueryEscape('[id*="'+prefix + '_terp_view_ids'+'"]').get() ? jQueryEscape('[id*="'+prefix + '_terp_view_ids'+'"]').val() : null;
+        this.view_id = jQueryEscape('[id="'+prefix + '_terp_view_id'+'"]').get() ? jQueryEscape('[id="'+prefix + '_terp_view_id'+'"]').val() : null;
+        this.view_mode = jQueryEscape('[id*="'+prefix + '_terp_view_mode'+'"]').get() ? jQueryEscape('[id*="'+prefix + '_terp_view_mode'+'"]').val() : null;
+        this.view_type = jQueryEscape('[id*="'+prefix + '_terp_view_type'+'"]').get() ? jQueryEscape('[id*="'+prefix + '_terp_view_type'+'"]').val() : null;
 
         // if o2m
 
-        this.m2m = jQuery('[id*="'+ name + '_set' + '"]');
-        this.default_get_ctx = jQuery('#' + prefix + '_terp_default_get_ctx').get() ? jQuery('#' + prefix + '_terp_default_get_ctx').val() : null;
+        this.m2m = $('[id*="'+ name + '_set' + '"]');
+        this.default_get_ctx = jQueryEscape('[id*="' + prefix + '_terp_default_get_ctx' + '"]').get() ? jQueryEscape('[id*="' + prefix + '_terp_default_get_ctx' + '"]').val() : null;
         // save the reference
-        jQuery('[id="'+name+'"]').get(0).__listview = this;
+        jQueryEscape('[id="'+name+'"]').get(0).__listview = this;
 
         this.sort_order = null;
         this.sort_key = null;
@@ -63,7 +64,7 @@ ListView.prototype = {
 
     get_previously_selected: function() {
         var prefix = this.name == '_terp_list' ? '' : this.name + '/';
-        var previous_field = jQuery('[id*="'+prefix + '_terp_previously_selected'+'"]')
+        var previous_field = jQueryEscape('[id*="'+prefix + '_terp_previously_selected'+'"]')
         if (previous_field) {
             sel = previous_field.val() || "";
             if (!sel) {return []};
@@ -74,7 +75,7 @@ ListView.prototype = {
 
     update_previously_selected: function(value_arr) {
         var prefix = this.name == '_terp_list' ? '' : this.name + '/';
-        field_previously_selected = jQuery('[id*="'+prefix + '_terp_previously_selected'+'"]');
+        field_previously_selected = jQueryEscape('[id*="'+prefix + '_terp_previously_selected'+'"]');
         if (field_previously_selected) {
             field_previously_selected.val(value_arr.join(','));
             $('#num_selected').html(value_arr.length);
@@ -111,8 +112,8 @@ ListView.prototype = {
 
     checkAll: function(clear) {
         var self = this
-        jQuery('[id="' + this.name + '"] input.grid-record-selector').each(function(){
-            jthis = jQuery(this)
+        jQueryEscape('[id="' + this.name + '"] input.grid-record-selector').each(function(){
+            jthis = $(this)
             if (clear && jthis.attr('checked')) {
                 self.remove_previously_selected(jthis.val());
             } else if (!clear && !jthis.attr('checked')) {
@@ -315,7 +316,7 @@ MochiKit.Base.update(ListView.prototype, {
         var group_by_context = $group_record.attr('grp_context');
         var domain = $group_record.attr('grp_domain');
         var total_groups = jQuery('#' + this.name).attr('groups');
-        var $header = jQuery('table#'+this.name+'_grid'+' tr.grid-header');
+        var $header = jQueryEscape('table[id="'+this.name+'_grid'+'"] tr.grid-header');
         var check_order = eval(total_groups);
         var sort_order;
         var sort_key;
@@ -696,7 +697,7 @@ MochiKit.Base.update(ListView.prototype, {
         var self = this;
         var req = openobject.http.postJSON('/openerp/listgrid/save', args);
 
-        var $current_record = jQuery('table#'+this.name+'_grid').find('tr.grid-row[record="'+id+'"]');
+        var $current_record = jQueryEscape('table[id="'+this.name+'_grid'+'"]').find('tr.grid-row[record="'+id+'"]');
         req.addCallback(function(obj) {
             if (obj.error) {
                 error_display(obj.error);
@@ -745,8 +746,8 @@ MochiKit.Base.update(ListView.prototype, {
         var todel = [];
 
         if(ids==0) {
-            var $o2m = jQuery(idSelector('_terp_default_o2m/' + this.name));
-            var $tr = jQuery(arguments[1]).parents('tr.grid-row:first');
+            var $o2m = $(idSelector('_terp_default_o2m/' + this.name));
+            var $tr = $(arguments[1]).parents('tr.grid-row:first');
 
             jQuery.post('/openerp/listgrid/remove_o2m_defaults', {
                 o2m_value: $o2m.val(),
@@ -793,9 +794,9 @@ MochiKit.Base.update(ListView.prototype, {
             $terp_approximation = jQuery('#_terp_approximation')
         }
         else {
-            $terp_ids = jQuery('[id="'+this.name+'/_terp_ids'+'"]')
-            $terp_count =  jQuery('[id="'+this.name+'/_terp_count'+'"]')
-            $terp_approximation =  jQuery('[id="'+this.name+'/_terp_approximation'+'"]')
+            $terp_ids = jQueryEscape('[id="'+this.name+'/_terp_ids'+'"]')
+            $terp_count =  jQueryEscape('[id="'+this.name+'/_terp_count'+'"]')
+            $terp_approximation =  jQueryEscape('[id="'+this.name+'/_terp_approximation'+'"]')
         }
 
         args['_terp_ids'] = $terp_ids.val()

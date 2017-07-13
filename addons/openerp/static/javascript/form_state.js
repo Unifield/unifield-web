@@ -57,9 +57,10 @@ function form_hookStateChange() {
 
 function list_hookStateChange(list_name) {
     var fields = {};
-    var list_fields_with_states = [ 'table#'+list_name+'_grid input.states',
-				    'table#'+list_name+'_grid selection.states' ].join(', ');
-    jQuery(list_fields_with_states).each(function() {
+    var list_fields_with_states = [ 'table[id="'+list_name+'_grid"] input.[states]',
+                    'table[id="'+list_name+'_grid"] selection.[states]' ].join(', ');
+
+    jQueryEscape(list_fields_with_states).each(function() {
         var $this = jQuery(this);
         var attrs = $this.attr('attrs') || '{}';
         var widget = $this.attr('widget') || '';
@@ -190,7 +191,7 @@ function form_hookAttrChange() {
 }
 
 function list_hookAttrChange(list_name) {
-    jQuery('table#'+list_name+'_grid [attrs]').each(function () {
+    jQueryEscape('table[id="'+list_name+'_grid"] [attrs]').each(function () {
         var $this = jQuery(this);
         var attrs = $this.attr('attrs') || '{}';
         var widget = $this.attr('widget') || '';

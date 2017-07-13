@@ -177,14 +177,14 @@
                                                 <button id="${name}_new" title="${_('Create new record.')}" type="button">${_('New')}</button>
                                                 % if editors:
                                                     <script type="text/javascript">
-                                                        jQuery('#${name}_new').click(function() {
+                                                        jQueryEscape('[id="${name}_new"]').click(function() {
                                                             listgridValidation('${name}', '${o2m or 0}', -1);
                                                             return false;
                                                         });
                                                     </script>
                                                 % else:
                                                     <script type="text/javascript">
-                                                        jQuery('#${name}_new').click(function() {
+                                                        jQueryEscape('[id="${name}_new"]').click(function() {
                                                             editRecord(null);
                                                             return false;
                                                         });
@@ -359,7 +359,7 @@
                     % if editors:
                         <script type="text/javascript">
                             /* In editable grid, clicking on empty row will create new and on existing row will edit. */
-                           jQuery('table#${name}_grid tr.grid-row').each(function(index, row) {
+                           jQueryEscape('table[id="${name}_grid"] tr.grid-row').each(function(index, row) {
                                if (! jQuery(row).hasClass('noteditable')) {
                                jQuery(row).click(function(event) {
                                    if (!jQuery(event.target).is(':input, img, option, a.listImage-container, td.m2o_coplition')) {
@@ -380,11 +380,11 @@
                                     editable = jQuery('#_terp_editable').val();
                                 }
                                 else {
-                                    view_type = jQuery('[id=${name}\\/_terp_view_type]').val();
-                                    editable = jQuery('[id=${name}\\/_terp_editable]').val();
+                                    view_type = jQueryEscape('[id="${name}/_terp_view_type"]').val();
+                                    editable = jQueryEscape('[id="${name}/_terp_editable"]').val();
                                 }
 
-                                jQuery('table#${name}_grid tr.grid-row').click(function(event) {
+                                jQueryEscape('table[id="${name}_grid"] tr.grid-row').click(function(event) {
                                     var $this = jQuery(this);
                                     if(jQuery(event.target).is('img, input, a.listImage-container')
                                      || view_type != 'tree'

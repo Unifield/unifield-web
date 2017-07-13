@@ -9,6 +9,26 @@
  *                    inserted, if any.
  */
 
+// some characters are now forbidden in selectors (such as '/'), escape them
+(function(jQuery) {
+
+  jQuery.withSelectorEscaping = function() {
+    function escapeSelector(selector) {
+        return selector.replace( /(:|\.|,|@|\/)/g, "\\$1" );
+    }
+    return function(selector, context) {
+      // do not do this for HTML
+      if (selector && selector.replace && selector[0] !== '<') {
+        selector = escapeSelector(selector);
+      }
+      return jQuery(selector, context);
+    };
+  }
+}(jQuery));
+
+// create new alias here
+jQueryEscape = jQuery.withSelectorEscaping();
+
 function close_this_frame() {
     /* less intrusive than UF-2513 */
     fr = jQuery('.ui-icon-closethick')
@@ -430,3 +450,4 @@ jQuery(document).bind({
 
     }
 });
+
