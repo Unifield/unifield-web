@@ -609,8 +609,8 @@ def close_popup(reload=True, o2m_refresh=False):
 def report_link(report_name, **kw):
     if kw.get('keep_open'):
         cherrypy.response.headers['keep-open'] = 1
-    cherrypy.response.headers['X-Target'] = 'download'
+    #cherrypy.response.headers['X-Target'] = 'download'
     cherrypy.response.headers['Location'] = tools.url(
-        '/openerp/report', report_name=report_name, **kw)
+        '/openerp/report', report_name=report_name)
     return dict(name=report_name, data=kw)
 
