@@ -20,6 +20,8 @@
 ##############################################################################
 
 # Win32 python extensions modules
+import sys
+sys.dont_write_bytecode=True
 import win32serviceutil
 import win32service
 import win32event
@@ -27,7 +29,6 @@ import win32api
 import win32process
 import servicemanager
 
-import sys
 import subprocess
 import os
 import thread
