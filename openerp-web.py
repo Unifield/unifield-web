@@ -8,6 +8,7 @@ proper start script.
 """
 
 import sys
+sys.dont_write_bytecode=True
 from openobject.commands import start, ConfigurationError
 
 if __name__ == "__main__":
