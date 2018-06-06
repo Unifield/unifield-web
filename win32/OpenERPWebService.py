@@ -23,7 +23,7 @@
 import sys
 sys.dont_write_bytecode=True
 import os
-os.environ['PYTHONDONTWRITEBYTECODE'] = 1
+os.environ['PYTHONDONTWRITEBYTECODE'] = "1"
 import win32serviceutil
 import win32service
 import win32event
