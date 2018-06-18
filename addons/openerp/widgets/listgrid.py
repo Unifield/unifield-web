@@ -612,6 +612,8 @@ class Float(Char):
         digits = self.attrs.get('digits', (16,2))
         if isinstance(digits, basestring):
             digits = eval(digits)
+        if self.attrs.get('truncate_qty'):
+            digits = (16,0)
 
         # custom fields - decimal_precision computation
         computation = self.attrs.get('computation', False)
