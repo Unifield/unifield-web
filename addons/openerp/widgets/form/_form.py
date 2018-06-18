@@ -457,7 +457,11 @@ class Float(TinyInputWidget):
     def __init__(self, **attrs):
         super(Float, self).__init__(**attrs)
 
-        digits = attrs.get('digits', (16,2))
+        if attrs.get('truncate_qty'):
+            digits = (16,0)
+        else:
+            digits = attrs.get('digits', (16,2))
+
         if isinstance(digits, basestring):
             digits = eval(digits)
 
