@@ -1,0 +1,417 @@
+table.fields {
+  background-color: white;
+  padding: 15px;
+}
+table.fields td{
+  border: none !important;
+  height: 30px !important;
+	font-size: 13px !important;
+	color: black;
+	position: relative;
+}
+table.fields tbody tr td.item-group{
+	padding-bottom: 15px;
+}
+ 
+table.fields tbody tr td.item-group .fields{
+	padding: 0px;
+	background-color: white;
+	border: none;
+	border-radius: 5px;
+}
+
+table.fields td input,
+table.fields td select{
+	height: 100%;
+	padding-left: 5px;
+  padding-right: 5px;
+	border: 1px solid #eaeaea;
+	border-radius: 5px;
+
+}
+
+table.fields td select.selection{
+	border: 1px solid #eaeaea;
+  padding-right: 30px;
+}
+table.fields td input.datetime,
+table.fields td input.m2o_search,
+table.fields td select.selection{
+  padding-right: 30px;
+}
+
+table.fields td input.datetime{
+  min-width: 125px;
+}
+
+.filters-group table.fields {
+  padding: 0 !important;
+}
+
+.label{
+  padding-left: 20px;
+  padding-right: 10px;
+}
+
+.o2m_cell{
+  padding: 0 !important;
+}
+
+.m2o{
+  width: 100%;
+  height: 100%;
+  display: inline-block;
+}
+
+.m2o_container{
+	display: flex;
+	justify-content: space-between;
+	padding-right: 0;
+	height: 100%;
+}
+
+.m2o_container > span{
+	flex-grow: 1;
+	margin-right: 5px;
+}
+
+img.datetime,
+.m2o_select {
+    position: absolute;
+    right: 5px;
+    top: 12px;
+}
+#view_form{
+  background-color: white;
+  border-radius: 5px;
+  padding-top: 0px;
+  overflow: hidden;
+}
+#view_form .requiredfield{
+	border: none;
+}
+
+#view_form .readonlyfield{
+	background-color: #eaeaea;
+}
+
+.item{
+  padding: 0 !important;
+  padding-left: 5px !important;
+}
+.item-filtersgroup{
+  padding-right: 0 !important;
+}
+.item.search_filters.item-filter{
+  padding-left: 0px !important;
+  padding-right: 0 !important;
+}
+.item-button{
+  padding: 5px !important;
+}
+
+.item-notebook {
+  padding-bottom: 10px;
+}
+.item-notebook .notebook{
+  padding-top: 10px;
+  background-color: white;
+  border-radius: 5px;
+  margin: 0;
+}
+
+.item-text{
+  padding-left: 10px !important;
+}
+
+.item-label{
+  padding: 0 10px;
+}
+
+.item-selection {
+	position: relative;
+	padding: 0;
+  padding-right: 10px;
+	outline: 0;
+	border-radius: 5px;
+}
+
+/*.item-selection:hover {
+	color: red;
+}*/
+
+.item-selection > select{
+    width:100%;
+    margin:0;
+    background: transparent;
+    border: 0;
+    outline: 0;
+    cursor: pointer;
+    /* Remove select styling */
+    appearance: none;
+    -webkit-appearance: none;
+    /* Font size must the 16px or larger to prevent iOS page zoom on focus */
+    font-size: 100%;
+    /* General select styles: change as needed */
+  }
+
+.item-selection > select:focus {
+      outline:0;
+}
+.item-selection > select > option{
+      font-weight:normal;
+}
+
+
+.item-selection:after {
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 18px;
+    top: 50%;
+    right: 10px;
+    margin-top:-2px;
+    background-image: url('../images/triangle.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    z-index: 2;
+    /* This hack make the select behind the arrow clickable in some browsers */
+    pointer-events:none;
+  }
+
+.m2o_container:after{
+    content: '';
+    position: absolute;
+    width: 16px;
+    height: 18px;
+    top: 50%;
+    right: 8px;
+    background-image: url('../images/arrow-down-circle.svg');
+    margin-top:-8px;
+    background-repeat: no-repeat;
+    background-size: 100%;
+    z-index: 2;
+    pointer-events:none;
+}
+
+img.datetime,
+img.requiredfield.datetime{
+  width:0px; 
+  height:0px; 
+  padding: 10px; 
+  background: transparent url("../images/calendar.svg") no-repeat scroll 0% 0%;
+  top: 3px;
+  right: 10px;
+}
+
+.grid-cell.date > img{
+  top: 18px;
+}
+
+.m2o img,
+img.m2o_select{
+  width:0px; 
+  height:0px; 
+  padding: 10px; 
+  background: transparent url("../images/glass.svg") no-repeat scroll 0% 0%;
+  top: 6px;
+  right: 6px;
+  position: absolute;
+}
+
+.m2o_container > span{
+  margin-right: 15px;
+}
+
+.m2o_container > img{
+    opacity: 0;
+}
+
+.m2o_search{
+  padding-right: 15px;
+}
+
+/*#order_line_filter{
+  position: relative;
+    -moz-appearance: none;
+
+}
+
+#order_line_filter:after{
+    content: '';
+    position: absolute;
+    width: 9px;
+    height: 18px;
+    top: 50%;
+    right: 15px;
+    margin-top:-2px;
+    background-image: url('../images/triangle.svg');
+    background-repeat: no-repeat;
+    background-size: 100%;
+    z-index: 2;
+    pointer-events:none;
+}*/
+/* ------------------------------------  */
+/* START OF UGLY BROWSER-SPECIFIC HACKS */
+/* ----------------------------------  */
+
+/* OPERA - Pre-Blink nix the custom arrow, go with a native select button to keep it simple. Targeted via this hack http://browserhacks.com/#hack-a3f166304aafed524566bc6814e1d5c7 */
+x:-o-prefocus, .item-selection::after {
+  display:none;
+}    
+
+ /* IE 10/11+ - This hides native dropdown button arrow so it will have the custom appearance, IE 9 and earlier get a native select - targeting media query hack via http://browserhacks.com/#hack-28f493d247a12ab654f6c3637f6978d5 - looking for better ways to achieve this targeting */
+/* The second rule removes the odd blue bg color behind the text in the select button in IE 10/11 and sets the text color to match the focus style's - fix via http://stackoverflow.com/questions/17553300/change-ie-background-color-on-unopened-focused-select-box */
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {  
+  .item-selection select::-ms-expand {
+    display: none;
+  }
+  .item-selection select:focus::-ms-value {
+    background: transparent;
+    color: #222;
+  }
+}  
+
+
+/* FIREFOX won't let us hide the native select arrow, so we have to make it wider than needed and clip it via overflow on the parent container. The percentage width is a fallback since FF 4+ supports calc() so we can just add a fixed amount of extra width to push the native arrow out of view. We're applying this hack across all FF versions because all the previous hacks were too fragile and complex. You might want to consider not using this hack and using the native select arrow in FF. Note this makes the menus wider than the select button because they display at the specified width and aren't clipped. Targeting hack via http://browserhacks.com/#hack-758bff81c5c32351b02e10480b5ed48e */
+/* Show only the native arrow */
+@-moz-document url-prefix() { 
+  .item-selection {
+    overflow: hidden;
+  }
+  .item-selection select {
+ /*   width: 120%;
+    width: -moz-calc(100% + 3em);
+    width: calc(100% + em);*/
+    -moz-appearance: none;
+    
+  }
+  
+}
+
+/* Firefox focus has odd artifacts around the text, this kills that. See https://developer.mozilla.org/en-US/docs/Web/CSS/:-moz-focusring */
+.item-selection select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 #000;
+}
+/* ------------------------------------  */
+/*  END OF UGLY BROWSER-SPECIFIC HACKS  */
+/* ------------------------------------  */
+
+.checkbox, .radio,
+.item .checkbox, .item .radio{
+  min-width: 20px;
+  height: 20px;
+}
+
+.grid-cell input{
+  min-width: 120px;
+  padding-right: 15px;
+}
+
+.grid-cell .checkbox, .grid-cell .radio, .item .checkbox, .item .radio{
+  min-width: 20px;
+}
+
+.m2o_container .m2o > input,
+.grid-cell.date > input{
+  padding-right: 35px;
+}
+
+.grid-cell.many2one .m2o_container:after{
+  right: 0px;
+}
+
+.grid-cell.reference .m2o_container{
+  width: 135px;
+}
+.grid-cell.reference .m2o_container:after{
+  right: -2px;
+}
+
+.item-group fieldset{
+  padding: 30px 0px 0px;
+  margin: 15px;
+  background: #E1E0E0;
+  border: 0;
+  border-radius: 5px;
+}
+
+.item-group fieldset > legend{
+  position: absolute;
+  display: block;
+  top: 30px;
+  left: 35px;
+}
+
+.item-group fieldset > table{
+  background: none !important;
+}
+
+.item-selection span,
+.item-datetime span,
+.item-float span,
+.item-char span,
+.item-m2o span{
+  height: 100%;
+    width: 100%;
+  display: flex;
+  align-items: center;
+  background-color: #eaeaea;
+  border-radius: 5px;
+}
+
+.non-editable .item-selection span,
+.non-editable .item-datetime span,
+.non-editable .item-float span,
+.non-editable .item-char span,
+.non-editable .item-m2o span{
+    padding-left: 15px;
+    background-color: #eaeaea !important;
+}
+
+.item-separator{
+  background-color: white;
+  padding: 15px;
+    /*padding-bottom: 0;*/
+    border-radius: 5px;
+  /*border-radius: 5px 5px 0px 0px;*/
+}
+
+.item-separator .separator.horizontal{
+  font-size: 16px;
+  margin: 0 !important;
+  padding: 0;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.item-text{
+  background-color: white;
+  padding: 15px;
+  /*border-radius: 0px;*/
+    margin-bottom: 15px;
+}
+.item-text p{
+  background-color: #eaeaea;
+  padding: 15px;
+  border-radius: 5px;
+}
+
+table.m2m_box td.m2m_cell{
+  background-color: white;
+  padding: 0;
+}
+
+table.errorbox{
+  background-color: white;
+}
+
+
+
+
+
+
+
+
+

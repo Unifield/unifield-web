@@ -1,0 +1,104 @@
+.notebook-tabs-strip {
+    list-style: outside none none;
+    overflow: hidden;
+    padding: 0px;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+	padding-left: 15px;
+}
+
+.notebook-tabs {
+	height: 36px;
+}
+
+
+.notebook-tab {
+    display: inline-block;
+    font-weight: normal;
+    margin: 0;
+    background: none;
+    background-color: white;
+    border-radius: 5px 5px 0px 0px;
+    cursor: pointer;
+    vertical-align: top;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #E1E0E0;
+    text-transform: uppercase;
+    border-left: 0;
+}
+.notebook-tab:first-child{
+    border-left: 1px solid #E1E0E0 !important;
+}
+
+.notebook-tab-active, li.notebook-tab-active:hover, .notebook-tab:hover {
+    background: none !important;
+    background-color: white !important;
+    cursor: auto;
+    border: 1px solid #E1E0E0;
+    border-bottom: 1px solid white;
+}
+
+.notebook-tab:hover,
+li.notebook-tab-active:hover,
+li.notebook-tab-active,
+.noteboox-tab:not(:first-child),
+.notebook-tab:hover {
+	border-left: 0;
+    cursor: pointer;
+}
+
+li.notebook-tab span.tab-title{
+    color: black !important;
+    padding: 0;
+    font-weight: bold;
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+
+.notebook-tab:hover span.tab-title,
+li.notebook-tab-active span.tab-title,
+li.notebook-tab-active:hover span.tab-title{
+    color: #dc3d2b !important;
+}
+
+div.notebook-pages {
+    padding: 0px;
+    background: none;
+    background-color: white;
+    border-radius: 0px
+    box-shadow: none;
+    border: 1px solid #E1E0E0;
+    border-radius: 0px;
+    border-right: 0;
+    border-left: 0;
+    border-bottom: 0;
+}
+
+.notebook-tabs.scrolling .notebook-tabs-strip {
+    left: 14px;
+    right: 14px;
+}
+
+.notebook-tabs.scrolling .left.scroller {
+    border: 1px solid rgb(234, 234, 234);
+    border-bottom: none;
+    background-color: transparent;
+    border-radius: 5px 5px 0px 0px;
+}
+.notebook-tabs.scrolling .right.scroller {
+    border: 1px solid rgb(234, 234, 234);
+    border-bottom: none;
+    background-color: transparent;
+    border-radius: 5px 5px 0px 0px;
+}
+
+.notebook-tabs.scrolling .scroller{
+    width: 12px;
+}
+
+.notebook-page > div > .fields{
+    padding: 15px;
+}
+

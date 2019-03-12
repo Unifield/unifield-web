@@ -1,0 +1,73 @@
+.grid-header{
+	background: none;
+	background-color: white;
+}
+
+.grid-header .grid-cell {
+    border-bottom: 1px solid #eaeaea;
+    font-weight: normal;
+    text-align: left;
+    font-size: 10px;
+}
+
+.pagerbar-cell{
+    border-bottom: 1px solid #eaeaea !important;
+    background-color: white;
+}
+.grid-header{
+	border-bottom: 1px solid #eaeaea;
+}
+
+.grid-header > th{
+	padding-top: 10px;
+	padding-bottom: 10px;
+}
+
+.grid-header > th:first-child{
+	padding-left: 15px;
+}
+.grid-header > th:last-child{
+	padding-right: 15px;
+}
+
+.grid-row{
+	border-bottom: 1px solid #eaeaea;
+	    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+.grid-row.grid-row-even{
+	background-color: white;
+}
+
+.grid-row .grid-cell{
+	padding: 5px;
+}
+
+.grid-content{
+	padding: 0;
+}
+
+.gridview{
+	/*border-top: 1px solid #eaeaea !important;*/
+}
+
+.gridview .pagerbar .pagerbar-cell {
+    padding: 5px 15px;
+	border-bottom: 1px solid #eaeaea !important;
+}
+
+.grid-row td.grid-cell:first-of-type{
+	padding-left: 15px;
+}
+
+.grid-row td.grid-cell:last-child{
+	padding-right: 15px;
+}
+
+.grid-row:hover, .grid-row-group:hover{
+	background-color: #f9f9f9;
+}
+
+.grid-cell #button_confirm_cash{
+	background-color: transparent !important;
+}

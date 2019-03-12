@@ -1,0 +1,56 @@
+#shortcuts {
+    position: absolute;
+    margin: 0px;
+    padding: 0 5px;
+    top: 20px;
+    right: 200px;
+    left: auto;
+    height: 20px;
+    font-family: 'GT America Condensed Medium';
+	font-size: 12px;
+    max-width: 40%;
+}
+#shortcuts.scrolling{ padding: 0 15px !important; }
+#shortcuts ul {
+	display: flex;
+}
+#shortcuts li {
+    display: inline-block;
+    color: #FFF;
+    text-align: center;
+    border-left: 1px solid white;
+    padding: 0 10px !important;
+}
+
+#shortcuts ul li a{
+	display: block;
+}
+
+#shortcuts ul li a:hover{
+	background: none;
+}
+
+#shortcuts a span{
+	line-height: 19px;
+	padding: 0;
+}
+
+div.contextmenu{
+	border-radius: 5px;
+	border: none;
+	font-size: 14px;
+	padding: 0px;
+}
+div.contextmenu table{
+}
+div.contextmenu a, div.contextmenu span{
+	display: block;
+	padding: 3px 10px;
+	width: auto;
+    -webkit-transition: all 0.2s; /* Safari */
+	transition: all 0.2s;
+}
+
+div.contextmenu a:hover, div.contextmenu span:hover{
+	background-color: #ae2f22;
+}

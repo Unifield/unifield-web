@@ -1,16 +1,16 @@
 <%inherit file="/openobject/controllers/templates/base.mako"/>
 
 <%def name="header()">
-    <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.base.js?v=11.0"></script>
+    <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.base.js?v=8.1"></script>
     <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.ui.js"></script>
     <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.ui.tips.js"></script>
     <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.ui.waitbox.js"></script>
     <script type="text/javascript" src="/openerp/static/javascript/openerp/openerp.ui.textarea.js"></script>
 
     <script type="text/javascript" src="/openerp/static/javascript/scripts.js"></script>
-    <script type="text/javascript" src="/openerp/static/javascript/form.js?v=11.0"></script>
+    <script type="text/javascript" src="/openerp/static/javascript/form.js?v=10.0"></script>
     <script type="text/javascript" src="/openerp/static/javascript/form_state.js?v=7.0"></script>
-    <script type="text/javascript" src="/openerp/static/javascript/listgrid.js?v=11.0"></script>
+    <script type="text/javascript" src="/openerp/static/javascript/listgrid.js?v=10.0"></script>
 
     <script type="text/javascript" src="/openerp/static/javascript/m2o.js?v=7.0"></script>
     <script type="text/javascript" src="/openerp/static/javascript/m2m.js?v=7.0"></script>
@@ -35,6 +35,21 @@
     <link rel="stylesheet" type="text/css" href="/openerp/static/css/pager.css"/>
     <link rel="stylesheet" type="text/css" href="/openerp/static/css/listgrid.css"/>
     <link rel="stylesheet" type="text/css" href="/openerp/static/css/autocomplete.css"/>
+
+    <!-- 2019 Theme files -->
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/fonts.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/screen.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/treegrid.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/menu.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/style.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/pager.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/notebook.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/listgrid.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/dashboard.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/fancybox.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/dialog.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/login.css"/>
+    <link rel="stylesheet" type="text/css" href="/openerp/static/2019-theme/css/tips.css"/>
 
     <!--[if lt IE 9]>
     <link rel="stylesheet" type="text/css" href="/openerp/static/css/style-ie.css"/>

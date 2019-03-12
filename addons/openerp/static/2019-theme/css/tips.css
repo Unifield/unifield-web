@@ -1,0 +1,51 @@
+table.tooltip {
+    position: absolute;
+    display: none;
+    font-size: 11px;
+    color: #666666;
+    z-index: 1000;
+    border-radius: 10px; 
+    background: #FCF9A7;
+    border: none;
+    padding: 5px;
+    max-width: 500px;
+}
+
+table.tooltip .tip-text {
+   text-align: center;
+    padding: 4px;
+}
+
+table.tooltip .tipTitle {
+    text-align: center;
+    font-weight: bold;
+    font-size: 15px;
+    text-align: center;
+    white-space: nowrap;
+    color: #333333;
+}
+
+table.tooltip .tipText {
+    text-align: center;
+}
+
+table.tooltip .tipExtra {
+    text-align: left;
+    color: #660000;
+    padding: 0 6px 6px 6px;
+    font-size: 12px;
+}
+
+
+.shortcut_tooltip {
+    padding: 5px;
+    text-align: center;
+    font-size: 11px;
+    color: #666666;
+    z-index: 1000;
+    border-radius: 10px;
+    background: #FCF9A7;
+    border: none;
+    max-width: 500px;
+    border: 1px solid #eaeaea;
+}

@@ -1,0 +1,61 @@
+.pager{
+    font-family: 'GT America Condensed Medium';
+	font-size: 12px;
+}
+
+span.pager_info{
+	color: black;
+	font-size: 12px;
+	font-weight: normal;
+}
+span.pager_info:hover {
+    text-decoration: none;
+}
+
+.pager .paging .nav {
+    display: -moz-inline-stack;
+    display: inline; /*IE7 */
+    display: inline-block;
+    overflow: hidden;
+    height: 14px;
+    font-size: 0;
+    text-align: left;
+    text-indent: -10001px;
+    vertical-align: middle;
+    width: 14px;
+}
+
+.pager p.paging a.new {
+    background: none;
+}
+
+.pager .paging .first {
+    margin: 0;
+    background: url(../images/pager_first.svg) no-repeat scroll 50% 75%;
+}
+.pager .paging .first.inactive {
+    background: url(../images/pager_first_inactive.svg) no-repeat scroll 50% 75%;
+}
+
+.pager .paging .prev {
+    background: url(../images/pager_left.svg) no-repeat scroll 50% 75%;
+}
+
+.pager .paging .prev.inactive {
+    background: url(../images/pager_left_inactive.svg) no-repeat scroll 50% 75%;
+}
+
+.pager .paging .last {
+    margin: 0;
+    background: url(../images/pager_last.svg) no-repeat scroll 50% 75%;
+}
+.pager .paging .last.inactive {
+    background: url(../images/pager_last_inactive.svg) no-repeat scroll 50% 75%;
+}
+
+.pager .paging .next {
+    background: url(../images/pager_right.svg) no-repeat scroll 50% 75%;
+}
+.pager .paging .next.inactive {
+    background: url(../images/pager_right_inactive.svg) no-repeat scroll 50% 75%;
+}

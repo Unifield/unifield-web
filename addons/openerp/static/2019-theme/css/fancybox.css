@@ -1,0 +1,34 @@
+#fancybox-wrap{
+	padding: 0;
+}
+
+.fancy-bg{
+	background-image: none !important;
+	background: white;
+}
+
+#fancy-bg-nw{
+	border-radius: 5px 0px 0px 0px;
+}
+#fancy-bg-ne{
+	border-radius: 0px 5px 0px 0px;
+}
+#fancy-bg-se{
+	border-radius: 0px 0px 5px 0px;
+}
+#fancy-bg-sw{
+	border-radius: 0px 0px 0px 5px;
+}
+
+#fancybox-inner{
+}
+
+#fancybox-close {
+	position: absolute;
+	width: 30px;
+	height: 30px;
+	background-image: url('/openobject/static/images/fancybox/fancybox.png');
+	background-position: -40px 0;
+	cursor: pointer;
+	z-index: 1103;
+}

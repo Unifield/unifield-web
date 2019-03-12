@@ -1,0 +1,39 @@
+.ui-dialog{
+	border-radius: 5px;
+	padding: 0;
+	border: 0px solid #707070;
+}
+.ui-widget-header{
+	background: #707070;
+	border-radius: 0;
+	border: none;
+	color: white;
+	padding: 10px !important;
+	border-radius: 5px 5px 0px 0px;
+}
+
+.ui-widget-content{
+	background-color: transparent !important;
+	border-radius: 0px 0px 5px 5px;
+	border: none;
+}
+
+.ui-state-hover, 
+.ui-widget-content .ui-state-hover, 
+.ui-widget-header .ui-state-hover, .ui-state-focus, 
+.ui-widget-content .ui-state-focus, 
+.ui-widget-header .ui-state-focus{
+	background: transparent;
+	border: none;
+}
+
+.ui-dialog .ui-dialog-titlebar-close,
+.ui-dialog .ui-dialog-titlebar-maximize,
+.ui-dialog .ui-dialog-titlebar-restore{
+	padding: 0px !important;
+}
+
+.ui-widget-overlay{
+	opacity: 0.8;
+	background: black;
+}

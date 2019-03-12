@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="16px" height="20px" viewBox="0 0 16 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>file</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Option-02" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="01" transform="translate(-687.000000, -535.000000)" stroke="#FFFFFF" stroke-width="1.8">
+            <g id="file" transform="translate(688.000000, 536.000000)">
+                <path d="M7.875,0 L1.75,0 C0.783501688,0 0,0.80588745 0,1.8 L0,16.2 C0,17.1941125 0.783501688,18 1.75,18 L12.25,18 C13.2164983,18 14,17.1941125 14,16.2 L14,6.3 L7.875,0 Z" id="Shape"></path>
+                <polyline id="Shape" points="7.875 0 7.875 6.3 14 6.3"></polyline>
+            </g>
+        </g>
+    </g>
+</svg>

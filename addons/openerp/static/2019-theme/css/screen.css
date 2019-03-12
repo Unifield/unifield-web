@@ -1,0 +1,881 @@
+body, textarea, input, select, option, button {
+    font-family: 'GT America Condensed Medium';
+}
+
+table{ border-bottom: none; }
+
+/* Left panel toggler */
+#main-sidebar-toggler {
+	background: url("../images/toggle-a-bg.png") no-repeat transparent;
+    position: relative;
+    width: 30px;
+    height: 30px;
+    border: none;
+    background-color: black;
+}
+#main-sidebar-toggler.closed{
+    background-position: -30px 0px;
+    position: absolute;
+}
+.toggle-sidebar.open {
+    margin-left: 158px;
+    width: 30px;
+    border: none;
+    background: url("../images/toggle-a-bg.png") no-repeat scroll -30px 0 transparent;
+}
+.toggle-sidebar.closed {
+    border: none;
+    background: url("../images/toggle-a-bg.png") no-repeat transparent;
+}
+
+#secondary{
+	background-color: #4d4d4d;
+    border: 0;
+}
+
+/* Left panel buttons */
+#sidenav-a {
+	text-shadow: none;
+	font-size: 12px !important;
+}
+#sidenav-a li {
+    text-transform: uppercase;
+    font-family: 'GT America Condensed Medium';
+    background: none;
+	background-color: #707070;
+    border-bottom: 1px solid #4d4d4d;
+}
+#sidenav-a li .tree-grid a {
+    text-transform: uppercase;
+    font-family: 'GT America Condensed Medium';
+    padding: 6px 0px;
+    padding-right: 13px;
+
+    -webkit-transition: all 0.2s; /* Safari */
+		transition: all 0.2s;
+}
+
+#sidenav-a li > span:hover,
+#sidenav-a li .tree-grid a:hover,
+#sidenav-a li .tree-grid .row:hover a,
+#sidenav-a li .tree-grid .row.selected,
+#sidenav-a li .tree-grid .row:hover a,
+#sidenav-a li .tree-grid .row:focus a,
+#sidenav-a li .tree-grid .row:active a,
+#sidenav-a li .tree-grid .row.active a,
+#sidenav-a li .tree-grid .row.selected a
+{
+    color: #000 !important;
+	text-shadow: none !important;
+	background: none !important;
+}
+#sidenav-a li > span{
+    padding: 13px;
+	background: none;
+	background-color: #707070;
+
+    line-height: 10px;
+    height: 10px;
+
+    -webkit-transition: all 0.2s; /* Safari */
+		transition: all 0.2s;
+}
+
+#sidenav-a li.accordion-content {
+	padding-top: 15px;
+	padding-bottom: 15px;
+	border: none;
+}
+
+#sidenav-a li .tree-grid .row:hover {
+	background: none !important;
+}
+
+#secondary div.wrap{
+	 /*-webkit-transition: all 0.3s; /* Safari */*/
+	/*transition: all 0.3s;*/
+	/*display: block !important;*/
+}
+
+#main-sidebar-toggler.closed + div.wrap {
+	/*transform: translateX( -100% );*/
+	/*width: 1px;*/
+}
+
+/* MAIN NAV */
+
+#main_nav {
+    background: none;
+    background-color: white;
+    background-color: #d63e2e;
+    width: 100%;
+}
+
+#applications_menu {
+    height: 42px; 
+    display: flex;
+}
+
+
+#applications_menu a {
+    padding: 0;
+    background: none;
+    color: black;
+    text-shadow: none;
+    background-color: white;
+}
+
+#applications_menu span {
+	background: none;
+	margin: 0;
+	padding: 0;
+}
+
+#applications_menu ul {
+	list-style: none;
+	display: flex;
+	height: 100%;
+	justify-content: center;
+}
+
+#applications_menu li {
+    font-family: 'GT America Condensed Medium';
+	font-size: 12px !important;
+    font-weight: normal;
+    margin: 0;
+}
+
+#applications_menu ul li a{
+	height: 100%;
+	display: flex;
+	align-items: center;
+	-webkit-transition: all 0.2s;
+	transition: all 0.2s;
+	padding: 0 10px;
+}
+
+#applications_menu ul li a span{
+	cursor: pointer;
+}
+
+#applications_menu ul li a:hover,
+#applications_menu ul li a:focus,
+#applications_menu ul li a.active {
+	background: none;
+    background-color: #ae2f22;
+    color: white;
+}
+
+#top {
+    background: none;
+    background-color: #d63e2e;
+    color: white;
+    text-shadow: none;
+}
+
+
+#top{
+	height: 80px;
+} 
+
+p#cmp_logo {
+    /*height: 44px;
+    width: 50px;
+    background: url(../images/logo-unifield.png) no-repeat;
+    margin: 0 23px;*/
+    background: none;
+}
+p#cmp_logo > a{
+}
+p#cmp_logo > a > img {
+	/*display: none;*/
+    height: 44px;
+    width: 50px;
+    margin: 0 23px;
+}	
+
+#title-menu,
+#client_string_one,
+#client_string_two {
+    float: left;
+    margin: 0;
+    padding: 4px 0;
+    color: white !important;
+    text-shadow: none !important;
+	font-weight: normal !important;
+    font-family: 'GT America Condensed Bold';
+	font-size: 24px !important;
+}
+
+#title-menu small {
+    font-family: 'GT America Condensed Medium';
+    display: block;
+	font-size: 14px;
+    color: white;
+}
+
+#client_string_two{
+	position: relative !important;
+	top: initial !important;
+	left: initial !important;
+	right: initial !important;
+	margin: 0 !important;
+	padding: 0 !important;
+	font-weight: normal !important;
+	line-height: 1.25!important;
+	padding: 4px 0 4px 10px !important;
+}
+
+#corner {
+    position: absolute;
+	top: 20px;
+	height: 20px;
+	right: 25px;
+}
+
+#corner ul.tools {
+    height: 20px !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    line-height: 19px !important;
+    font-size: 12px !important;
+    text-transform: none !important;
+}
+
+#corner ul.tools li{
+	padding: 0px 5px;
+}
+
+#corner ul.tools li a{
+    height: 20px;
+	padding: 0;
+	background-size: contain;
+}
+
+#corner ul.tools li a.home{
+	background: url(../images/home.svg) no-repeat scroll 50% 0%;
+	background-size: contain;
+}
+
+#corner ul.tools li a.preferences{
+	background: url(../images/settings.svg) no-repeat scroll 50% 0%;
+	background-size: contain;
+}
+
+#corner ul.tools li a.info{
+	background: url(../images/info.svg) no-repeat scroll 50% 0%;
+	background-size: contain;
+}
+
+#corner p.logout{
+	background: url(../images/logout.svg) no-repeat scroll 100% 0%;
+	background-size: contain;
+	padding-right: 15px;
+}
+
+#corner ul.tools li a.home:hover,
+#corner ul.tools li a.preferences:hover,
+#corner ul.tools li a.info:hover{
+	background-position: 50% 0%;
+}
+
+#corner p.logout{
+    height: 20px;
+}
+
+#corner p.logout a{
+	background: none !important;
+	text-transform: none;
+    font-family: 'GT America Condensed Medium';
+    font-size: 12px;
+    height: 20px;
+    line-height: 19px;
+}
+/* corner tools */
+#corner ul.tools li ul{
+    left: -45px;
+}
+#corner ul.tools li ul li{
+    padding: 0;
+}
+
+#corner ul.tools li ul li a{
+    background: none;
+    background-color: #4D4D4D;
+    font-family: 'GT America Condensed Medium';
+    font-size: 12px;
+    text-shadow: none;
+}
+
+/* RIGHT SIDEBAR */
+/* sidebar */
+#main_sidebar{
+    border: none;
+}
+.toggle-sidebar{
+    width: 30px;
+    height: 30px;
+}
+.toggle-sidebar.closed{
+    right: 0;
+}
+.toggle-sidebar.open{
+    position: relative;
+}
+td.tertiary {
+    background: none;
+    background-color: #eaeaea;
+    border: none;
+}
+td.tertiary div.wrap {
+    margin-top: 9px;
+}
+#tertiary {
+    background-color: #eaeaea;
+    font-family: 'GT America Condensed Medium';
+    text-shadow: none !important;
+    color: black;
+    border: none;
+}
+
+#tertiary.open {
+    float: none;
+    width: 100%;
+}
+.sideheader-a{
+    background: none;
+    border: none;
+    padding-top: 10px;
+}
+.sideheader-a:not(:first-child){
+    border-top: 1px solid #e1e0e0;
+    padding-top: 20px;
+}
+.sideheader-a h2, .sideheader-a h3{
+    color: black;
+    text-transform: uppercase;
+    margin: 0px 0px 0px 13px;
+}
+
+#sidebar ul{
+    list-style: none;
+    margin: 0px;
+    padding: 0px;
+    margin: 10px 0px 25px 20px;
+}
+#sidebar li{
+    font-family: 'GT America Condensed Bold';
+    text-shadow: none;
+    font-size: 14px !important;
+}
+
+#sidebar li img {
+    display: none;
+}
+
+#sidebar li a {
+    color: black;
+        -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+#sidebar li a:hover {
+    color: #dc3d2b;
+}
+
+/* BODY FORM */
+#primary {
+    background: #e1e0e0;
+}
+#body_form {
+    padding: 10px;
+    background: #e1e0e0;
+}
+
+h1{
+    background: none;
+    background-color: white;
+    padding: 15px;
+    border-radius: 5px 5px 0px 0px;
+    /*border-radius: 5px;*/
+    /*margin-bottom: 15px;*/
+
+    padding-bottom: 0;
+
+    font-family: 'GT America Condensed Medium';
+    font-size: 30px;
+
+}
+
+h1 a.help{
+    background: transparent url("../images/iconset-a-help.svg") no-repeat scroll 0% 0%;
+    width: 20px;
+    height: 20px;
+}
+
+div.action-buttons{
+    margin: 0;
+    padding: 0;
+
+    background: none;
+    background-color: white;
+    padding: 10px;
+    border-radius: 0px 0px 5px 5px;
+    /*border-radius: 5px;*/
+    width: auto;
+
+    margin-bottom: 10px;
+
+}
+
+#view-selector{
+    margin-top: 15px;
+    margin-right: 15px;
+}
+
+/* TREE view selector */
+#view-selector li.tree a{
+    background: transparent url("../images/view-tree-unselected.svg") no-repeat scroll 0% 0%;
+    background-size: contain;
+    width: 45px;
+    height: 35px;
+}
+#view-selector li.tree a:hover, #view-selector li.tree a:focus, #view-selector li.tree a:active, #view-selector li.tree a.active{
+    background: transparent url("../images/view-tree-selected.svg") no-repeat scroll 0% 0%;
+    background-size: contain;
+}
+
+/* FORM view selector */
+#view-selector li.form a{
+    background: transparent url("../images/view-form-unselected.svg") no-repeat scroll 0% 0%;
+    background-size: contain;
+    width: 45px;
+    height: 35px;
+}
+
+#view-selector li.form a:hover, #view-selector li.form a:focus, #view-selector li.form a:active, #view-selector li.form a.active{
+    background: transparent url("../images/view-form-selected.svg") no-repeat scroll 0% 0%;
+    background-size: contain;
+}
+
+
+
+h1 small.sub{
+    color: #9b9b9b;
+    margin-top: 10px;
+}
+
+div.action-buttons div.pager{
+    padding: 0;
+}
+
+
+
+
+/* BUTTONS */
+.static_boxes,
+.button, button,
+.button-a {
+    height: auto;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 30px;
+    box-shadow: none;
+    background: none;
+    background-color: #dc3d2b;
+    color: #FFF !important;
+    white-space: nowrap;
+    font-size: 14px;
+    line-height: 15px;
+    text-shadow: none;
+    font-family: 'GT America Condensed Medium';
+    text-transform: uppercase;
+    display: inline-block;
+
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+}
+button:hover,
+.button:hover,
+.button-a:hover {
+    background-color: #AE2F22;
+}
+
+a.button-b, button.button-b {
+    height: auto !important;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 30px;
+    box-shadow: none;
+    background: none;
+    background-color: #4D4D4D;
+    color: white;
+    white-space: nowrap;
+    font-size: 14px !important;
+    line-height: 1;
+    text-shadow: none;
+    font-family: 'GT America Condensed Medium';
+    text-transform: uppercase;
+    display: inline-block;
+
+    -webkit-transition: all 0.2s;
+    transition: all 0.2s;
+
+    position: relative;
+}
+
+a.button-b:hover, button.button-b:hover {
+    background-color: black;
+}
+
+.button-b[disabled], .button-b[disabled]:hover{
+    background-color: #bbb;
+}
+
+/* FILTER BUTTONS */
+.filter-a .filter_with_icon{
+    font-family: 'GT America Condensed Medium';
+    font-weight: normal;
+    color: black !important;
+    text-shadow: none;
+    background-color: white;
+    padding: 5px !important;
+    line-height: 1;
+    min-height: 35px;
+}
+
+.filter-a .filter_with_icon:hover,
+.filter-a .filter_with_icon:focus,
+.filter-a .filter_with_icon.active{
+    background-color: #4D4D4D;
+    color: white !important;
+    border-color: #4D4D4D !important;
+}
+
+.filters-group .group_box button{
+    border-color: #EAEAEA !important;
+}
+
+.filter-a .filter_with_icon img{
+    display: inline-block;
+    margin: 0;
+    margin-right: 10px;
+    height: auto;
+    width: auto;
+}
+
+#search_filter_data{
+    padding: 5px;
+    background-color: white;
+}
+#filter_option_table{
+    background-color: white;
+}
+.view_form_options{
+    padding: 5px 10px;
+    background-color: white;
+}
+
+/* SEARCH FILTER GROUPS */
+.search_filters.item-group{
+    padding: 0 !important;
+    padding-bottom: 10px !important;
+}
+.search_filters.item-group h2{
+    text-shadow: none;
+    text-transform: uppercase;
+    font-family: 'GT America Condensed Medium';
+    font-weight: normal;
+    color: black;
+}
+.search_filters.item-group .group-collapse{
+    padding: 10px 10px 0px;
+    padding-bottom: 0;
+    background-color: #EAEAEA;
+    width: auto;
+    border-radius: 5px 5px 0px 0px;
+    margin: 0;
+}
+.search_filters.item-group .group-expand{
+    padding: 10px;
+    background-color: #EAEAEA;
+    width: auto;
+    border-radius: 5px;
+    margin: 0;
+}
+.search_filters.item-group #groupdata_table{
+    background-color: #EAEAEA;
+    padding: 10px;
+    padding-top: 5px;
+    margin: 0;
+    border-radius: 0px 0px 5px 5px;
+}
+.group-expand + #groupdata_table {
+    display: none !important;
+}
+
+.group-collapse + #groupdata_table {
+    display: block !important;
+}
+
+.search_filters.item-group #groupdata_table .label.search_filters.search_fields{
+    padding: 10px !important;
+    padding-top: 0 !important;
+    border-radius: 5px;
+    background-color: white;
+    display: inline-block;
+    width: auto !important;
+    height: auto !important;
+}
+
+.search_filters.item-group #groupdata_table .fields{
+    padding: 0;
+    background-color: transparent;
+}
+
+.group-data{
+    display: block !important;
+}
+
+.group-collapse > h2{
+    padding: 0;
+    padding-left: 15px;
+    background: url("../images/triangle.svg") no-repeat scroll 0px 50%;
+}
+.group-collapse h2:hover{
+    background: transparent url("../images/triangle.svg") no-repeat scroll 0px 50%;
+}
+
+.group-expand > h2{
+    padding: 0;
+    padding-left: 15px;
+    background: url("../images/triangle-right.svg") no-repeat scroll 0px 50%;
+}
+.group-expand h2:hover{
+    background: transparent url("../images/triangle-right.svg") no-repeat scroll 0px 50%;
+}
+
+.search_table label{
+    font-weight: normal;
+}
+
+.search_table > tbody > tr:first-child > td.item-selection:after{
+    display: none;
+}
+
+#search_filter_data > .fields > tbody > tr > td.item-filtersgroup{
+    width: 100%;
+    display: block;
+    padding: 15px 0 !important;
+}
+#search_filter_data > .fields > tbody > tr > td.label.search_filters.search_fields{
+
+    width: auto !important;
+    height: auto !important;
+    display: inline-block;
+    background-color: #eaeaea;
+    padding: 0 10px 10px !important;
+    margin-bottom: 2px;
+    border-radius: 5px;
+
+}
+
+#search_filter_data > .fields > tbody > tr > td.item-filtersgroup + td.item-filtersgroup{
+    padding-top: 0 !important;
+}
+
+/* --- */
+
+/*.item-button button img{
+    display: none;
+}
+
+.item-button button:before {
+    content: '';
+    display: inline-block;
+    color: white;
+    height: 16px;
+    width: 16px;
+    margin-bottom: -2px;
+}*/
+
+/*#button_wiz_temp_posting:before{
+    background: url(../images/icons/temp-posting.svg) no-repeat;
+    background-size: contain;
+}
+#button_wiz_hard_posting:before{
+    background: url(../images/icons/hard-posting.svg) no-repeat;
+    background-size: contain;
+}
+#button_create_invoice:before{
+    background: url(../images/icons/direct-invoice.svg) no-repeat;
+    background-size: contain;
+}
+#button_wiz_import_invoices:before{
+    background: url(../images/icons/pending-payments.svg) no-repeat;
+    background-size: contain;
+}
+#button_open_advances:before{
+    background: url(../images/icons/list-open-advances.svg) no-repeat;
+    background-size: contain;
+}
+#button_confirm_cash:before{
+    background: url(../images/icons/arrow-left-circle.svg) no-repeat;
+    background-size: contain;
+}
+#button_analytic_distribution:before{
+    background: url(../images/icons/analytical.svg) no-repeat;
+    background-size: contain;
+}
+#button_reset_distribution:before{
+    background: url(../images/icons/reset.svg) no-repeat;
+    background-size: contain;
+}
+#button_reset_distribution:before{
+    background: url(../images/icons/reset.svg) no-repeat;
+    background-size: contain;
+}
+#change_currency:before{
+    background: url(../images/icons/currency.svg) no-repeat;
+    background-size: contain;
+}
+#update_date:before{
+    background: url(../images/icons/lines.svg) no-repeat;
+    height: 14px;
+    background-size: contain;
+}
+#round_to_soq:before{
+    background: url(../images/icons/round.svg) no-repeat;
+    background-size: contain;
+}
+#wizard_import_si_line:before,
+#wizard_import_po_line:before{
+    background: url(../images/icons/lines.svg) no-repeat;
+    height: 14px;
+    background-size: contain;
+}
+#button_remove_lines:before{
+    background: url(../images/icons/delete-lines.svg) no-repeat;
+    height: 14px;
+    background-size: contain;
+}
+#check_lines_to_fix:before{
+    background: url(../images/icons/check-lines.svg) no-repeat;
+    height: 15px;
+    background-size: contain;
+}
+#add_multiple_lines:before{
+    background: url(../images/icons/add.svg) no-repeat;
+    background-size: contain;
+}
+#button_dummy:before{
+    display: none;
+}
+
+#invoice_cancel:before,
+#button_cancel:before,
+#purchase_cancel:before{
+    background: url(../images/icons/cancel.svg) no-repeat;
+    background-size: contain;
+}
+#button_confirm:before,
+#validate_lines:before{
+    background: url(../images/icons/arrow-right-circle.svg) no-repeat;
+    background-size: contain;
+}*/
+
+.item-button button img{
+    vertical-align: -2px;
+    margin-right: 5px;
+}
+
+
+
+
+
+
+#button_confirm_cash{
+    background-color: #dc3d2b;
+}
+#button_confirm_cash:hover{
+    background-color: #4D4D4D;
+}
+
+/* LOADING */
+
+#ajax_loading {
+    background: none;
+    background-color: #707070;
+    font-size: 12px;
+    font-family: 'GT America Condensed Medium';
+    font-weight: normal !important;
+    width: 100%;
+    left: 0 !important;
+    padding: 5px;
+    border-radius: 0;
+}
+
+/**/
+
+span.help{
+    color: #D63E2E;
+    top: 0;
+    display: inline !important;
+    background-color: transparent  !important;
+}
+
+div.box-a, table.box-a{
+    box-shadow: none;
+    border-radius: 0px;
+}
+
+div.non-editable div.notebook table.fields td{
+    border: none;
+}
+
+table thead th{
+    color: #000;
+}
+form > table > tbody > tr > td > table.fields > tbody > tr > td.label,
+form > table > tbody > tr > td > table.fields > tbody > tr > td.item {
+    background-color: white;
+    padding: 15px;
+}
+form > table > tbody > tr > td > table.fields > tbody > tr > td.label{
+    /*padding-right: 0;*/
+    padding: 5px 15px;
+    /*padding-top: 5px;*/
+    /*padding-bottom: 5px;*/
+}
+
+/* MAIN FOOTER */
+div.footer-a {
+    box-shadow: none;
+    background-color: #4D4D4D;
+    border: none;
+}
+
+div.footer-a p,
+div.footer-a p.powered,
+div.footer-a p.powered a,
+div.footer-a p.powered a:hover,
+div.footer-a p span{
+    color: #707070;
+    font-size: 10px;
+    font-family: 'GT America Condensed Medium';
+    font-weight: normal;
+    text-decoration: none;
+}
+
+#shortcut_message{
+    font-weight: normal;
+}
+
+
+
+
+
+
+
+
+

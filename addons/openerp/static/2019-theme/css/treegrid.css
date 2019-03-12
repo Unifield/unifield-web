@@ -1,0 +1,56 @@
+table.tree-grid .indent,
+table.tree-grid .expand,
+table.tree-grid .collapse,
+table.tree-grid .loading {
+    width: 1.5em;
+}
+
+table.tree-grid .header th {
+    padding: 4px 5px;
+    background: url(../images/treegrid/header.gif);
+}
+
+table.tree-grid .expand {
+    background-image: url("../../images/arrow_right.png");
+}
+
+table.tree-grid .expand:hover {
+    background-image: url("../../images/arrow_right.png");
+}
+
+table.tree-grid .collapse {
+    background-image: url("../../images/arrow_down.png");
+}
+
+table.tree-grid .collapse:hover {
+    background-image: url("../../images/arrow_down.png");
+}
+
+table.tree-grid .loading {
+    background-image: url("../images/treegrid/loading.gif");
+}
+
+table.tree-grid .header th{
+	padding: 15px;
+	color: white;
+	font-size: 14px;
+    font-family: 'GT America Condensed Medium';
+    font-weight: normal;
+}
+
+.tree_grid .tree-body .tree-field{
+	padding: 15px;
+	font-size: 14px;
+}
+
+#treeview-tree-selector{
+	margin: 15px;
+	font-size: 14px;
+	padding: 10px;
+	margin-right: 0;
+}
+
+#treeview-tree-selector + #expand_button{
+	margin: 15px;
+	margin-top: 10px;
+}

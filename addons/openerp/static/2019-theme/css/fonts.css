@@ -1,0 +1,15 @@
+@font-face {
+    font-family:"GT America Condensed Bold";
+    src: url("../fonts/GT-America-Condensed-Bold.woff2") format("woff2"),
+		 url("../fonts/GT-America-Condensed-Bold.woff") format("woff"),
+    	 url("../fonts/GT-America-Condensed-Bold.otf") format("opentype");
+    font-style:normal;font-weight:400;
+}
+
+@font-face {
+    font-family:"GT America Condensed Medium";
+    src: url("../fonts/GT-America-Condensed-Medium.woff2") format("woff2"),
+    	 url("../fonts/GT-America-Condensed-Medium.woff") format("woff"),
+    	 url("../fonts/GT-America-Condensed-Medium.otf") format("opentype");
+    font-style:normal;font-weight:400;
+}

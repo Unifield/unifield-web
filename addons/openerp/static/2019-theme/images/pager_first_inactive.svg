@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="14px" height="10px" viewBox="0 0 14 10" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 52.2 (67145) - http://www.bohemiancoding.com/sketch -->
+    <title>Group 10</title>
+    <desc>Created with Sketch.</desc>
+    <g id="Option-02" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="01" transform="translate(-1170.000000, -309.000000)" fill="#4A4A4A">
+            <g id="Group-10" transform="translate(1170.000000, 309.000000)">
+                <polygon id="Triangle" transform="translate(10.500000, 5.000000) rotate(-180.000000) translate(-10.500000, -5.000000) " points="14 5 7 10 7 0"></polygon>
+                <polygon id="Triangle" transform="translate(3.500000, 5.000000) rotate(-180.000000) translate(-3.500000, -5.000000) " points="7 5 0 10 0 0"></polygon>
+            </g>
+        </g>
+    </g>
+</svg>
