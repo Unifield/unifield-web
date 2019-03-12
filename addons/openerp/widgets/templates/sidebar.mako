@@ -29,8 +29,8 @@
 <div class="sideheader-a"><h2>${title}</h2></div>
 <ul class="clean-a">
 	% for item in items:
-        % if item:
-        	${sidebox_action_item(item, model, submenu, icon)}
+        % if item and (not item.get('res_model') or model != 'sale.order' or (model == 'sale.order' and item['res_model'] != 'procurement.request.import')):
+            ${sidebox_action_item(item, model, submenu, icon)}
         % endif
     % endfor
 </ul>
