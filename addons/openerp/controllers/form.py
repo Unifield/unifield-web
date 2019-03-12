@@ -685,6 +685,9 @@ class Form(SecuredController):
         ids = (id or []) and [id]
         ctx = dict((params.context or {}), **rpc.session.context)
         ctx.update(params.button.context or {})
+        if params.button.selected_ids:
+            s_ids = params.button.selected_ids if isinstance(params.button.selected_ids, list) else [params.button.selected_ids]
+            ctx['button_selected_ids'] = s_ids
         return model, id, ids, ctx
 
     def button_action(self, params):
@@ -899,6 +902,9 @@ class Form(SecuredController):
         id = params.id or False
         ids = params.ids or []
         filter_action = params.filter_action
+
+        if not filter_action:
+            params.filter_action = 'PAGER_LIMIT'
 
         if ids and filter_action == 'FIRST':
             o = 0
