@@ -178,11 +178,11 @@ class List(TinyWidget):
         if kw.get('limit') is not None:
             self.limit = int(kw.get('limit'))
 
-        self.colors = {}
+        self.colors = []
         for color_spec in attrs.get('colors', '').split(';'):
             if color_spec:
                 colour, test_c = color_spec.split(':')
-                self.colors[colour] = test_c
+                self.colors.append((colour, test_c))
 
         proxy = rpc.RPCProxy(model)
 
@@ -523,7 +523,7 @@ class List(TinyWidget):
                             else:
                                 cell = CELLTYPES[kind](value=row_value.get(name, False), **fields[name])
 
-                        for color, expr in self.colors.items():
+                        for color, expr in self.colors:
                             try:
                                 if expr_eval(expr,
                                              dict(row_value, active_id=rpc.session.active_id or False)):
