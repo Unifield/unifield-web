@@ -276,6 +276,10 @@ def refresh_o2m(action=False, *a, **b):
     return json.dumps({'reload': 1, 'list_grid': action.get('o2m_refresh')})
 
 def act_window(action, data):
+
+    if action.get('menu_id') and isinstance(action.get('menu_id'), tuple):
+        action['menu_id'] = action['menu_id'][0]
+
     if not action.get('opened'):
         action.setdefault('target', 'current')
         return act_window_opener(action, data)
@@ -460,8 +464,15 @@ def act_window_opener(action, data):
            urllib.urlencode({'payload': compressed_payload}))
 
     if open_new_tab:
-        url = '/?' + urllib.urlencode({'next': url})
+        url_param = {'next': url}
+        if action.get('menu_id'):
+            url_param['menu_id'] = action['menu_id']
+        url = '/?' + urllib.urlencode(url_param)
 
+    if data.get('model') == 'ir.ui.menu' and data.get('id'):
+        cherrypy.response.headers['X-Menu-id'] = data.get('id')
+    elif action.get('menu_id'):
+        cherrypy.response.headers['X-Menu-id2'] = action.get('menu_id')
     cherrypy.response.headers['X-Target'] = action['target']
     cherrypy.response.headers['Location'] = url
     if action and action.get('keep_open'):
@@ -490,7 +501,6 @@ def execute(action, **data):
         return;
 
     data.setdefault('context', {}).update(expr_eval(action.get('form_context', '{}') or action.get('context','{}'), data.get('context', {})))
-
     action_executor = ACTIONS_BY_TYPE[action['type']]
     return action_executor(action, data)
 

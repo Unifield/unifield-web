@@ -117,7 +117,7 @@
                                 % endfor
                             </ul>
                             <script type="text/javascript">
-                                new Accordion("sidenav-a");
+                                new Accordion("sidenav-a", {'menu_to_open': ${menu_to_open or 'null'}});
                             </script>
                         </div>
                     </td>

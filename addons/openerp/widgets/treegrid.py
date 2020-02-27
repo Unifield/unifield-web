@@ -29,7 +29,7 @@ class TreeGrid(TinyWidget):
 
     template = "/openerp/widgets/templates/treegrid.mako"
     params = ['headers', 'showheaders', 'expandall', 'linktarget',
-    'onselection', 'onbuttonclick', 'onheaderclick', 'url', 'url_params']
+    'onselection', 'onbuttonclick', 'onheaderclick', 'url', 'url_params', 'activeids']
 
     javascript = [JSLink("openerp", "javascript/treegrid.js")]
 
@@ -63,7 +63,7 @@ class TreeGrid(TinyWidget):
         self.onheaderclick = params.pop('onheaderclick', '')
         self.expandall = params.pop('expandall', 0)
         self.linktarget = params.pop('linktarget', 0)
-
+        self.activeids =  None
         def _jsonify(obj):
 
             for k, v in obj.items():

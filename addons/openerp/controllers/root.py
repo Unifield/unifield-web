@@ -44,7 +44,7 @@ class Root(SecuredController):
     _cp_path = "/openerp"
 
     @expose()
-    def index(self, next=None):
+    def index(self, next=None, menu_id=None):
         """Index page, loads the view defined by `action_id`.
         """
         if not next:
@@ -53,7 +53,7 @@ class Root(SecuredController):
             if read_result['action_id']:
                 next = '/openerp/home'
 
-        return self.menu(next=next)
+        return self.menu(next=next, menu_id=menu_id)
 
     @expose()
     def home(self):
@@ -93,7 +93,7 @@ class Root(SecuredController):
     """ % (url("/openerp/static/images/loading.gif"))
 
     @expose(template="/openerp/controllers/templates/index.mako")
-    def menu(self, active=None, next=None):
+    def menu(self, active=None, next=None, menu_id=None):
         from openerp.widgets import tree_view
         if next == '/openerp/pref/update_password':
             # in case the password must be changed, do not do others operations
@@ -121,6 +121,18 @@ class Root(SecuredController):
         ids = menus.search(domain, 0, 0, 0, ctx)
         parents = menus.read(ids, ['name', 'action', 'web_icon_data', 'web_icon_hover_data'], ctx)
 
+        submenu_to_open = False
+        menu_to_expand = []
+        if menu_id:
+            menu_id = int(menu_id)
+            menu_parents = menus.read(menu_id, ['parent_path_ids'], ctx)
+            if menu_parents.get('parent_path_ids'):
+                id = menu_parents['parent_path_ids'].pop(0)
+                if menu_parents['parent_path_ids']:
+                    submenu_to_open = menu_parents['parent_path_ids'].pop(0)
+                if menu_parents['parent_path_ids']:
+                    menu_to_expand = menu_parents['parent_path_ids']
+                menu_to_expand.append(menu_id)
         for parent in parents:
             if parent['id'] == id:
                 parent['active'] = 'active'
@@ -147,6 +159,8 @@ class Root(SecuredController):
                 tree.tree.onselection = None
                 tree.tree.onheaderclick = None
                 tree.tree.showheaders = 0
+                if tid == submenu_to_open:
+                    tree.tree.activeids = menu_to_expand
         else:
             # display home action
             tools = None
@@ -174,7 +188,8 @@ class Root(SecuredController):
                     welcome_messages=rpc.RPCProxy('publisher_warranty.contract').get_last_user_messages(_MAXIMUM_NUMBER_WELCOME_MESSAGES),
                     show_close_btn=rpc.session.uid == 1,
                     widgets=widgets,
-                    display_shortcut=display_shortcut)
+                    display_shortcut=display_shortcut,
+                    menu_to_open=submenu_to_open)
 
     @expose()
     def do_login(self, *arg, **kw):

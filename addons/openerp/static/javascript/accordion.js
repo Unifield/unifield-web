@@ -49,7 +49,7 @@ Accordion.prototype = {
         
         var titles = MochiKit.DOM.getElementsByTagAndClassName(null, "accordion-title", container);
         var contents = MochiKit.DOM.getElementsByTagAndClassName(null, "accordion-content", container);
-        
+        var menu_to_open = this.options.menu_to_open
         for (var i=0; i<titles.length; i++) {
             var title = titles[i];
             var content = contents[i];
@@ -57,8 +57,7 @@ Accordion.prototype = {
             title._content = content;
             
             MochiKit.Signal.connect(title, "onclick", this, partial(this.activate, title));
-            
-            if (i > 0) {
+            if ((! menu_to_open && i > 0) || (menu_to_open && content.id != 'content_' + menu_to_open)) {
             	MochiKit.Style.hideElement(content);
             }
             else {

@@ -324,7 +324,6 @@ TreeNode.prototype = {
     createDOM : function() {
         this.element = MochiKit.DOM.TR({'class' : 'row'});
         this.element.style.display = this.parentNode ? (this.parentNode.expanded ? "" : "none") : "";
-
         var record = this.record;
         var indent = this.getPath().length - 1;
 
@@ -393,6 +392,14 @@ TreeNode.prototype = {
 
                 value = TABLE({'class': 'tree-field', 'cellpadding': 0, 'cellspacing': 0},
                         TBODY(null, TR(null, td_row)));
+
+            if (this.tree.options.activeids && this.tree.options.activeids.indexOf(this.record.id) != -1) {
+                if (this.hasChildren) {
+                    this.expand();
+                } else {
+                    MochiKit.DOM.addElementClass(this.element, "selected");
+                }
+            }
             } else if (i > 0 && value) {
                 switch (header.type) {
                     case 'url':

@@ -6,7 +6,8 @@
             'onbuttonclick': ${onbuttonclick or 'null'},
             'onheaderclick': ${onheaderclick or 'null'},
             'expandall': ${(expandall and 'true') or 'false'},
-            'linktarget': ${linktarget}
+            'linktarget': ${linktarget},
+            'activeids': ${activeids or 'null'},
         });
         treeGrids['${name}'].setHeaders(${headers|n});
         treeGrids['${name}'].setRecords('${url}', ${url_params|n});

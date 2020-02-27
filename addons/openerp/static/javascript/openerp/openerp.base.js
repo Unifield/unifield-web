@@ -20,7 +20,8 @@ function close_this_frame() {
 function openLink(url /*optional afterLoad */) {
     var $app = jQuery('#appContent');
     var afterLoad = arguments[1];
-    if($app.length) {
+    var menu_id = arguments[2];
+    if($app.length && !menu_id) {
         jQuery.ajax({
             url: url,
             complete: function () {
@@ -34,8 +35,12 @@ function openLink(url /*optional afterLoad */) {
     }
     // Home screen
     if(jQuery('#root').length) {
+        var param = {next: url}
+        if (menu_id) {
+            param['menu_id'] = menu_id;
+        }
         window.location.assign(
-            '/?' + jQuery.param({next: url}));
+            '/?' + jQuery.param(param));
         return;
     }
     window.location.assign(url);
@@ -117,15 +122,21 @@ function initial_onchange_triggers() {
  * @param app the element to insert successful content in
  * @param {String} [url] the url being opened, to set as hash-url param
  */
-function doLoadingSuccess(app, url) {
+function doLoadingSuccess(app, url, open_menu) {
     return function (data, status, xhr) {
         var target;
         var active_id;
         var keep_open = false;
+        var menu_id;
         if(xhr.getResponseHeader){
             target = xhr.getResponseHeader('X-Target');
             active_id = xhr.getResponseHeader('active_id');
             keep_open = xhr.getResponseHeader('keep-open');
+            if (open_menu) {
+                menu_id = xhr.getResponseHeader('X-Menu-id');
+            } else {
+                menu_id = xhr.getResponseHeader('X-Menu-id2');
+            }
         }
         if(target) {
             var _openAction;
@@ -134,7 +145,7 @@ function doLoadingSuccess(app, url) {
             } else {
                 _openAction = openAction;
             }
-            _openAction(xhr.getResponseHeader('Location'), target, active_id, keep_open, xhr.getResponseHeader('height'), xhr.getResponseHeader('width'));
+            _openAction(xhr.getResponseHeader('Location'), target, active_id, keep_open, xhr.getResponseHeader('height'), xhr.getResponseHeader('width'), menu_id);
             return;
         }
         if(url) {
@@ -187,7 +198,7 @@ function doLoadingSuccess(app, url) {
  * @param action_url the URL of the action to open
  * @param target the target, if any, defaults to 'current'
  */
-function openAction(action_url, target, terp_id, keep_open, height, width) {
+function openAction(action_url, target, terp_id, keep_open, height, width, menu_id) {
     var $dialogs = jQuery('.action-dialog');
     switch(target) {
         case 'new':
@@ -228,7 +239,7 @@ function openAction(action_url, target, terp_id, keep_open, height, width) {
             break;
         case 'current':
         default:
-            openLink(action_url);
+            openLink(action_url, null, menu_id);
     }
     if (!keep_open) {
         $dialogs.dialog('close');
@@ -262,7 +273,15 @@ jQuery(document).ready(function () {
         // open un-targeted links in #appContent via xhr. Links with @target are considered
         // external links. Ignore hash-links.
         jQuery(document).delegate(UNTARGETED_LINKS_SELECTOR, 'click', function () {
-            openLink(jQuery(this).attr('href'));
+            if (jQuery(this).attr('id').startsWith('shortcut')) {
+                jQuery.ajax({
+                    url: jQuery(this).attr('href'),
+                    success: doLoadingSuccess(jQuery(this).attr('href'), null, true)
+                });
+
+            } else {
+                openLink(jQuery(this).attr('href'));
+            }
             return false;
         });
         // do the same for forms
@@ -280,7 +299,7 @@ jQuery(document).ready(function () {
             jQuery(document).delegate(UNTARGETED_LINKS_SELECTOR, 'click', function() {
                 jQuery.ajax({
                     url: jQuery(this).attr('href'),
-                    success: doLoadingSuccess(jQuery(this).attr('href'))
+                    success: doLoadingSuccess(jQuery(this).attr('href'), null, true)
                 });
                 return false;
             });
