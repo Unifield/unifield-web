@@ -591,6 +591,9 @@ class Char(TinyWidget):
     def __str__(self):
         return ustr(self.text)
 
+class HtmlText(Char):
+    template = "/openerp/widgets/templates/listgrid/html.mako"
+
 class Reference(Char):
 
     def get_text(self):
@@ -897,4 +900,5 @@ CELLTYPES = {
     'progressbar' : ProgressBar,
     'separator': Separator,
     'human_size': HumanSize,
+    'html_text': HtmlText,
 }
