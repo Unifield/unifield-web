@@ -136,6 +136,9 @@ class List(TinyWidget):
 
         attrs = node_attributes(root)
 
+        if attrs.get('min_rows'):
+            self.min_rows = int(attrs.get('min_rows'))
+
         self.button_attrs = attrs.get('button_attrs', None)
 
         # Get the hide status of some buttons - by default buttons are shown
@@ -439,6 +442,7 @@ class List(TinyWidget):
 
         myfields = [] # check for duplicate fields
 
+        set_tooltip = {}
         for node in root.childNodes:
 
             if node.nodeName == 'button':
@@ -455,10 +459,14 @@ class List(TinyWidget):
                     buttons += [Button(**attrs)]
                     headers.append(("button", len(buttons)))
             elif node.nodeName == 'separator':
+                attrs = node_attributes(node)
+                if attrs.get('invisible', False):
+                    invisible = eval(attrs['invisible'], {'context':self.context})
+                    if invisible:
+                        continue
                 headers += [("separator", {'type': 'separator', 'string': '|', 'not_sortable': 1})]
             elif node.nodeName == 'field':
                 attrs = node_attributes(node)
-
                 if 'name' in attrs:
 
                     name = attrs['name']
@@ -508,6 +516,9 @@ class List(TinyWidget):
                     if 'real_sum' in attrs:
                         field_real_total[name] = [attrs['real_sum'], 0.0]
 
+                    if fields[name].get('tooltip'):
+                        set_tooltip[name] = fields[name].get('tooltip')
+
                     for i, row in enumerate(data):
                         row_value = values[i]
                         if invisible:
@@ -531,19 +542,28 @@ class List(TinyWidget):
                                     break
                             except:
                                 pass
-
                         row[name] = cell
+
                     if invisible:
                         continue
 
                     headers += [(name, fields[name])]
+
+        if set_tooltip:
+            for row in data:
+                for to_set in set_tooltip:
+                    if isinstance(row[set_tooltip[to_set]], Hidden):
+                        row[to_set].tooltip = row[set_tooltip[to_set]].widget.get_display_value()
+                    else:
+                        row[to_set].tooltip = row[set_tooltip[to_set]].get_display_value()
+
 
         return headers, hiddens, data, field_total, field_real_total, buttons
 
 class Char(TinyWidget):
     template = "/openerp/widgets/templates/listgrid/char.mako"
 
-    params = ['text', 'link', 'value', 'truncate']
+    params = ['text', 'link', 'value', 'truncate', 'tooltip']
 
     def __init__(self, **attrs):
 
@@ -551,6 +571,7 @@ class Char(TinyWidget):
 
         self.attrs = attrs.copy()
 
+        self.tooltip = attrs.get('tooltip_value')
         self.text = self.get_text()
         self.link = self.get_link()
 
@@ -585,6 +606,9 @@ class Char(TinyWidget):
 
     def __str__(self):
         return ustr(self.text)
+
+class HtmlText(Char):
+    template = "/openerp/widgets/templates/listgrid/html.mako"
 
 class Reference(Char):
 
@@ -632,12 +656,12 @@ class M2O(Char):
 class O2M(Char):
 
     def get_text(self):
-        return "(%d)" % len(self.value)
+        return "%d" % len(self.value)
 
 class M2M(Char):
 
     def get_text(self):
-        return "(%d)" % len(self.value)
+        return "%d" % len(self.value)
 
 class Selection(Char):
 
@@ -654,7 +678,15 @@ class Selection(Char):
 
 class Float(Char):
 
+    def __init__(self, **attrs):
+        self.with_null = attrs.get('with_null')
+        self.null_value = attrs.get('null_value', '')
+        super(Float, self).__init__( **attrs)
+
     def get_text(self):
+        if self.with_null and self.value is False:
+            return self.null_value
+
         digits = self.attrs.get('digits', (16,2))
         if isinstance(digits, basestring):
             digits = eval(digits)
@@ -689,12 +721,19 @@ class FloatTime(Char):
 
 class Int(Char):
 
+    def __init__(self, **attrs):
+        self.with_null = attrs.get('with_null')
+        self.null_value = attrs.get('null_value', '')
+        super(Int, self).__init__( **attrs)
+
     def get_text(self):
         if self.value:
             if isinstance(self.value, (unicode, str)):
                 return ast.literal_eval(self.value)
             return int(self.value)
 
+        elif self.with_null and (self.value is False or self.value is None):
+            return self.null_value
         return 0
 
 class ProgressBar(Char):
@@ -877,4 +916,5 @@ CELLTYPES = {
     'progressbar' : ProgressBar,
     'separator': Separator,
     'human_size': HumanSize,
+    'html_text': HtmlText,
 }

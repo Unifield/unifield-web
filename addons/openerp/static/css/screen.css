@@ -2414,3 +2414,48 @@ img.no_image {
     background: rgba(184, 222, 130, .6);
     white-space: pre-line;
 }
+
+table #rr-chrono  {
+  text-align: center;
+  border-collapse: collapse;
+  margin-bottom: 15px;
+  border: 2px solid black;
+  background: #EEEEEE;
+}
+
+
+#rr-chrono td, #rr-chrono th {
+  text-align: center;
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 3px 0 3px 0 ;
+}
+
+#rr-chrono .rr-text td{
+  font-weight: normal !important;
+  vertical-align: top;
+  border-collapse: collapse;
+}
+
+#rr-chrono input {
+   margin-left: 3px;
+   width: 4em;
+}
+#rr-chrono .tlt {
+}
+#rr-chrono .ilt {
+}
+#rr-chrono .elt {
+}
+#rr-chrono .oclt {
+  width: 25%;
+}
+#rr-chrono .ovlt {
+  width: 25%;
+}
+#rr-chrono .slt {
+  width: 25%;
+}
+#rr-chrono .hlt {
+  width: 25%;
+}

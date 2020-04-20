@@ -43,7 +43,7 @@ if (auto_field && auto_field.val()){
             % for i, (field, field_attrs) in enumerate(headers):
                 % if field == 'button':
                     <td class="grid-cell"></td>
-                % elif field_attrs.get('displayon') != 'noteditable':
+                % elif field_attrs.get('displayon') not in ('noteditable', 'notedition'):
                     % if field_attrs.get('displayon') == 'editable':
                        <% cnt -= 1 %>
                     % endif
@@ -162,7 +162,7 @@ if (auto_field && auto_field.val()){
                 sortable_value="${data[field].get_sortable_text()}">
                 % if impex:
                 	<a href="javascript: void(0)" onclick="do_select('${data['id']}')">${data[field].display()}</a>
-                % else:
+                % elif (edit_inline == -1 or not edit_inline or field_attrs.get('displayon') != 'notedition'):
                 	<span>${data[field].display()}</span>
                 % endif
             </td>
@@ -189,6 +189,38 @@ if (auto_field && auto_field.val()){
 </%def>
 
 <div class="box-a list-a">
+% if any([field != 'button' and field_attrs.get('filter_selector') for field, field_attrs in headers]):
+<div class="o2m_filter_block">
+    <table id="${name}_o2m_filter" class="o2m_header_filter"><tr>
+        % for (field, field_attrs) in headers:
+            % if field != 'button' and field_attrs.get('filter_selector'):
+               <% has_filter = True %>
+                <td> ${field_attrs['string']|br}:
+                    % if field_attrs['type'] == 'selection':
+                        <select id="${name}_${field}" class="paging ignore_changes_when_leaving_page" style="width: auto" field="${field}" kind="selection">
+                            <option value=""></option>
+                            % for key, val in field_attrs['selection']:
+                                <option value="${key}">${val}</option>
+                            % endfor
+                        </select>
+                    % elif field_attrs['type'] == 'boolean':
+                        <select id="${name}_${field}" class="paging ignore_changes_when_leaving_page" style="width: auto" field="${field}" kind="boolean">
+                            <option value=""></option>
+                            <option value="t">${_('Yes')}</option>
+                            <option value="f">${_('No')}</option>
+                        </select>
+                    % else:
+                        <input id="${name}_${field}" type="text" class="paging ignore_changes_when_leaving_page" style="width: auto" field="${field}" onkeydown="if (event.keyCode == 13) new ListView('${name}').update_o2m_filter();"/>
+                    % endif
+                </td>
+            % endif
+        % endfor
+        <td><button type="button" onclick="new ListView('${name}').update_o2m_filter()">${_('Search')}</button></td>
+        <td><button type="button" onclick="new ListView('${name}').clear_filter()">${_('Clear')}</button></td>
+    </table>
+</div>
+% endif
+
     <div class="inner">
         <table id="${name}" class="gridview" width="100%" cellspacing="0" cellpadding="0">
             % if pageable:
@@ -199,8 +231,8 @@ if (auto_field && auto_field.val()){
                                 <td class="pager-cell">
                                     <h2>${string}</h2>
                                 </td>
-                                <td class="loading-list" style="display: none;">
-                                    <img src="/openerp/static/images/load.gif" width="16" height="16" title="loading..."/>
+                                <td style="min-width: 16px">
+                                    <img src="/openerp/static/images/load.gif" width="16" height="16" title="loading..." class="loading-list" style="display: none;"/>
                                 </td>
                                 % if editable:
                                     <td class="pager-cell-button">
@@ -289,7 +321,10 @@ if (auto_field && auto_field.val()){
                                         <% i += 1 %>
                                     % endfor
                                 </td>
-                                % endif 
+                                % else:
+                                <td class="pager-cell" style="width: 90%">
+                                </td>
+                                % endif
                                 <td class="pager-cell" style="width: 90%">
                                     ${pager.display()}
                                 </td>

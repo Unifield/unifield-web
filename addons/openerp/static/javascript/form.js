@@ -418,9 +418,6 @@ function pager_action(src){
 }
 
 function buttonClicked(name, btype, model, id, sure, target, context){
-    if (sure && !confirm(sure)) {
-        return;
-    }
 
     // to be able to get selected lines ids
     s_ids = [];
@@ -428,6 +425,16 @@ function buttonClicked(name, btype, model, id, sure, target, context){
         s_ids = ListView('order_line').getSelectedRecords();
     } else if (jQuery('[id="move_lines"]').length > 0){
         s_ids = ListView('move_lines').getSelectedRecords();
+    } else if (model == 'shipment' && jQuery('[id="pack_family_memory_ids"]').length > 0){
+        s_ids = ListView('pack_family_memory_ids').getSelectedRecords();
+    }  else if (model =='replenishment.inventory.review' && jQuery('[id="line_ids"]').length > 0){
+        s_ids = ListView('line_ids').getSelectedRecords();
+    } else if (model =='replenishment.segment' && jQuery('[id="line_ids"]').length > 0){
+        s_ids = ListView('line_ids').getSelectedRecords();
+    }
+
+    if (sure && !confirm(sure.replace('%(number_selected)s',s_ids.length))) {
+        return;
     }
 
     var params = {
@@ -691,6 +698,12 @@ function onChange(caller){
 
 function onChangePop(caller){
 
+
+    // *************** WARNING ***********************
+    // TestField:  this method is monkey patched in TF
+    // ***********************************************
+
+
     if (openobject.http.AJAX_COUNT > 0) {
         // Delay the call
         callLater(1, onChangePop, caller);
@@ -873,6 +886,12 @@ function onChangePop(caller){
                         if(value){
                         	fld_val = '['+ value.join(',') + ']';
                         }
+                        if (!jQuery(fld).attr('name')) {
+                            // guess we are in editable tree view
+                            jQuery(idSelector(prefix + k)).val(fld_val);
+                            break;
+                        }
+                        //fld.value = fld_val;
                         var fld_name = jQuery(fld).attr('name');
                         var old_m2m = jQuery(idSelector(fld_name)).closest('.list-a');
                         $(idSelector(fld_name+'/_terp_id')).val('');
@@ -885,7 +904,8 @@ function onChangePop(caller){
                                 'model': jQuery(fld).attr('relation'),
                                 'view_id': jQuery(idSelector(fld_name + '/_terp_view_id')).val(),
                                 'view_type': jQuery(idSelector(fld_name + '/_terp_view_type')).val(),
-                                'ids': fld_val
+                                'ids': fld_val,
+                                'disabled': jQuery(fld).attr('disabled'),
                             },
                             dataType: 'json',
                             error: loadingError(),

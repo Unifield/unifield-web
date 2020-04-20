@@ -159,6 +159,8 @@ class Frame(TinyWidget):
             td = [attrs, label]
 
             if self.is_search:
+                if hasattr(widget, 'class') and getattr(widget, 'class'):
+                    attrs['class'] += ' %s' % getattr(widget, 'class')
                 if colspan > 1:
                     attrs['colspan'] = colspan
                 if getattr(widget, 'full_name', None):
@@ -411,10 +413,14 @@ class Integer(TinyInputWidget):
 
     def __init__(self, **attrs):
         super(Integer, self).__init__(**attrs)
+        self.with_null = attrs.get('with_null')
         self.validator = validators.Int()
 
     def set_value(self, value):
-        self.default = value or 0
+        if self.with_null and (value is False or value is None):
+            self.default = ''
+        else:
+            self.default = value or 0
 
 register_widget(Integer, ["integer"])
 
@@ -461,7 +467,7 @@ class Float(TinyInputWidget):
     def __init__(self, **attrs):
         super(Float, self).__init__(**attrs)
 
-
+        self.with_null = attrs.get('with_null')
         rounding = False
         if attrs.get('rounding_value') and attrs.get('uom_rounding'):
             if isinstance(attrs.get('rounding_value'), (list, tuple)):
@@ -487,7 +493,10 @@ class Float(TinyInputWidget):
 #            self.default = 0.0
 
     def set_value(self, value):
-        self.default = value or 0.0
+        if self.with_null and value is False:
+            self.default = ''
+        else:
+            self.default = value or 0.0
 
 register_widget(Float, ["float"])
 
@@ -789,6 +798,12 @@ class HtmlView(TinyWidget):
             self.default = attrs.get('value')
 
 register_widget(HtmlView, ["html"])
+
+class HtmlText(Char):
+
+    template = "/openerp/widgets/form/templates/html.mako"
+
+register_widget(HtmlText, ["html_text"])
 
 class Form(TinyInputWidget):
     """A generic form widget

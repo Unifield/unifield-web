@@ -81,6 +81,28 @@
     cursor: pointer;
 }
 
+.o2m-sticky th {
+    background: url(../images/gradientlinebg.gif);
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+    text-align: center !important;
+}
+
+.o2m-sticky td {
+    text-align: center !important;
+}
+.o2m-sticky input {
+    text-align: center !important;
+}
+.o2m-sticky select {
+    text-align: center !important;
+}
+
+.o2m-sticky input.datetime {
+    text-align: left !important;
+}
+
 .grid-row .grid-cell {
     border-bottom: 1px solid #E3E3E3;
 }
@@ -134,6 +156,10 @@
     background: none;
     border: none;
     width: 100%;
+}
+
+.pager-table td {
+    border: 0px !important;
 }
 
 .gridview .pagerbar .pagerbar-cell .pager-table .pager-cell {
@@ -202,6 +228,28 @@ strong#total_sum_label {
     padding: 0 1px;
     color: #7D7979;
     font-size: 0.9em;
+}
+.o2m_filter_block {
+    width: 99.5%;
+    border-bottom: 1px solid rgb(153, 153, 153);
+    padding-bottom: 5px;
+}
+.o2m_header_filter td {
+    padding-right: 10px;
+    padding-left: 4px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+.o2m_header_filter img {
+    cursor: pointer;
+}
+
+.htmlbox {
+    display: flex;
+    align-items: center;
+}
+.warning {
+    margin-right: 3px;
 }
 /**
  * vim: sts=4 st=4 et
