@@ -68,7 +68,7 @@ class Translator(SecuredController):
         if translate == 'fields' and params.id:
             # US-3071 : single field translation only for product.product
             if params.get('_terp_clicked_field', False) and params.get('_terp_model', False) \
-                    and params['_terp_model'] == 'product.product':
+                    and params['_terp_model'] in ('product.product', 'account.analytic.account'):
                 clicked_field = params['_terp_clicked_field']
                 attrs = view_fields[clicked_field]
                 if attrs.get('translate'):
