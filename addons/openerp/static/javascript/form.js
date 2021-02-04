@@ -442,7 +442,9 @@ function buttonClicked(name, btype, model, id, sure, target, context, set_ids){
         } else if (model == 'shipment' && jQuery('[id="pack_family_memory_ids"]').length > 0){
             s_ids = ListView('pack_family_memory_ids').getSelectedRecords();
         } else if (model =='wizard.compare.rfq' && jQuery('[id="line_ids"]').length > 0){
-        s_ids = ListView('line_ids').getSelectedRecords();
+            s_ids = ListView('line_ids').getSelectedRecords();
+        } else if (model =='view.expired.expiring.stock' && jQuery('[id="v_mng_exp_lines_ids"]').length > 0){
+            s_ids = ListView('v_mng_exp_lines_ids').getSelectedRecords();
         }
     }
 
