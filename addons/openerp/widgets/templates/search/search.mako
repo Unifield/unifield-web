@@ -1,9 +1,9 @@
 <div id="search_filter_data">
-	% if frame:
+    % if frame:
         ${display_member(frame)}
-	% endif
+    % endif
 
-	% if not source:
+    % if not source:
         <tr>
            <td>
                 <table id="filter_option_table" style="display:none;">
@@ -18,14 +18,10 @@
                                 <label id="filterlabel" value=""></label>
                             </td>
                             <td>
-                                <select class="expr" onchange="jQuery(this).parents('tr.filter_row_class').find('input.qstring')[0].focus()">
-                                    % for operator, description in operators_map:
-                                        <option value="${operator}" >${description}</option>
-                                    % endfor
-                                </select>
+                                <select class="expr" />
                             </td>
                             <td colspan="2" align="right" class="filter_column">
-                                <input type="text" class='qstring' value="" autofocus="true"/>
+                                <input class='qstring' />
                             </td>
                         </tr>
                     </tbody>
@@ -54,11 +50,35 @@
                 </table>
             </td>
         </tr>
+    <script type="text/javascript">
+        % if fields_selection_json:
+          var fields_selection_json = JSON.parse('${fields_selection_json|n}');
+        % endif
+
+        var operator_input = $("<select class=\"expr\" onchange=\"jQuery(this).parents('tr.filter_row_class').find('input.qstring')[0].focus()\">");
+        var operator_date_digit = $("<select class=\"expr\" onchange=\"jQuery(this).parents('tr.filter_row_class').find('input.qstring')[0].focus()\">");
+        var operator_rel = $("<select class=\"expr\" onchange=\"jQuery(this).parents('tr.filter_row_class').find('input.qstring')[0].focus()\">");
+        var operator_select = $("<select class=\"expr\" onchange=\"jQuery(this).parents('tr.filter_row_class').find('select.qstring')[0].focus()\">");
+        % for operator, description in operators_map:
+            operator_input.append('<option value="${operator}">${description}</option>')
+            % if operator in ('=', '<>'):
+                operator_select.append('<option value="${operator}">${description}</option>')
+            % endif
+            % if operator in ('=', '<>', '>', '<'):
+                operator_date_digit.append('<option value="${operator}">${description}</option>')
+            % endif
+            % if operator not in ('>', '<'):
+                operator_rel.append('<option value="${operator}">${description}</option>')
+            % endif
+        % endfor
+
+        var value_input=$('<input type="text" class="qstring" value="" autofocus="true"/>');
+    </script>
     % endif
 
     <script type="text/javascript">
         jQuery(document).ready(function () {
             switch_searchView("${flt_domain | n}");
-		});
+    });
     </script>
 </div>

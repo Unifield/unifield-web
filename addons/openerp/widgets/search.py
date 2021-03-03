@@ -28,6 +28,7 @@ import xml.dom.minidom
 
 import cherrypy
 import copy
+import json
 
 from openerp.utils import rpc, cache, icons, node_attributes, expr_eval
 from openerp.widgets import TinyInputWidget, InputWidgetLabel, form
@@ -199,7 +200,7 @@ class Search(TinyInputWidget):
     template = "/openerp/widgets/templates/search/search.mako"
     javascript = [JSLink("openerp", "javascript/search.js?v=15.1", location=locations.bodytop)]
 
-    params = ['fields_type', 'filters_list', 'operators_map', 'fields_list', 'filter_domain', 'flt_domain', 'source']
+    params = ['fields_type', 'filters_list', 'operators_map', 'fields_list', 'filter_domain', 'flt_domain', 'source', 'fields_selection_json']
     member_widgets = ['frame']
 
     def __init__(self, source, model, domain=None, context=None, values={}, filter_domain=None, search_view=None, group_by_ctx=[], **kw):
@@ -261,13 +262,16 @@ class Search(TinyInputWidget):
 
         self.fields = dict(all_fields, **fields)
 
-        self.fields_list = [
-            (field_name, ustr(field['string']), field['type'])
-            for field_name, field in self.fields.iteritems()
-            if field['type'] != 'binary'
-            if field.get('selectable')
-            if not field.get('internal') or not expr_eval(field.get('internal'), ctx)
-        ]
+        self.fields_list = []
+        fields_selection = {}
+        for field_name, field in self.fields.iteritems():
+            if field['type'] != 'binary' and field.get('selectable') and (not field.get('internal') or not expr_eval(field.get('internal'), ctx)):
+                self.fields_list.append((field_name, ustr(field['string']), field['type']))
+            if field['type'] == 'selection' and field.get('selection'):
+                fields_selection[field_name] = dict(field['selection'])
+            elif field['type'] == 'boolean':
+                fields_selection[field_name] = {'1': _('True'), '0': _('False')}
+        self.fields_selection_json = json.dumps(fields_selection)
 
         if self.fields_list:
             self.fields_list.sort(lambda x, y: cmp(x[1], y[1]))

@@ -30,9 +30,12 @@ function add_filter_row(elem) {
     var $filter_opt_tbl = jQuery('#filter_option_table');
     var $cls_tbody = $element.closest("tbody");
     var selected_txt = $element.find('option:selected').text();
+    var kind = $element.find('option:selected').attr('kind');
+
 
     if ($filter_opt_tbl.find('tbody:visible').length == 1 &&
         $cls_tbody.siblings().length == 1) {
+        var $new_tr = $filter_table;
         if($filter_table.is(':hidden')) {
             var $filterlabel = jQuery('#filterlabel');
             if ($filterlabel.text() == '') {
@@ -52,9 +55,7 @@ function add_filter_row(elem) {
         var $new_tr_lbl = $new_tr.find('#filterlabel')
                 .text(selected_txt)
                 .attr('value', $element.val());
-
-        var $new_tr_qstring = $new_tr.find('input.qstring')
-                .css('background', '#fff').val('');
+        var $new_tr_qstring = $new_tr.find('input.qstring');
         if ($new_tr.is(':hidden')) {
             $new_tr.show();
         }
@@ -72,6 +73,24 @@ function add_filter_row(elem) {
             $position_tr = $curr_body.find('tr.filter_row_class')[index_row];
         }
         jQuery($position_tr).after($new_tr);
+    }
+
+    if ($element.val() in fields_selection_json) {
+        var $new_select = $('<select style="width: 100%" class="qstring">');
+        for (let [key, value] of Object.entries(fields_selection_json[$element.val()])) {
+               $new_select.append('<option value="'+key+'">'+value+'</option>');
+        }
+        $new_tr.find('.qstring').replaceWith($new_select);
+        $new_tr.find('select.expr').replaceWith(operator_select.clone());
+    } else {
+        if (kind == 'date' || kind == 'datetime' || kind == 'float' || kind == 'integer' ) {
+            $new_tr.find('select.expr').replaceWith(operator_date_digit.clone());
+        } else if (kind == 'one2many' || kind == 'many2many' || kind == 'many2one') {
+            $new_tr.find('select.expr').replaceWith(operator_rel.clone());
+        } else {
+            $new_tr.find('select.expr').replaceWith(operator_input.clone());
+        }
+        $new_tr.find('.qstring').replaceWith(value_input.clone()).css('background', '#fff').val('');
     }
 
     var select_or = jQuery('select.filter_fields_or');
@@ -279,10 +298,9 @@ function display_Customfilters(all_domains, group_by_ctx) {
         var pid = jQuery(this).index();
 
         jQuery(this).children('.filter_row_class').each(function () {
-            var $constraint_value = jQuery(this).find('input.qstring');
+            var $constraint_value = jQuery(this).find('input.qstring, select.qstring');
             var $fieldname = jQuery(this).find('#filterlabel');
             var id = jQuery(this).parent().find('> .filter_row_class').index(this);
-
             if($constraint_value.val()) {
                 var rec = {};
                 rec[$fieldname.attr('value')] = $constraint_value.val();
@@ -340,18 +358,18 @@ function display_Customfilters(all_domains, group_by_ctx) {
                     var field = return_record['rec'];
                     var comparison = $row.find('select.expr').val();
                     var value = return_record['rec_val'];
-                    
+
                     // if there are multiple values we must split them before conversion
                     var isMultipleValues = comparison == 'in' || comparison == 'not in';
                     var values;
                     if(isMultipleValues) {
-                    	values = value.split(',');
+                        values = value.split(',');
                     } else {
-                    	values = [value];
+                        values = [value];
                     }
                     // converting values
                     var newValues = jQuery.map(values, function(valuePart, i) {
-                    	switch (type) {
+                        switch (type) {
                             case "string":
                             case "many2one":
                             case "many2many":
@@ -395,14 +413,14 @@ function display_Customfilters(all_domains, group_by_ctx) {
                                 return;
                             default:
                                 return;
-                    	}
+                        }
                     });
                     if(isMultipleValues) {
-                    	value = newValues;
+                        value = newValues;
                     } else {
-                    	value = newValues[0];
+                        value = newValues[0];
                     }
-                    
+
                     switch (comparison) {
                         case 'ilike':
                         case 'not ilike':
@@ -524,7 +542,7 @@ function parse_filters(src, id) {
             if ($fld.val() != '' && $fld.val() != 'False') {
 
                 if ($fld.attr('type2') == 'many2one') {
-                	var selection_operator = $fld.attr('operator');
+                    var selection_operator = $fld.attr('operator');
                     fld_value = $fld.val() + '__' + selection_operator;
                 }
                 else{
@@ -544,7 +562,7 @@ function parse_filters(src, id) {
                 fld_value = 'm2o_'+ fld_value;
             }
             else {
-            	fld_value = parseInt(jQuery(idSelector(fld_name)).val()) || fld_value;
+                fld_value = parseInt(jQuery(idSelector(fld_name)).val()) || fld_value;
             }
             fld_context = jQuery(idSelector(fld_name)).attr('context');
             if (fld_context) {
@@ -555,7 +573,7 @@ function parse_filters(src, id) {
                 search_context[fld_name]['value'] = fld_value;
             }
         }
-        
+
         if(kind == 'boolean' && fld_value) {
             fld_value = parseInt(fld_value);
             domains[fld_name] = fld_value;
