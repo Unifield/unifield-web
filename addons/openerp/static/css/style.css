@@ -1102,3 +1102,8 @@ iframe.ui-dialog-content {
     padding: 0 !important;
     width: 100% !important;
 }
+
+#recent_moves_months {
+   background-color: #F0EEEE !important;
+   font-style: italic;
+}
