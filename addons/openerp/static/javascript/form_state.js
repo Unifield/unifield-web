@@ -574,7 +574,14 @@ function form_setReadonly(container, fieldName, readonly) {
                 .attr({'disabled': readonly, 'readOnly': readonly});
         return;
     }
-    $field.attr({'disabled':readonly, 'readOnly': readonly});
+    var attr_to_set = {'disabled':readonly, 'readOnly': readonly}
+    if (readonly && field_name == 'type') {
+        var terp_model_el = getElement('_terp_model');
+        if (terp_model_el && terp_model_el.value == 'physical.inventory') {
+            attr_to_set = {'readOnly': readonly}
+        }
+    }
+    $field.attr(attr_to_set);
     ro_f = jQuery(idSelector(field_id+'_ro'))
     if (readonly) {
         if ((type == 'button')) {
