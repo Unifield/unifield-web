@@ -1150,7 +1150,7 @@ class Form(TinyInputWidget):
             if self.id:
                 proxy = rpc.RPCProxy(self.model)
                 attrs['selection'] = getattr(proxy, attrs['get_selection'])(self.id, name)
-            elif name == 'reason_type_id' and self.model == 'stock.picking':
+            elif name == 'reason_type_id' and self.model in ('stock.picking', 'stock.move'):
                 del(attrs['get_selection'])
         if attrs.get('force_readonly', False) and 'states' in attrs:
             del attrs['states']
