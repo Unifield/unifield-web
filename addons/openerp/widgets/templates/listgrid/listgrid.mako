@@ -488,7 +488,11 @@ if (auto_field && auto_field.val()){
                             /* In editable grid, clicking on empty row will create new and on existing row will edit. */
                            jQuery('table[id=${name}_grid] tr.grid-row').each(function(index, row) {
                                if (! jQuery(row).hasClass('noteditable')) {
-                               jQuery(row).click(function(event) {
+                               jQuery(row).mousedown(function(event) {
+                                   if (event.button != 0) {
+                                       // process only click with "left" button
+                                        return;
+                                    }
                                    if (jQuery('table[id=${name}]').hasClass("readonlyfield")
                                    &&  jQuery(row).hasClass("inline_editors"))
                                    {

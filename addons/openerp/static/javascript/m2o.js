@@ -544,6 +544,7 @@ ManyToOne.prototype.displayResults = function(result) {
 
         var mouseOver = jQuery.proxy(this, 'getMouseover');
         var onClick = jQuery.proxy(this, 'getOnclick');
+        var mouseDown = jQuery.proxy(this, 'getMousedown');
         var rowName = "autoComplete" + this.name + "_";
         var $resultsTable = jQuery('<tbody>').appendTo($fancyTable);
         jQuery.each(result.values, function (i, currentObject) {
@@ -552,7 +553,8 @@ ManyToOne.prototype.displayResults = function(result) {
                 "name": rowName + i,
                 "id": rowName + i,
                 "mouseover": mouseOver,
-                "click": onClick
+                "click": onClick,
+                "mousedown": mouseDown
             }).append(jQuery('<td>', {
                 'data-id':currentObject[0],
                 'class': 'm2o_coplition'
@@ -607,6 +609,11 @@ ManyToOne.prototype.getMouseover = function(evt) {
 ManyToOne.prototype.getOnclick = function(evt) {
     evt.which = 13;
     this.on_keydown(evt);
+    evt.stopPropagation();
+    evt.preventDefault();
+};
+
+ManyToOne.prototype.getMousedown = function(evt) {
     evt.stopPropagation();
     evt.preventDefault();
 };
