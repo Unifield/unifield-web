@@ -33,6 +33,12 @@ var ListView = function(name) {
     this.__init__(name);
 };
 
+$.fn.isInHorizontalViewport = function() {
+    var elementLeft = $(this).offset().left;
+    var viewportLeft = $(window).scrollLeft();
+    return elementLeft >= viewportLeft;
+};
+
 
 ListView.prototype = {
 
@@ -240,9 +246,14 @@ ListView.prototype = {
         if (!nosidebar) {
             var $sidebar = jQuery('.toggle-sidebar');
             if ($sidebar.is('.closed')) {
-                $sidebar.click()
+                scrollLeft = $(window).scrollLeft()
+                $sidebar.click();
+                if (!$('#'+this.name+'_check_all').isInHorizontalViewport()) {
+                    $sidebar.click();
+                    $(window).scrollLeft(scrollLeft);
+                }
             }
-            if(!this.getSelectedRecords().length) {
+            if($sidebar.is('.open') && !this.getSelectedRecords().length) {
                 $sidebar.click();
             }
         }
